@@ -69,7 +69,7 @@ export default async function handler(req, res) {
     await redis.set(`setup:${setupToken}`, JSON.stringify(licenseData), { ex: 60 * 60 * 24 * 30 });
     await redis.set(`license:${licenseKey}`, setupToken);
 
-    const setupUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/setup?token=${setupToken}`;
+    const setupUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/setup.html?token=${setupToken}`;
 
     await resend.emails.send({
       from: 'The Content Edit <onboarding@resend.dev>',
