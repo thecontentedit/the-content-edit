@@ -167,9 +167,41 @@
   }
   .empty-cell span { font-size: 11px; color: var(--muted); }
 
+  /* ── TOOLBAR ── */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    padding: 0 2px;
+  }
+
+  .refresh-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity .2s;
+  }
+
+  .refresh-btn:hover { opacity: .75; }
+
+  .refresh-btn svg {
+    width: 12px;
+    height: 12px;
+  }
+
   /* ── WATERMARK ── */
   .watermark {
-    text-align: center; margin-top: 8px;
+    text-align: right;
     font-size: 10px; color: rgba(28,25,21,.25);
     letter-spacing: .06em; text-transform: uppercase;
   }
@@ -189,11 +221,16 @@
 
 <div id="widget">
   <div class="grid" id="grid"></div>
-  <div class="watermark">The Content Edit</div>
+  <div class="toolbar">
+    <button class="refresh-btn" onclick="loadWidget()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      Refresh
+    </button>
+    <div class="watermark">The Content Edit</div>
+  </div>
 </div>
 
 <script>
-// El widgetId viene en la URL: /embed/WIDGET_ID
 const widgetId = location.pathname.split('/').filter(Boolean).pop();
 const API_BASE  = location.origin;
 
@@ -206,6 +243,11 @@ const icons = {
 };
 
 async function loadWidget() {
+  document.getElementById('grid').innerHTML = '';
+  document.getElementById('widget').style.display = 'none';
+  document.getElementById('error').style.display = 'none';
+  document.getElementById('loading').style.display = 'flex';
+
   try {
     const res = await fetch(`${API_BASE}/api/widget/${widgetId}`);
     if (!res.ok) throw new Error(res.status);
@@ -243,7 +285,6 @@ function renderGrid(posts, plan) {
     const cell = document.createElement('div');
     cell.className = 'cell' + (isLastRow ? ' flip-tooltip' : '');
 
-    // inner (clipped)
     const inner = document.createElement('div');
     inner.className = 'cell-inner';
 
@@ -258,7 +299,6 @@ function renderGrid(posts, plan) {
       };
       inner.appendChild(img);
     } else {
-      // Canva / Pinterest — placeholder con ícono
       const label = post.imageUrl?.includes('canva') ? 'Canva' : post.imageUrl?.includes('pinterest') ? 'Pinterest' : 'Link';
       inner.appendChild(makePlaceholder(label));
     }
@@ -268,7 +308,6 @@ function renderGrid(posts, plan) {
     inner.appendChild(overlay);
     cell.appendChild(inner);
 
-    // Badge top-right: carrusel o reel (solo pro)
     if (plan === 'pro' && (post.mediaType === 'carousel' || post.mediaType === 'reel')) {
       const b = document.createElement('div');
       b.className = 'badge-tr';
@@ -276,7 +315,6 @@ function renderGrid(posts, plan) {
       cell.appendChild(b);
     }
 
-    // Badge top-left: fijado (solo pro)
     if (plan === 'pro' && post.pinned) {
       const p = document.createElement('div');
       p.className = 'badge-tl';
@@ -284,7 +322,6 @@ function renderGrid(posts, plan) {
       cell.appendChild(p);
     }
 
-    // Tooltip
     if (post.name || post.publishDate) {
       const tooltip = document.createElement('div');
       tooltip.className = 'tooltip';
