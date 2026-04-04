@@ -1,6 +1,7 @@
 {
   "version": 2,
   "rewrites": [
+    { "source": "/setup", "destination": "/public/setup.html" },
     { "source": "/embed/:widgetId", "destination": "/public/embed.html" },
     { "source": "/widget/:widgetId", "destination": "/public/embed.html" }
   ],
