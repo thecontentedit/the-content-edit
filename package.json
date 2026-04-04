@@ -1,8 +1,12 @@
-	name	"the-content-edit"
-version	"1.0.0"
-private	true
-dependencies	
-@upstash/redis	"^1.28.0"
-resend	"^3.0.0"
-engines	
-node	">=18"
+{
+  "name": "the-content-edit",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@upstash/redis": "^1.28.0",
+    "resend": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
