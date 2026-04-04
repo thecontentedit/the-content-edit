@@ -1,0 +1,13 @@
+{
+  "name": "the-content-edit",
+  "version": "1.0.0",
+  "description": "Instagram grid preview widget for Notion",
+  "private": true,
+  "dependencies": {
+    "@vercel/kv": "^2.0.0",
+    "resend": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

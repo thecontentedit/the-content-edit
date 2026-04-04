@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Content Edit — Tu grid de Instagram en Notion</title>
+<meta name="description" content="Conecta tu base de datos de Notion y visualiza tu feed de Instagram en tiempo real. Sin salir de Notion."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F9F6F1;
+    --ink: #1C1915;
+    --muted: #7A7570;
+    --border: rgba(28,25,21,0.1);
+    --border-strong: rgba(28,25,21,0.22);
+    --accent: #C17F3E;
+    --serif: 'DM Serif Display', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--cream);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--cream);
+    border-bottom: 0.5px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px;
+  }
+
+  .nav-logo {
+    font-family: var(--serif);
+    font-size: 17px; letter-spacing: -0.01em;
+    color: var(--ink); text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex; align-items: center; gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 13px; color: var(--muted);
+    text-decoration: none; transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+
+  .nav-cta {
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 999px;
+    padding: 8px 20px; font-size: 13px; font-weight: 500;
+    cursor: pointer; transition: opacity .2s;
+    font-family: var(--sans); text-decoration: none;
+  }
+  .nav-cta:hover { opacity: .75; }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 680px; margin: 0 auto; padding: 0 1.5rem; }
+  .container-wide { max-width: 860px; margin: 0 auto; padding: 0 1.5rem; }
+
+  section { padding: 5rem 0; }
+  section + section { border-top: 0.5px solid var(--border); }
+
+  .label {
+    font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted); display: block; margin-bottom: .75rem;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 6rem 0 5rem;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(38px, 7vw, 58px);
+    line-height: 1.1; letter-spacing: -0.02em;
+    margin-bottom: 1.25rem; color: var(--ink);
+  }
+
+  .hero h1 em {
+    font-style: italic; color: var(--muted);
+  }
+
+  .hero-sub {
+    font-size: 16px; color: var(--muted); line-height: 1.65;
+    max-width: 420px; margin: 0 auto 2rem;
+  }
+
+  .hero-btns {
+    display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+    margin-bottom: 3rem;
+  }
+
+  .btn-primary {
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 999px;
+    padding: 12px 28px; font-size: 14px; font-weight: 500;
+    cursor: pointer; transition: opacity .2s;
+    font-family: var(--sans);
+  }
+  .btn-primary:hover { opacity: .75; }
+
+  .btn-ghost {
+    background: transparent; color: var(--muted);
+    border: 0.5px solid var(--border-strong); border-radius: 999px;
+    padding: 12px 28px; font-size: 14px;
+    cursor: pointer; transition: background .2s;
+    font-family: var(--sans);
+  }
+  .btn-ghost:hover { background: rgba(28,25,21,.05); }
+
+  /* ── TICKER ── */
+  .ticker-section {
+    padding: 0;
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+    overflow: hidden;
+  }
+
+  .ticker-track {
+    display: flex; width: max-content;
+    animation: ticker 22s linear infinite;
+    padding: 10px 0;
+  }
+
+  .ticker-track span {
+    font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted); white-space: nowrap; padding: 0 1.5rem;
+  }
+
+  .ticker-track span.dot { padding: 0; color: var(--accent); }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ── MINI GRID HERO ── */
+  .grid-demo {
+    display: inline-block;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 0.5px solid var(--border-strong);
+    max-width: 320px; width: 100%;
+  }
+
+  .grid-demo-inner {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+    background: var(--border);
+  }
+
+  .grid-demo-cell {
+    aspect-ratio: 1; overflow: hidden;
+    background: #e8e4dd;
+  }
+
+  .grid-demo-cell img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform .3s ease;
+  }
+  .grid-demo-cell:hover img { transform: scale(1.06); }
+
+  /* ── PROBLEM ── */
+  .problem-text {
+    font-family: var(--serif);
+    font-size: clamp(20px, 3.5vw, 26px);
+    line-height: 1.45; color: var(--ink);
+    margin-bottom: 1.25rem;
+  }
+
+  .problem-text em { font-style: italic; color: var(--muted); }
+
+  .problem-body {
+    font-size: 15px; color: var(--muted); line-height: 1.7;
+    max-width: 520px;
+  }
+
+  /* ── FEATURES ── */
+  .feat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-top: 2rem;
+  }
+
+  .feat-card {
+    background: var(--cream);
+    padding: 1.5rem;
+    transition: background .2s;
+  }
+  .feat-card:hover { background: #F2EDE5; }
+
+  .feat-icon {
+    width: 32px; height: 32px;
+    border: 0.5px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1rem;
+    font-size: 14px;
+  }
+
+  .feat-title {
+    font-family: var(--serif);
+    font-size: 16px; margin-bottom: 5px;
+    letter-spacing: -0.01em;
+  }
+
+  .feat-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+  /* ── WHO ── */
+  .who-list { display: flex; flex-direction: column; gap: 1px; margin-top: 2rem; }
+
+  .who-item {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1.1rem 1.25rem;
+    background: var(--cream);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 14px; color: var(--ink);
+    transition: background .2s;
+  }
+  .who-item:hover { background: #F2EDE5; }
+
+  .who-icon {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(28,25,21,.06);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .who-icon svg { width: 13px; height: 13px; }
+
+  /* ── HOW IT WORKS ── */
+  .steps { display: flex; flex-direction: column; gap: 0; margin-top: 2rem; }
+
+  .step {
+    display: flex; gap: 1.25rem; padding: 1.25rem 0;
+    border-bottom: 0.5px solid var(--border);
+    align-items: flex-start;
+  }
+  .step:last-child { border-bottom: none; }
+
+  .step-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 0.5px solid var(--border-strong);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 500; color: var(--muted);
+    flex-shrink: 0; margin-top: 2px;
+  }
+
+  .step-title { font-weight: 500; font-size: 14px; margin-bottom: 3px; }
+  .step-desc  { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+  /* ── PRICING ── */
+  .plans {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-top: 2rem;
+  }
+
+  .plan {
+    background: var(--cream);
+    border: 0.5px solid var(--border-strong);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+  }
+
+  .plan.featured {
+    border: 1.5px solid var(--ink);
+    background: var(--ink); color: var(--cream);
+  }
+
+  .plan-tag {
+    display: inline-block;
+    font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+    border: 0.5px solid rgba(249,246,241,.35);
+    color: rgba(249,246,241,.7);
+    padding: 3px 10px; border-radius: 999px;
+    margin-bottom: 1rem;
+  }
+
+  .plan-name {
+    font-family: var(--serif);
+    font-size: 22px; margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+
+  .plan-desc {
+    font-size: 12px; margin-bottom: 1.25rem;
+    line-height: 1.5;
+  }
+
+  .plan .plan-desc { color: var(--muted); }
+  .plan.featured .plan-desc { color: rgba(249,246,241,.6); }
+
+  .plan-price {
+    font-family: var(--serif);
+    font-size: 36px; letter-spacing: -0.03em;
+    margin-bottom: 2px;
+  }
+
+  .plan-period {
+    font-size: 12px; margin-bottom: 1.5rem;
+  }
+
+  .plan .plan-period { color: var(--muted); }
+  .plan.featured .plan-period { color: rgba(249,246,241,.5); }
+
+  .plan-divider {
+    height: 0.5px; margin-bottom: 1.25rem;
+    background: var(--border);
+  }
+  .plan.featured .plan-divider { background: rgba(249,246,241,.15); }
+
+  .plan-feats { list-style: none; margin-bottom: 1.5rem; }
+
+  .plan-feats li {
+    display: flex; align-items: flex-start; gap: 7px;
+    font-size: 13px; padding: 5px 0;
+    border-bottom: 0.5px solid var(--border);
+    line-height: 1.4;
+  }
+  .plan.featured .plan-feats li { border-bottom-color: rgba(249,246,241,.1); color: rgba(249,246,241,.85); }
+  .plan-feats li:last-child { border-bottom: none; }
+  .plan-feats li svg { width: 12px; height: 12px; flex-shrink: 0; margin-top: 2px; }
+  .plan-feats li.muted { color: var(--muted); }
+  .plan.featured .plan-feats li.muted { color: rgba(249,246,241,.35); }
+
+  .plan-btn {
+    width: 100%; padding: 11px;
+    border-radius: 999px; font-size: 13px; font-weight: 500;
+    cursor: pointer; font-family: var(--sans);
+    transition: opacity .2s;
+  }
+
+  .plan-btn.light {
+    background: transparent; color: var(--ink);
+    border: 0.5px solid var(--border-strong);
+  }
+  .plan-btn.light:hover { background: rgba(28,25,21,.05); }
+
+  .plan-btn.dark {
+    background: var(--cream); color: var(--ink);
+    border: none;
+  }
+  .plan-btn.dark:hover { opacity: .85; }
+
+  /* ── NOTE ── */
+  .note-card {
+    background: #EDE8E0;
+    border-radius: var(--radius);
+    padding: 2rem;
+    border: 0.5px solid var(--border);
+  }
+
+  .note-from {
+    font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 1rem; display: block;
+  }
+
+  .note-body {
+    font-family: var(--serif);
+    font-size: clamp(16px, 2.5vw, 20px);
+    line-height: 1.55; color: var(--ink);
+    margin-bottom: 1.25rem;
+  }
+
+  .note-body em { font-style: italic; color: var(--muted); }
+
+  .note-sig {
+    font-size: 13px; color: var(--muted);
+  }
+
+  /* ── FAQ ── */
+  .faq-list { margin-top: 2rem; }
+
+  .faq-item {
+    border-bottom: 0.5px solid var(--border);
+    cursor: pointer;
+  }
+
+  .faq-q {
+    display: flex; justify-content: space-between;
+    align-items: center; gap: 1rem;
+    padding: 1.1rem 0;
+    font-size: 14px; font-weight: 500; color: var(--ink);
+  }
+
+  .faq-q svg {
+    width: 14px; height: 14px; flex-shrink: 0;
+    color: var(--muted); transition: transform .22s;
+  }
+  .faq-item.open .faq-q svg { transform: rotate(45deg); }
+
+  .faq-a {
+    font-size: 13px; color: var(--muted); line-height: 1.65;
+    max-height: 0; overflow: hidden;
+    transition: max-height .28s ease, padding .22s;
+  }
+  .faq-item.open .faq-a { max-height: 240px; padding-bottom: 1.1rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 0.5px solid var(--border);
+    padding: 2rem 1.5rem;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 1rem;
+    max-width: 860px; margin: 0 auto;
+  }
+
+  .footer-logo {
+    font-family: var(--serif); font-size: 16px;
+    color: var(--ink); text-decoration: none;
+  }
+
+  .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .footer-links a {
+    font-size: 12px; color: var(--muted);
+    text-decoration: none; transition: color .2s;
+  }
+  .footer-links a:hover { color: var(--ink); }
+
+  .footer-copy { font-size: 11px; color: var(--muted); width: 100%; }
+
+  /* ── FADE IN ── */
+  .fade-in {
+    opacity: 0; transform: translateY(16px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 540px) {
+    .plans { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .feat-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">The Content Edit</a>
+  <ul class="nav-links">
+    <li><a href="#features">Funciones</a></li>
+    <li><a href="#pricing">Precio</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="#pricing" class="nav-cta">Obtener el widget</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <span class="label">Widget de Notion para creators</span>
+    <h1>Tu feed de Instagram,<br><em>dentro de Notion.</em></h1>
+    <p class="hero-sub">Conecta tu base de datos y ve exactamente cómo quedará tu feed antes de publicar. Sin salir de Notion, sin apps extra.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Obtener el widget →</button>
+      <button class="btn-ghost" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">Ver cómo funciona</button>
+    </div>
+    <div style="display:flex; justify-content:center;">
+      <div class="grid-demo fade-in" id="heroGrid">
+        <div class="grid-demo-inner" id="gridInner"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-section">
+  <div class="ticker-track" id="ticker"></div>
+</div>
+
+<!-- PROBLEM -->
+<section>
+  <div class="container fade-in">
+    <span class="label">El problema</span>
+    <p class="problem-text">Planeas en Notion. Diseñas en Canva. Y para ver tu feed tienes que <em>armar un mockup a mano cada vez.</em></p>
+    <p class="problem-body">Cambias una foto y el mockup ya no sirve. Cambias el orden y empiezas de cero. Es un ciclo que no debería existir. The Content Edit conecta tu base de datos de Notion con una vista de grid en tiempo real — actualizas tu DB y tu feed se refleja al instante.</p>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="container-wide">
+    <div class="container fade-in" style="padding:0;">
+      <span class="label">Qué incluye</span>
+      <h2 style="font-family:var(--serif); font-size:clamp(24px,4vw,32px); letter-spacing:-0.02em; line-height:1.2;">Todo lo que necesitas para <em style="font-style:italic; color:var(--muted)">planear tu feed sin fricciones</em></h2>
+    </div>
+    <div class="feat-grid fade-in">
+      <div class="feat-card">
+        <div class="feat-icon">▦</div>
+        <div class="feat-title">Grid en tiempo real</div>
+        <div class="feat-desc">Actualiza tu base de datos y el widget refleja los cambios al instante. Sin exportar nada, sin recargas manuales.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">◈</div>
+        <div class="feat-title">Canva + links externos</div>
+        <div class="feat-desc">Pega el link de tu diseño de Canva o cualquier URL de imagen y aparece directo en tu grid. Cero descargas.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">⊕</div>
+        <div class="feat-title">Posts fijados</div>
+        <div class="feat-desc">Fija tu mejor contenido al tope del grid con un solo checkbox en Notion. El orden queda exactamente como lo planeas.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">▷</div>
+        <div class="feat-title">Carruseles y reels</div>
+        <div class="feat-desc">Distingue cada formato visualmente con los íconos reales de Instagram. Sabes de un vistazo qué es qué.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">◎</div>
+        <div class="feat-title">Hover con info</div>
+        <div class="feat-desc">Pasa el cursor sobre cada post y ve el título y la fecha de publicación al instante, sin saturar el grid.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">∞</div>
+        <div class="feat-title">Widgets ilimitados</div>
+        <div class="feat-desc">Crea uno para cada cliente o cuenta. Un solo pago para siempre, sin suscripciones ni sorpresas.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO -->
+<section>
+  <div class="container fade-in">
+    <span class="label">Para quién es</span>
+    <h2 style="font-family:var(--serif); font-size:clamp(22px,3.5vw,30px); letter-spacing:-0.02em; line-height:1.25; margin-bottom:0;">Si creas contenido y vives en Notion, <em style="font-style:italic; color:var(--muted)">esto es para ti.</em></h2>
+    <div class="who-list" style="margin-top:1.5rem;">
+      <div class="who-item">
+        <div class="who-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+        Creators que planean su contenido semana a semana
+      </div>
+      <div class="who-item">
+        <div class="who-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        Social media managers con múltiples clientes
+      </div>
+      <div class="who-item">
+        <div class="who-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7H4C2.9 7 2 7.9 2 9v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2z"/><path d="M16 3H8L6 7h12l-2-4z"/></svg></div>
+        Negocios que quieren un feed con intención y estética
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="container fade-in">
+    <span class="label">Cómo funciona</span>
+    <h2 style="font-family:var(--serif); font-size:clamp(22px,3.5vw,30px); letter-spacing:-0.02em; line-height:1.25;">Setup de una sola vez. <em style="font-style:italic; color:var(--muted)">Después es automático.</em></h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <div class="step-title">Duplica la plantilla de Notion</div>
+          <div class="step-desc">Te damos una base de datos lista para usar con todas las propiedades configuradas. O usa la tuya si ya tienes una.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <div class="step-title">Conecta tu integration token</div>
+          <div class="step-desc">Crea una integración gratuita en Notion, pega tu token en la página de setup y listo. Tarda menos de 3 minutos.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <div class="step-title">Pega tu widget en Notion</div>
+          <div class="step-desc">Recibes un link único. Lo pegas como bloque <code style="font-size:11px; background:rgba(28,25,21,.07); padding:1px 5px; border-radius:4px;">/embed</code> en cualquier página de Notion y tu grid aparece al instante.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div>
+          <div class="step-title">Actualiza tu DB, el grid se actualiza solo</div>
+          <div class="step-desc">Cada vez que agregas un post, cambias una imagen o reordenas — solo refresca. Tu feed siempre está al día.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container fade-in">
+    <span class="label">Precio</span>
+    <h2 style="font-family:var(--serif); font-size:clamp(24px,4vw,32px); letter-spacing:-0.02em; line-height:1.2;">Un solo pago. <em style="font-style:italic; color:var(--muted)">Tuyo para siempre.</em></h2>
+    <p style="font-size:14px; color:var(--muted); margin-top:.5rem;">Sin suscripciones, sin renovaciones. Paga una vez y úsalo cuanto quieras.</p>
+    <div class="plans">
+      <div class="plan">
+        <div class="plan-name">Gratis</div>
+        <div class="plan-desc">Para probar el widget y ver que funciona</div>
+        <div class="plan-price">$0</div>
+        <div class="plan-period">para siempre · sin tarjeta</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-feats">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Grid preview básico</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Hasta 9 imágenes</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Solo archivos adjuntos desde Notion</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Widgets ilimitados</li>
+          <li class="muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Sin Canva ni links externos</li>
+          <li class="muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Sin carrusel, reel ni posts fijados</li>
+        </ul>
+        <button class="plan-btn light">Empezar gratis</button>
+      </div>
+      <div class="plan featured">
+        <div class="plan-tag">Recomendado</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-desc">Para creators serios en su contenido</div>
+        <div class="plan-price">$449 <span style="font-family:var(--sans); font-size:16px; font-weight:300;">MXN</span></div>
+        <div class="plan-period">pago único · acceso de por vida</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-feats">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Todo lo del plan gratis</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Hasta 60 imágenes</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Canva + links externos</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Indicadores de carrusel y reel</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Posts fijados</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Hover con título y fecha</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Widgets ilimitados</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Actualizaciones incluidas para siempre</li>
+        </ul>
+        <button class="plan-btn dark">Obtener Pro — $449 MXN →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NOTE -->
+<section>
+  <div class="container fade-in">
+    <div class="note-card">
+      <span class="note-from">Una nota de quien lo construyó</span>
+      <p class="note-body">Lo construí porque yo misma lo necesitaba. Vivía en Notion para todo mi contenido pero cada vez que quería ver cómo quedaba mi feed, <em>tenía que saltar a otra app y armar un mockup a mano.</em></p>
+      <p class="note-body">Lo que empezó como una solución para mí se convirtió en esto. Si tienes ideas o algo no funciona como esperabas, cuéntame — cada actualización viene de lo que me dicen ustedes.</p>
+      <p class="note-sig">Con cariño ✦</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container fade-in">
+    <span class="label">Preguntas frecuentes</span>
+    <h2 style="font-family:var(--serif); font-size:clamp(22px,3.5vw,30px); letter-spacing:-0.02em; margin-bottom:0;">FAQ</h2>
+    <div class="faq-list" id="faqList"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo">The Content Edit</a>
+  <div class="footer-links">
+    <a href="#">Instagram</a>
+    <a href="#">TikTok</a>
+    <a href="#">Contacto</a>
+    <a href="#">Política de privacidad</a>
+  </div>
+  <p class="footer-copy">© 2025 The Content Edit. Todos los derechos reservados.</p>
+</footer>
+
+<script>
+const tickerItems = ["Grid preview","·","Canva links","·","Carruseles","·","Reels","·","Posts fijados","·","Sin salir de Notion","·","Pago único","·","Widgets ilimitados","·"];
+const track = document.getElementById('ticker');
+const full = [...tickerItems, ...tickerItems].map(t => {
+  const s = document.createElement('span');
+  s.textContent = t;
+  if (t === '·') s.className = 'dot';
+  return s;
+});
+full.forEach(el => track.appendChild(el));
+
+const gridImgs = [
+  "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=220&q=75",
+  "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=220&q=75",
+  "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=220&q=75",
+  "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=220&q=75",
+  "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=220&q=75",
+  "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=220&q=75",
+  "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=220&q=75",
+  "https://images.unsplash.com/photo-1567958451986-2de427a4a0be?w=220&q=75",
+  "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=220&q=75",
+];
+const gi = document.getElementById('gridInner');
+gridImgs.forEach(src => {
+  const cell = document.createElement('div');
+  cell.className = 'grid-demo-cell';
+  const img = document.createElement('img');
+  img.src = src; img.loading = 'lazy'; img.alt = '';
+  cell.appendChild(img); gi.appendChild(cell);
+});
+
+const faqs = [
+  { q: "¿Necesito saber programar?", a: "Para nada. Si sabes usar Notion, puedes usar este widget. Hay una configuración inicial de un solo paso y las instrucciones te guían en todo. Tarda menos de 5 minutos." },
+  { q: "¿Funciona con mi base de datos de Notion actual?", a: "Sí, siempre que tenga las propiedades requeridas. Si usas nombres diferentes solo tendrás que renombrarlas. También hay una plantilla lista para duplicar." },
+  { q: "¿Cuántos widgets puedo crear?", a: "Los que necesites. Tanto el plan gratis como el Pro te permiten crear widgets ilimitados. Cada uno se conecta a una base de datos de Notion diferente — perfecto para gestionar múltiples cuentas o clientes." },
+  { q: "¿Qué tipos de contenido puedo mostrar?", a: "Gratis: imágenes adjuntadas directamente en Notion. Pro: imágenes desde links externos, diseños de Canva sin exportar, videos, carruseles con múltiples imágenes y posts fijados." },
+  { q: "¿Necesito cuenta de Notion de pago?", a: "No. El widget funciona perfectamente con el plan gratuito de Notion. Mientras puedas crear bases de datos, estás listo." },
+  { q: "¿Cuál es la política de reembolso?", a: "Todas las ventas son finales al ser un producto digital. Por eso existe la versión gratuita — para que puedas probar la experiencia antes de comprometerte con Pro." },
+  { q: "¿El widget se actualiza automáticamente?", a: "Sí. Cada vez que editas tu base de datos de Notion — agregas un post, cambias una imagen, reordenas — solo necesitas refrescar la página donde tienes el widget y refleja los cambios al instante." },
+];
+
+const faqList = document.getElementById('faqList');
+faqs.forEach(item => {
+  const el = document.createElement('div');
+  el.className = 'faq-item';
+  el.innerHTML = `
+    <div class="faq-q">
+      <span>${item.q}</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+    </div>
+    <div class="faq-a">${item.a}</div>`;
+  el.addEventListener('click', () => {
+    const open = el.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!open) el.classList.add('open');
+  });
+  faqList.appendChild(el);
+});
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
