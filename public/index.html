@@ -35,7 +35,6 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ── NAV ── */
   nav {
     position: sticky; top: 0; z-index: 100;
     background: var(--cream);
@@ -71,7 +70,6 @@
   }
   .nav-cta:hover { opacity: .75; }
 
-  /* ── LAYOUT ── */
   .container { max-width: 680px; margin: 0 auto; padding: 0 1.5rem; }
   .container-wide { max-width: 860px; margin: 0 auto; padding: 0 1.5rem; }
 
@@ -83,11 +81,7 @@
     color: var(--muted); display: block; margin-bottom: .75rem;
   }
 
-  /* ── HERO ── */
-  .hero {
-    padding: 6rem 0 5rem;
-    text-align: center;
-  }
+  .hero { padding: 6rem 0 5rem; text-align: center; }
 
   .hero h1 {
     font-family: var(--serif);
@@ -96,9 +90,7 @@
     margin-bottom: 1.25rem; color: var(--ink);
   }
 
-  .hero h1 em {
-    font-style: italic; color: var(--muted);
-  }
+  .hero h1 em { font-style: italic; color: var(--muted); }
 
   .hero-sub {
     font-size: 16px; color: var(--muted); line-height: 1.65;
@@ -128,7 +120,6 @@
   }
   .btn-ghost:hover { background: rgba(28,25,21,.05); }
 
-  /* ── TICKER ── */
   .ticker-section {
     padding: 0;
     border-top: 0.5px solid var(--border);
@@ -154,7 +145,6 @@
     to   { transform: translateX(-50%); }
   }
 
-  /* ── MINI GRID HERO ── */
   .grid-demo {
     display: inline-block;
     border-radius: var(--radius);
@@ -168,10 +158,7 @@
     background: var(--border);
   }
 
-  .grid-demo-cell {
-    aspect-ratio: 1; overflow: hidden;
-    background: #e8e4dd;
-  }
+  .grid-demo-cell { aspect-ratio: 1; overflow: hidden; background: #e8e4dd; }
 
   .grid-demo-cell img {
     width: 100%; height: 100%; object-fit: cover; display: block;
@@ -179,7 +166,6 @@
   }
   .grid-demo-cell:hover img { transform: scale(1.06); }
 
-  /* ── PROBLEM ── */
   .problem-text {
     font-family: var(--serif);
     font-size: clamp(20px, 3.5vw, 26px);
@@ -194,7 +180,6 @@
     max-width: 520px;
   }
 
-  /* ── FEATURES ── */
   .feat-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -206,11 +191,7 @@
     margin-top: 2rem;
   }
 
-  .feat-card {
-    background: var(--cream);
-    padding: 1.5rem;
-    transition: background .2s;
-  }
+  .feat-card { background: var(--cream); padding: 1.5rem; transition: background .2s; }
   .feat-card:hover { background: #F2EDE5; }
 
   .feat-icon {
@@ -218,19 +199,12 @@
     border: 0.5px solid var(--border-strong);
     border-radius: var(--radius-sm);
     display: flex; align-items: center; justify-content: center;
-    margin-bottom: 1rem;
-    font-size: 14px;
+    margin-bottom: 1rem; font-size: 14px;
   }
 
-  .feat-title {
-    font-family: var(--serif);
-    font-size: 16px; margin-bottom: 5px;
-    letter-spacing: -0.01em;
-  }
-
+  .feat-title { font-family: var(--serif); font-size: 16px; margin-bottom: 5px; letter-spacing: -0.01em; }
   .feat-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
 
-  /* ── WHO ── */
   .who-list { display: flex; flex-direction: column; gap: 1px; margin-top: 2rem; }
 
   .who-item {
@@ -252,7 +226,6 @@
   }
   .who-icon svg { width: 13px; height: 13px; }
 
-  /* ── HOW IT WORKS ── */
   .steps { display: flex; flex-direction: column; gap: 0; margin-top: 2rem; }
 
   .step {
@@ -273,7 +246,6 @@
   .step-title { font-weight: 500; font-size: 14px; margin-bottom: 3px; }
   .step-desc  { font-size: 13px; color: var(--muted); line-height: 1.55; }
 
-  /* ── PRICING ── */
   .plans {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -302,37 +274,15 @@
     margin-bottom: 1rem;
   }
 
-  .plan-name {
-    font-family: var(--serif);
-    font-size: 22px; margin-bottom: 4px;
-    letter-spacing: -0.01em;
-  }
-
-  .plan-desc {
-    font-size: 12px; margin-bottom: 1.25rem;
-    line-height: 1.5;
-  }
-
+  .plan-name { font-family: var(--serif); font-size: 22px; margin-bottom: 4px; letter-spacing: -0.01em; }
+  .plan-desc { font-size: 12px; margin-bottom: 1.25rem; line-height: 1.5; }
   .plan .plan-desc { color: var(--muted); }
   .plan.featured .plan-desc { color: rgba(249,246,241,.6); }
-
-  .plan-price {
-    font-family: var(--serif);
-    font-size: 36px; letter-spacing: -0.03em;
-    margin-bottom: 2px;
-  }
-
-  .plan-period {
-    font-size: 12px; margin-bottom: 1.5rem;
-  }
-
+  .plan-price { font-family: var(--serif); font-size: 36px; letter-spacing: -0.03em; margin-bottom: 2px; }
+  .plan-period { font-size: 12px; margin-bottom: 1.5rem; }
   .plan .plan-period { color: var(--muted); }
   .plan.featured .plan-period { color: rgba(249,246,241,.5); }
-
-  .plan-divider {
-    height: 0.5px; margin-bottom: 1.25rem;
-    background: var(--border);
-  }
+  .plan-divider { height: 0.5px; margin-bottom: 1.25rem; background: var(--border); }
   .plan.featured .plan-divider { background: rgba(249,246,241,.15); }
 
   .plan-feats { list-style: none; margin-bottom: 1.5rem; }
@@ -362,13 +312,9 @@
   }
   .plan-btn.light:hover { background: rgba(28,25,21,.05); }
 
-  .plan-btn.dark {
-    background: var(--cream); color: var(--ink);
-    border: none;
-  }
+  .plan-btn.dark { background: var(--cream); color: var(--ink); border: none; }
   .plan-btn.dark:hover { opacity: .85; }
 
-  /* ── NOTE ── */
   .note-card {
     background: #EDE8E0;
     border-radius: var(--radius);
@@ -389,18 +335,10 @@
   }
 
   .note-body em { font-style: italic; color: var(--muted); }
+  .note-sig { font-size: 13px; color: var(--muted); }
 
-  .note-sig {
-    font-size: 13px; color: var(--muted);
-  }
-
-  /* ── FAQ ── */
   .faq-list { margin-top: 2rem; }
-
-  .faq-item {
-    border-bottom: 0.5px solid var(--border);
-    cursor: pointer;
-  }
+  .faq-item { border-bottom: 0.5px solid var(--border); cursor: pointer; }
 
   .faq-q {
     display: flex; justify-content: space-between;
@@ -409,10 +347,7 @@
     font-size: 14px; font-weight: 500; color: var(--ink);
   }
 
-  .faq-q svg {
-    width: 14px; height: 14px; flex-shrink: 0;
-    color: var(--muted); transition: transform .22s;
-  }
+  .faq-q svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--muted); transition: transform .22s; }
   .faq-item.open .faq-q svg { transform: rotate(45deg); }
 
   .faq-a {
@@ -422,7 +357,6 @@
   }
   .faq-item.open .faq-a { max-height: 240px; padding-bottom: 1.1rem; }
 
-  /* ── FOOTER ── */
   footer {
     border-top: 0.5px solid var(--border);
     padding: 2rem 1.5rem;
@@ -431,28 +365,50 @@
     max-width: 860px; margin: 0 auto;
   }
 
-  .footer-logo {
-    font-family: var(--serif); font-size: 16px;
-    color: var(--ink); text-decoration: none;
-  }
-
+  .footer-logo { font-family: var(--serif); font-size: 16px; color: var(--ink); text-decoration: none; }
   .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
-  .footer-links a {
-    font-size: 12px; color: var(--muted);
-    text-decoration: none; transition: color .2s;
-  }
+  .footer-links a { font-size: 12px; color: var(--muted); text-decoration: none; transition: color .2s; }
   .footer-links a:hover { color: var(--ink); }
-
   .footer-copy { font-size: 11px; color: var(--muted); width: 100%; }
 
-  /* ── FADE IN ── */
-  .fade-in {
-    opacity: 0; transform: translateY(16px);
-    transition: opacity .6s ease, transform .6s ease;
-  }
+  .fade-in { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
   .fade-in.visible { opacity: 1; transform: translateY(0); }
 
-  /* ── RESPONSIVE ── */
+  /* TESTIMONIOS */
+  .t-card {
+    position: absolute;
+    background: #fff;
+    border: 0.5px solid rgba(28,25,21,0.12);
+    border-radius: 12px;
+    padding: 14px 16px;
+    max-width: 190px;
+    will-change: transform;
+  }
+
+  .t-body { font-size: 12px; line-height: 1.55; color: var(--ink); margin: 0 0 8px; }
+  .t-name { font-size: 11px; color: var(--muted); font-style: italic; margin: 0; }
+
+  @media (max-width: 600px) {
+    #testimonios { min-height: auto !important; }
+    #testimonios-container {
+      height: auto !important;
+      display: flex; flex-direction: column; gap: 12px;
+      padding: 2rem 1.5rem;
+    }
+    .t-card {
+      position: relative !important;
+      left: auto !important; right: auto !important;
+      top: auto !important; bottom: auto !important;
+      max-width: 100%; transform: none !important;
+    }
+    #testimonios-container > div:first-child {
+      position: relative !important;
+      top: auto !important; left: auto !important;
+      transform: none !important;
+      text-align: center; margin-bottom: 1rem; width: 100% !important;
+    }
+  }
+
   @media (max-width: 540px) {
     .plans { grid-template-columns: 1fr; }
     .nav-links { display: none; }
@@ -602,12 +558,15 @@
           <div class="step-title">Actualiza tu DB, el grid se actualiza solo</div>
           <div class="step-desc">Cada vez que agregas un post, cambias una imagen o reordenas — solo refresca. Tu feed siempre está al día.</div>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-<section id="testimonios" style="padding: 0; overflow: hidden; position: relative; min-height: 640px;">
-
+<!-- TESTIMONIOS -->
+<section id="testimonios" style="padding: 0; overflow: hidden; position: relative; min-height: 640px; border-top: 0.5px solid var(--border);">
   <div id="testimonios-container" style="position: relative; height: 640px; max-width: 960px; margin: 0 auto; padding: 0 1.5rem;">
 
-    <!-- Texto fijo centrado -->
     <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; z-index: 1; pointer-events: none; width: 52%;">
       <p style="font-family: var(--serif); font-size: clamp(22px, 3.5vw, 38px); line-height: 1.15; letter-spacing: -0.02em; color: var(--ink); margin: 0;">
         Ve lo que otras<br>
@@ -616,37 +575,31 @@
       </p>
     </div>
 
-    <!-- arriba izq -->
     <div class="t-card" data-speed="0.25" style="left: 8%; top: 3%;">
       <p class="t-body">Llevaba meses haciendo capturas de mi grid. Esto cambió todo — lo veo en tiempo real desde Notion sin salir.</p>
       <p class="t-name">— Camila R., creadora de contenido</p>
     </div>
 
-    <!-- arriba der -->
     <div class="t-card" data-speed="0.4" style="right: 3%; top: 8%;">
       <p class="t-body">Administro 4 cuentas y este widget me ahorra horas cada semana. El setup fue superfácil y funciona perfecto.</p>
       <p class="t-name">— Sofía M., social media manager</p>
     </div>
 
-    <!-- medio izq -->
     <div class="t-card" data-speed="0.15" style="left: 2%; top: 42%;">
       <p class="t-body">Lo probé gratis y en 10 minutos ya quería el Pro. Exactamente lo que necesitaba para planear mi feed.</p>
       <p class="t-name">— Valentina L., lifestyle creator</p>
     </div>
 
-    <!-- medio der -->
     <div class="t-card" data-speed="0.5" style="right: 2%; top: 38%;">
       <p class="t-body">Nunca pensé que planear mi feed pudiera ser tan visual. Mis posts ahora tienen mucha más intención.</p>
       <p class="t-name">— Mariana G., content creator</p>
     </div>
 
-    <!-- abajo izq -->
     <div class="t-card" data-speed="0.3" style="left: 5%; bottom: 5%;">
       <p class="t-body">Puedo fijar posts y ver exactamente cómo queda mi grid antes de publicar. Mis clientes también lo aman.</p>
       <p class="t-name">— Daniela P., estratega de contenido</p>
     </div>
 
-    <!-- abajo der -->
     <div class="t-card" data-speed="0.45" style="right: 7%; bottom: 4%;">
       <p class="t-body">Pensé que iba a ser complicado y lo tuve listo en 5 minutos. Se ve increíble dentro de Notion.</p>
       <p class="t-name">— Andrea V., creadora y SMM</p>
@@ -654,86 +607,6 @@
 
   </div>
 </section>
-
-<style>
-.t-card {
-  position: absolute;
-  background: #fff;
-  border: 0.5px solid rgba(28,25,21,0.12);
-  border-radius: 12px;
-  padding: 14px 16px;
-  max-width: 190px;
-  will-change: transform;
-}
-
-.t-body {
-  font-size: 12px;
-  line-height: 1.55;
-  color: var(--ink);
-  margin: 0 0 8px;
-}
-
-.t-name {
-  font-size: 11px;
-  color: var(--muted);
-  font-style: italic;
-  margin: 0;
-}
-
-@media (max-width: 600px) {
-  #testimonios { min-height: auto !important; }
-  #testimonios-container {
-    height: auto !important;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 2rem 1.5rem;
-  }
-  .t-card {
-    position: relative !important;
-    left: auto !important;
-    right: auto !important;
-    top: auto !important;
-    bottom: auto !important;
-    max-width: 100%;
-    transform: none !important;
-  }
-  #testimonios-container > div:first-child {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    transform: none !important;
-    text-align: center;
-    margin-bottom: 1rem;
-    width: 100% !important;
-  }
-}
-</style>
-
-<script>
-(function() {
-  var cards = document.querySelectorAll('.t-card');
-  if (!cards.length) return;
-
-  function update() {
-    var container = document.getElementById('testimonios-container');
-    if (!container) return;
-    var rect = container.getBoundingClientRect();
-    var progress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
-    progress = Math.max(0, Math.min(1, progress));
-
-    cards.forEach(function(card) {
-      var speed = parseFloat(card.dataset.speed) || 0.3;
-      var offset = (progress - 0.5) * speed * 160;
-      card.style.transform = 'translateY(' + offset + 'px)';
-    });
-  }
-
-  window.addEventListener('scroll', update, { passive: true });
-  update();
-})();
-</script>
-
 
 <!-- PRICING -->
 <section id="pricing">
@@ -879,6 +752,28 @@ const observer = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.1 });
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// PARALLAX TESTIMONIOS
+(function() {
+  var cards = document.querySelectorAll('.t-card');
+  if (!cards.length) return;
+
+  function update() {
+    var container = document.getElementById('testimonios-container');
+    if (!container) return;
+    var rect = container.getBoundingClientRect();
+    var progress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
+    progress = Math.max(0, Math.min(1, progress));
+    cards.forEach(function(card) {
+      var speed = parseFloat(card.dataset.speed) || 0.3;
+      var offset = (progress - 0.5) * speed * 160;
+      card.style.transform = 'translateY(' + offset + 'px)';
+    });
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
 </script>
 </body>
 </html>
