@@ -7,7 +7,7 @@
 <meta name="description" content="Conecta tu base de datos de Notion y visualiza tu feed de Instagram en tiempo real. Sin salir de Notion."/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -18,7 +18,8 @@
     --border: rgba(28,25,21,0.1);
     --border-strong: rgba(28,25,21,0.22);
     --accent: #C17F3E;
-    --serif: 'DM Serif Display', Georgia, serif;
+    --serif: 'Playfair Display', Georgia, serif;
+    --serif-italic: 'Cormorant Garamond', Georgia, serif;
     --sans: 'DM Sans', system-ui, sans-serif;
     --radius: 12px;
     --radius-sm: 8px;
@@ -90,7 +91,7 @@
     margin-bottom: 1.25rem; color: #F9F6F1;
   }
 
-  .hero h1 em { font-style: italic; color: rgba(249,246,241,0.4); }
+  .hero h1 em { font-style: italic; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.08em; color: rgba(249,246,241,0.4); }
 
   .hero-sub {
     font-size: 16px; color: rgba(249,246,241,0.55); line-height: 1.65;
@@ -173,7 +174,7 @@
     margin-bottom: 1.25rem;
   }
 
-  .problem-text em { font-style: italic; color: var(--muted); }
+  .problem-text em { font-style: italic; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.08em; color: var(--muted); }
 
   .problem-body {
     font-size: 15px; color: var(--muted); line-height: 1.7;
@@ -274,11 +275,11 @@
     margin-bottom: 1rem;
   }
 
-  .plan-name { font-family: var(--serif); font-size: 22px; margin-bottom: 4px; letter-spacing: -0.01em; }
+  .plan-name { font-family: 'DM Serif Display', Georgia, serif; font-size: 22px; margin-bottom: 4px; letter-spacing: -0.01em; }
   .plan-desc { font-size: 12px; margin-bottom: 1.25rem; line-height: 1.5; }
   .plan .plan-desc { color: var(--muted); }
   .plan.featured .plan-desc { color: rgba(249,246,241,.6); }
-  .plan-price { font-family: var(--serif); font-size: 36px; letter-spacing: -0.03em; margin-bottom: 2px; }
+  .plan-price { font-family: 'DM Serif Display', Georgia, serif; font-size: 36px; letter-spacing: -0.03em; margin-bottom: 2px; }
   .plan-period { font-size: 12px; margin-bottom: 1.5rem; }
   .plan .plan-period { color: var(--muted); }
   .plan.featured .plan-period { color: rgba(249,246,241,.5); }
@@ -467,7 +468,7 @@
   <div class="container-wide">
     <div class="container fade-in" style="padding:0;">
       <span class="label">Qué incluye</span>
-      <h2 style="font-family:var(--serif); font-size:clamp(24px,4vw,32px); letter-spacing:-0.02em; line-height:1.2;">Todo lo que necesitas para <em style="font-style:italic; color:var(--muted)">planear tu feed sin fricciones</em></h2>
+      <h2 style="font-family:var(--serif); font-size:clamp(24px,4vw,32px); letter-spacing:-0.02em; line-height:1.2;">Todo lo que necesitas para <em style="font-style:italic; font-family:'Cormorant Garamond', Georgia, serif; font-size:1.08em; color:var(--muted)">planear tu feed sin fricciones</em></h2>
     </div>
     <div class="feat-grid fade-in">
       <div class="feat-card">
@@ -508,7 +509,7 @@
 <section style="background:#EDE8E0;">
   <div class="container fade-in">
     <span class="label">Para quién es</span>
-    <h2 style="font-family:var(--serif); font-size:clamp(22px,3.5vw,30px); letter-spacing:-0.02em; line-height:1.25; margin-bottom:0;">Si creas contenido y vives en Notion, <em style="font-style:italic; color:var(--muted)">esto es para ti.</em></h2>
+    <h2 style="font-family:var(--serif); font-size:clamp(22px,3.5vw,30px); letter-spacing:-0.02em; line-height:1.25; margin-bottom:0;">Si creas contenido y vives en Notion, <em style="font-style:italic; font-family:'Cormorant Garamond', Georgia, serif; font-size:1.08em; color:var(--muted)">esto es para ti.</em></h2>
     <div class="who-list" style="margin-top:1.5rem;">
       <div class="who-item">
         <div class="who-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
@@ -530,7 +531,7 @@
 <section id="how" style="background:#EDE8E0;">
   <div class="container fade-in">
     <span class="label">Cómo funciona</span>
-    <h2 style="font-family:var(--serif); font-size:clamp(22px,3.5vw,30px); letter-spacing:-0.02em; line-height:1.25;">Setup de una sola vez. <em style="font-style:italic; color:var(--muted)">Después es automático.</em></h2>
+    <h2 style="font-family:var(--serif); font-size:clamp(22px,3.5vw,30px); letter-spacing:-0.02em; line-height:1.25;">Setup de una sola vez. <em style="font-style:italic; font-family:'Cormorant Garamond', Georgia, serif; font-size:1.08em; color:var(--muted)">Después es automático.</em></h2>
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
@@ -571,7 +572,7 @@
   <div style="position: absolute; top: 40%; left: 50%; transform: translate(-50%,-50%); text-align: center; z-index: 2; pointer-events: none; width: 52%;">
     <p style="font-family: var(--serif); font-size: clamp(22px, 3.5vw, 38px); line-height: 1.15; letter-spacing: -0.02em; color: var(--ink); margin: 0;">
       Ve lo que otros<br>
-      creators <em style="font-style: italic; color: var(--muted);">están diciendo</em><br>
+      creators <em style="font-style:italic; font-family:'Cormorant Garamond', Georgia, serif; font-size:1.08em; color:var(--muted);">están diciendo</em><br>
       del widget ✦
     </p>
   </div>
@@ -621,7 +622,7 @@
 <section id="pricing">
   <div class="container fade-in">
     <span class="label">Precio</span>
-    <h2 style="font-family:var(--serif); font-size:clamp(24px,4vw,32px); letter-spacing:-0.02em; line-height:1.2;">Un solo pago. <em style="font-style:italic; color:var(--muted)">Tuyo para siempre.</em></h2>
+    <h2 style="font-family:var(--serif); font-size:clamp(24px,4vw,32px); letter-spacing:-0.02em; line-height:1.2;">Un solo pago. <em style="font-style:italic; font-family:'Cormorant Garamond', Georgia, serif; font-size:1.08em; color:var(--muted)">Tuyo para siempre.</em></h2>
     <p style="font-size:14px; color:var(--muted); margin-top:.5rem;">Sin suscripciones, sin renovaciones. Paga una vez y úsalo cuanto quieras.</p>
     <div class="plans">
       <div class="plan">
