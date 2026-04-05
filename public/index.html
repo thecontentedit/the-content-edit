@@ -602,126 +602,142 @@
           <div class="step-title">Actualiza tu DB, el grid se actualiza solo</div>
           <div class="step-desc">Cada vez que agregas un post, cambias una imagen o reordenas — solo refresca. Tu feed siempre está al día.</div>
         </div>
-      </div>
+ <!-- TESTIMONIOS CON PARALLAX — reemplaza la sección de testimonios anterior en index.html -->
+
+<section id="testimonios" style="padding: 0; overflow: hidden; position: relative; min-height: 640px;">
+
+  <div id="testimonios-container" style="position: relative; height: 640px; max-width: 960px; margin: 0 auto; padding: 0 1.5rem;">
+
+    <!-- Texto fijo centrado -->
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; z-index: 1; pointer-events: none; width: 52%;">
+      <p style="font-family: var(--serif); font-size: clamp(22px, 3.5vw, 38px); line-height: 1.15; letter-spacing: -0.02em; color: var(--ink); margin: 0;">
+        Ve lo que otras<br>
+        creators <em style="font-style: italic; color: var(--muted);">están diciendo</em><br>
+        del widget ✦
+      </p>
     </div>
-  </div>
-</section>
-<!-- TESTIMONIOS - pega esta sección completa en index.html antes del cierre </body> -->
-<!-- Agrégala después de la sección de HOW IT WORKS y antes de PRICING -->
 
-<section id="testimonios" style="padding: 6rem 0; overflow: hidden; position: relative;">
-  <div style="max-width: 680px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 2;">
-    <div style="text-align: center; margin-bottom: 4rem;">
-      <span style="font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: .75rem;">Lo que dicen</span>
-      <h2 style="font-family: var(--serif); font-size: clamp(24px, 4vw, 36px); letter-spacing: -0.02em; line-height: 1.15; color: var(--ink);">Lo que dicen las creators<br><em style="font-style: italic; color: var(--muted);">que ya lo usan</em></h2>
-    </div>
-  </div>
-
-  <!-- Contenedor de testimonios flotantes -->
-  <div id="testimonios-container" style="position: relative; height: 480px; max-width: 900px; margin: 0 auto; padding: 0 1.5rem;">
-
-    <div class="testimonio" data-speed="0.3" style="left: 4%; top: 10%;">
-      <p class="t-body">Llevaba meses haciendo capturas de pantalla de mi grid para ver cómo quedaba. Esto cambió todo — ahora lo veo en tiempo real desde Notion sin salir.</p>
+    <!-- arriba izq -->
+    <div class="t-card" data-speed="0.25" style="left: 8%; top: 3%;">
+      <p class="t-body">Llevaba meses haciendo capturas de mi grid. Esto cambió todo — lo veo en tiempo real desde Notion sin salir.</p>
       <p class="t-name">— Camila R., creadora de contenido</p>
     </div>
 
-    <div class="testimonio" data-speed="0.6" style="right: 2%; top: 0%;">
-      <p class="t-body">Administro 4 cuentas de clientes y este widget me ahorra literalmente horas cada semana. El setup fue superfácil y funciona perfecto.</p>
+    <!-- arriba der -->
+    <div class="t-card" data-speed="0.4" style="right: 3%; top: 8%;">
+      <p class="t-body">Administro 4 cuentas y este widget me ahorra horas cada semana. El setup fue superfácil y funciona perfecto.</p>
       <p class="t-name">— Sofía M., social media manager</p>
     </div>
 
-    <div class="testimonio" data-speed="0.2" style="left: 30%; top: 40%;">
-      <p class="t-body">Lo probé gratis primero y en menos de 10 minutos ya quería el Pro. Es exactamente lo que necesitaba para planear mi feed sin apps extra.</p>
+    <!-- medio izq -->
+    <div class="t-card" data-speed="0.15" style="left: 2%; top: 42%;">
+      <p class="t-body">Lo probé gratis y en 10 minutos ya quería el Pro. Exactamente lo que necesitaba para planear mi feed.</p>
       <p class="t-name">— Valentina L., lifestyle creator</p>
     </div>
 
-    <div class="testimonio" data-speed="0.5" style="left: 3%; top: 60%;">
-      <p class="t-body">Me encanta que puedo fijar posts y ver exactamente cómo va a quedar mi grid antes de publicar. Mis clientes también lo aman.</p>
+    <!-- medio der -->
+    <div class="t-card" data-speed="0.5" style="right: 2%; top: 38%;">
+      <p class="t-body">Nunca pensé que planear mi feed pudiera ser tan visual. Mis posts ahora tienen mucha más intención.</p>
+      <p class="t-name">— Mariana G., content creator</p>
+    </div>
+
+    <!-- abajo izq -->
+    <div class="t-card" data-speed="0.3" style="left: 5%; bottom: 5%;">
+      <p class="t-body">Puedo fijar posts y ver exactamente cómo queda mi grid antes de publicar. Mis clientes también lo aman.</p>
       <p class="t-name">— Daniela P., estratega de contenido</p>
     </div>
 
-    <div class="testimonio" data-speed="0.35" style="right: 5%; top: 55%;">
-      <p class="t-body">Sinceramente pensé que iba a ser complicado de configurar y lo tuve listo en 5 minutos. El widget se ve increíble dentro de Notion.</p>
+    <!-- abajo der -->
+    <div class="t-card" data-speed="0.45" style="right: 7%; bottom: 4%;">
+      <p class="t-body">Pensé que iba a ser complicado y lo tuve listo en 5 minutos. Se ve increíble dentro de Notion.</p>
       <p class="t-name">— Andrea V., creadora y SMM</p>
     </div>
 
   </div>
-
-  <!-- Texto fijo centrado -->
-  <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 1; pointer-events: none; width: 100%;">
-    <p style="font-family: var(--serif); font-size: clamp(28px, 5vw, 48px); line-height: 1.15; letter-spacing: -0.02em; color: var(--ink);">
-      Ve lo que otras<br>
-      creators <em style="font-style: italic; color: var(--muted);">están diciendo</em><br>
-      del widget ✦
-    </p>
-  </div>
 </section>
 
 <style>
-.testimonio {
+.t-card {
   position: absolute;
   background: #fff;
   border: 0.5px solid rgba(28,25,21,0.12);
   border-radius: 12px;
-  padding: 14px 18px;
-  max-width: 240px;
-  box-shadow: 0 2px 12px rgba(28,25,21,0.06);
-  transition: transform 0.1s linear;
+  padding: 14px 16px;
+  max-width: 190px;
+  will-change: transform;
 }
 
 .t-body {
   font-size: 12px;
   line-height: 1.55;
-  color: #1C1915;
-  margin-bottom: 8px;
+  color: var(--ink);
+  margin: 0 0 8px;
 }
 
 .t-name {
   font-size: 11px;
-  color: #7A7570;
+  color: var(--muted);
   font-style: italic;
+  margin: 0;
 }
 
 @media (max-width: 600px) {
+  #testimonios { min-height: auto !important; }
   #testimonios-container {
     height: auto !important;
     display: flex;
     flex-direction: column;
     gap: 12px;
+    padding: 2rem 1.5rem;
   }
-  .testimonio {
+  .t-card {
     position: relative !important;
     left: auto !important;
     right: auto !important;
     top: auto !important;
+    bottom: auto !important;
     max-width: 100%;
+    transform: none !important;
+  }
+  #testimonios-container > div:first-child {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    text-align: center;
+    margin-bottom: 1rem;
+    width: 100% !important;
   }
 }
 </style>
 
 <script>
 (function() {
-  const container = document.getElementById('testimonios-container');
-  if (!container) return;
+  var cards = document.querySelectorAll('.t-card');
+  if (!cards.length) return;
 
-  const items = container.querySelectorAll('.testimonio');
+  function update() {
+    var container = document.getElementById('testimonios-container');
+    if (!container) return;
+    var rect = container.getBoundingClientRect();
+    var progress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
+    progress = Math.max(0, Math.min(1, progress));
 
-  function onScroll() {
-    const containerTop = container.getBoundingClientRect().top;
-    const windowHeight = window.innerHeight;
-    const scrolled = windowHeight - containerTop;
-
-    items.forEach(item => {
-      const speed = parseFloat(item.dataset.speed) || 0.3;
-      const offset = scrolled * speed * 0.4;
-      item.style.transform = `translateY(-${offset}px)`;
+    cards.forEach(function(card) {
+      var speed = parseFloat(card.dataset.speed) || 0.3;
+      var offset = (progress - 0.5) * speed * 160;
+      card.style.transform = 'translateY(' + offset + 'px)';
     });
   }
 
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  window.addEventListener('scroll', update, { passive: true });
+  update();
 })();
 </script>
+     </div>
+    </div>
+  </div>
+</section>
 
 <!-- PRICING -->
 <section id="pricing">
