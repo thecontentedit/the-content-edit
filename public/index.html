@@ -12,7 +12,7 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --cream: #F9F6F1;
+    --cream: #F7F7F5;
     --ink: #1C1915;
     --muted: #7A7570;
     --border: rgba(28,25,21,0.1);
@@ -81,19 +81,19 @@
     color: var(--muted); display: block; margin-bottom: .75rem;
   }
 
-  .hero { padding: 6rem 0 5rem; text-align: center; }
+  .hero { padding: 6rem 0 5rem; text-align: center; background: #503b31; }
 
   .hero h1 {
     font-family: var(--serif);
     font-size: clamp(38px, 7vw, 58px);
     line-height: 1.1; letter-spacing: -0.02em;
-    margin-bottom: 1.25rem; color: var(--ink);
+    margin-bottom: 1.25rem; color: #F9F6F1;
   }
 
-  .hero h1 em { font-style: italic; color: var(--muted); }
+  .hero h1 em { font-style: italic; color: rgba(249,246,241,0.4); }
 
   .hero-sub {
-    font-size: 16px; color: var(--muted); line-height: 1.65;
+    font-size: 16px; color: rgba(249,246,241,0.55); line-height: 1.65;
     max-width: 420px; margin: 0 auto 2rem;
   }
 
@@ -103,7 +103,7 @@
   }
 
   .btn-primary {
-    background: var(--ink); color: var(--cream);
+    background: #F9F6F1; color: #503b31;
     border: none; border-radius: 999px;
     padding: 12px 28px; font-size: 14px; font-weight: 500;
     cursor: pointer; transition: opacity .2s;
@@ -112,13 +112,13 @@
   .btn-primary:hover { opacity: .75; }
 
   .btn-ghost {
-    background: transparent; color: var(--muted);
-    border: 0.5px solid var(--border-strong); border-radius: 999px;
+    background: transparent; color: rgba(249,246,241,0.6);
+    border: 0.5px solid rgba(249,246,241,0.25); border-radius: 999px;
     padding: 12px 28px; font-size: 14px;
     cursor: pointer; transition: background .2s;
     font-family: var(--sans);
   }
-  .btn-ghost:hover { background: rgba(28,25,21,.05); }
+  .btn-ghost:hover { background: rgba(249,246,241,0.08); }
 
   .ticker-section {
     padding: 0;
@@ -149,16 +149,16 @@
     display: inline-block;
     border-radius: var(--radius);
     overflow: hidden;
-    border: 0.5px solid var(--border-strong);
+    border: 0.5px solid rgba(249,246,241,0.2);
     max-width: 320px; width: 100%;
   }
 
   .grid-demo-inner {
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
-    background: var(--border);
+    background: rgba(249,246,241,0.08);
   }
 
-  .grid-demo-cell { aspect-ratio: 1; overflow: hidden; background: #e8e4dd; }
+  .grid-demo-cell { aspect-ratio: 1; overflow: hidden; background: rgba(249,246,241,0.06); }
 
   .grid-demo-cell img {
     width: 100%; height: 100%; object-fit: cover; display: block;
@@ -358,18 +358,19 @@
   .faq-item.open .faq-a { max-height: 240px; padding-bottom: 1.1rem; }
 
   footer {
-    border-top: 0.5px solid var(--border);
+    border-top: none;
+    background: #503b31;
     padding: 2rem 1.5rem;
     display: flex; justify-content: space-between; align-items: center;
     flex-wrap: wrap; gap: 1rem;
-    max-width: 860px; margin: 0 auto;
+    max-width: 100%; margin: 0 auto;
   }
 
-  .footer-logo { font-family: var(--serif); font-size: 16px; color: var(--ink); text-decoration: none; }
+  .footer-logo { font-family: var(--serif); font-size: 16px; color: #F9F6F1; text-decoration: none; }
   .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
-  .footer-links a { font-size: 12px; color: var(--muted); text-decoration: none; transition: color .2s; }
-  .footer-links a:hover { color: var(--ink); }
-  .footer-copy { font-size: 11px; color: var(--muted); width: 100%; }
+  .footer-links a { font-size: 12px; color: rgba(249,246,241,0.5); text-decoration: none; transition: color .2s; }
+  .footer-links a:hover { color: #F9F6F1; }
+  .footer-copy { font-size: 11px; color: rgba(249,246,241,0.35); width: 100%; }
 
   .fade-in { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
   .fade-in.visible { opacity: 1; transform: translateY(0); }
@@ -432,7 +433,7 @@
 <!-- HERO -->
 <section class="hero">
   <div class="container">
-    <span class="label">Widget de Notion para creators</span>
+    <span class="label" style="color:rgba(249,246,241,0.45);">Widget de Notion para creators</span>
     <h1>Tu feed de Instagram,<br><em>dentro de Notion.</em></h1>
     <p class="hero-sub">Conecta tu base de datos y ve exactamente cómo quedará tu feed antes de publicar. Sin salir de Notion, sin apps extra.</p>
     <div class="hero-btns">
