@@ -606,6 +606,122 @@
     </div>
   </div>
 </section>
+<!-- TESTIMONIOS - pega esta sección completa en index.html antes del cierre </body> -->
+<!-- Agrégala después de la sección de HOW IT WORKS y antes de PRICING -->
+
+<section id="testimonios" style="padding: 6rem 0; overflow: hidden; position: relative;">
+  <div style="max-width: 680px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 2;">
+    <div style="text-align: center; margin-bottom: 4rem;">
+      <span style="font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: .75rem;">Lo que dicen</span>
+      <h2 style="font-family: var(--serif); font-size: clamp(24px, 4vw, 36px); letter-spacing: -0.02em; line-height: 1.15; color: var(--ink);">Lo que dicen las creators<br><em style="font-style: italic; color: var(--muted);">que ya lo usan</em></h2>
+    </div>
+  </div>
+
+  <!-- Contenedor de testimonios flotantes -->
+  <div id="testimonios-container" style="position: relative; height: 480px; max-width: 900px; margin: 0 auto; padding: 0 1.5rem;">
+
+    <div class="testimonio" data-speed="0.3" style="left: 4%; top: 10%;">
+      <p class="t-body">Llevaba meses haciendo capturas de pantalla de mi grid para ver cómo quedaba. Esto cambió todo — ahora lo veo en tiempo real desde Notion sin salir.</p>
+      <p class="t-name">— Camila R., creadora de contenido</p>
+    </div>
+
+    <div class="testimonio" data-speed="0.6" style="right: 2%; top: 0%;">
+      <p class="t-body">Administro 4 cuentas de clientes y este widget me ahorra literalmente horas cada semana. El setup fue superfácil y funciona perfecto.</p>
+      <p class="t-name">— Sofía M., social media manager</p>
+    </div>
+
+    <div class="testimonio" data-speed="0.2" style="left: 30%; top: 40%;">
+      <p class="t-body">Lo probé gratis primero y en menos de 10 minutos ya quería el Pro. Es exactamente lo que necesitaba para planear mi feed sin apps extra.</p>
+      <p class="t-name">— Valentina L., lifestyle creator</p>
+    </div>
+
+    <div class="testimonio" data-speed="0.5" style="left: 3%; top: 60%;">
+      <p class="t-body">Me encanta que puedo fijar posts y ver exactamente cómo va a quedar mi grid antes de publicar. Mis clientes también lo aman.</p>
+      <p class="t-name">— Daniela P., estratega de contenido</p>
+    </div>
+
+    <div class="testimonio" data-speed="0.35" style="right: 5%; top: 55%;">
+      <p class="t-body">Sinceramente pensé que iba a ser complicado de configurar y lo tuve listo en 5 minutos. El widget se ve increíble dentro de Notion.</p>
+      <p class="t-name">— Andrea V., creadora y SMM</p>
+    </div>
+
+  </div>
+
+  <!-- Texto fijo centrado -->
+  <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 1; pointer-events: none; width: 100%;">
+    <p style="font-family: var(--serif); font-size: clamp(28px, 5vw, 48px); line-height: 1.15; letter-spacing: -0.02em; color: var(--ink);">
+      Ve lo que otras<br>
+      creators <em style="font-style: italic; color: var(--muted);">están diciendo</em><br>
+      del widget ✦
+    </p>
+  </div>
+</section>
+
+<style>
+.testimonio {
+  position: absolute;
+  background: #fff;
+  border: 0.5px solid rgba(28,25,21,0.12);
+  border-radius: 12px;
+  padding: 14px 18px;
+  max-width: 240px;
+  box-shadow: 0 2px 12px rgba(28,25,21,0.06);
+  transition: transform 0.1s linear;
+}
+
+.t-body {
+  font-size: 12px;
+  line-height: 1.55;
+  color: #1C1915;
+  margin-bottom: 8px;
+}
+
+.t-name {
+  font-size: 11px;
+  color: #7A7570;
+  font-style: italic;
+}
+
+@media (max-width: 600px) {
+  #testimonios-container {
+    height: auto !important;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .testimonio {
+    position: relative !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    max-width: 100%;
+  }
+}
+</style>
+
+<script>
+(function() {
+  const container = document.getElementById('testimonios-container');
+  if (!container) return;
+
+  const items = container.querySelectorAll('.testimonio');
+
+  function onScroll() {
+    const containerTop = container.getBoundingClientRect().top;
+    const windowHeight = window.innerHeight;
+    const scrolled = windowHeight - containerTop;
+
+    items.forEach(item => {
+      const speed = parseFloat(item.dataset.speed) || 0.3;
+      const offset = scrolled * speed * 0.4;
+      item.style.transform = `translateY(-${offset}px)`;
+    });
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
 
 <!-- PRICING -->
 <section id="pricing">
