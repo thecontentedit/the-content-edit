@@ -1,10 +1,21 @@
 import { Redis } from '@upstash/redis';
-import { decryptToken } from '../setup.js';
+import { createDecipheriv } from 'crypto';
 
 const redis = new Redis({
   url: process.env.KV_REST_API_URL,
   token: process.env.KV_REST_API_TOKEN,
 });
+
+function decryptToken(ciphertext) {
+  const [ivHex, authTagHex, encryptedHex] = ciphertext.split(':');
+  const key = Buffer.from(process.env.ENCRYPTION_KEY, 'hex');
+  const iv = Buffer.from(ivHex, 'hex');
+  const authTag = Buffer.from(authTagHex, 'hex');
+  const encrypted = Buffer.from(encryptedHex, 'hex');
+  const decipher = createDecipheriv('aes-256-gcm', key, iv);
+  decipher.setAuthTag(authTag);
+  return decipher.update(encrypted) + decipher.final('utf8');
+}
 
 function formatDate(dateStr) {
   if (!dateStr) return null;
