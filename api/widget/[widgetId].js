@@ -117,7 +117,7 @@ export default async function handler(req, res) {
       return true;
     });
     const profile = profilePage ? formatProfile(profilePage) : null;
-    const posts = postPages.map(p => formatPost(p));
+    const posts = postPages.map(p => formatPost(p, plan));
     const pinned  = plan === 'pro' ? posts.filter(p => p.pinned) : [];
     const regular = posts.filter(p => !p.pinned);
     const ordered = [...pinned, ...regular].slice(0, limit);
@@ -185,7 +185,7 @@ function normalizeLink(url) {
   return url;
 }
 
-function formatPost(page) {
+function formatPost(page, plan) {
   const props = page.properties;
   const name = props[PROPS.name]?.title?.[0]?.plain_text || '';
   const dateRaw = props[PROPS.publishDate]?.date?.start;
@@ -206,9 +206,9 @@ function formatPost(page) {
   const attachmentUrls = attachments.map(f =>
     f.type === 'file' ? f.file.url : f.external?.url
   ).filter(Boolean);
-  const linkText = props[PROPS.link]?.rich_text?.map(r => r.plain_text).join('') || '';
+  const linkText = plan === 'pro' ? (props[PROPS.link]?.rich_text?.map(r => r.plain_text).join('') || '') : '';
   const linkUrls = linkText.split('\n').map(l => normalizeLink(l.trim())).filter(l => l && l.startsWith('http'));
-  let canvaUrl = props[PROPS.canvaLink]?.url || null;
+  let canvaUrl = plan === 'pro' ? (props[PROPS.canvaLink]?.url || null) : null;
   if (canvaUrl && !canvaUrl.includes('?embed')) {
     canvaUrl = canvaUrl.split('?')[0] + '?embed';
   }
