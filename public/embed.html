@@ -132,6 +132,19 @@
 
   #saving-indicator { display: none; position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); background: var(--ink); color: #F9F6F1; padding: 6px 14px; border-radius: 999px; font-size: 11px; z-index: 999; }
 
+  /* BIO MODE */
+  body.bio-mode #bio-section { padding: 24px 16px 20px; }
+  body.bio-mode .bio-avatar { width: 100px; height: 100px; }
+  body.bio-mode .bio-avatar-placeholder { font-size: 36px; }
+  body.bio-mode .bio-username { font-size: 20px; margin-bottom: 4px; }
+  body.bio-mode .bio-displayname { font-size: 16px; margin-bottom: 8px; }
+  body.bio-mode .bio-text { font-size: 14px; margin-bottom: 6px; }
+  body.bio-mode .bio-website { font-size: 14px; }
+  body.bio-mode .bio-top { gap: 20px; align-items: center; }
+  body.bio-mode #highlights-section { padding: 12px 16px 16px; gap: 16px; }
+  body.bio-mode .highlight-circle { width: 68px; height: 68px; }
+  body.bio-mode .highlight-label { font-size: 12px; max-width: 72px; }
+
   /* DARK MODE */
   body.dark { --ink: #F0EDE8; --cream: #1C1915; --muted: #9A948E; --border: rgba(240,237,232,0.12); background: #1C1915; }
   body.dark #settings-panel { background: #2A2520; border-color: rgba(240,237,232,0.15); }
@@ -280,6 +293,8 @@ try { const s = localStorage.getItem(SETTINGS_KEY); if (s) settings = { ...setti
 function saveSettings() { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch(e) {} }
 // Aplicar dark mode inmediatamente para evitar flash
 if (settings.darkMode) document.body.classList.add('dark');
+// Aplicar bio mode inmediatamente
+if (isBioMode) document.body.classList.add('bio-mode');
 
 let currentTab = 'grid';
 let cachedData = null;
