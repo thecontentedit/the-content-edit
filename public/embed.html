@@ -345,11 +345,18 @@ function renderGrid(posts, plan) {
     const inner = document.createElement('div'); inner.className = 'cell-inner';
 
     if (post.imageSource === 'canva' && post.imageUrl) {
+      const wrapper = document.createElement('div');
+      wrapper.style.cssText = 'position:relative;width:100%;height:100%;overflow:hidden;';
       const iframe = document.createElement('iframe');
       iframe.src = post.imageUrl;
-      iframe.style.cssText = 'width:100%;height:100%;border:none;pointer-events:none;';
+      iframe.style.cssText = 'width:100%;height:115%;border:none;pointer-events:none;margin-top:-1px;';
       iframe.setAttribute('allowfullscreen', '');
-      inner.appendChild(iframe);
+      wrapper.appendChild(iframe);
+      // Cover Canva branding at bottom
+      const cover = document.createElement('div');
+      cover.style.cssText = 'position:absolute;bottom:0;left:0;right:0;height:18%;background:#fff;z-index:2;';
+      wrapper.appendChild(cover);
+      inner.appendChild(wrapper);
     } else if (post.imageUrl && !post.imageUrl.startsWith('__')) {
       const img = document.createElement('img');
       img.src = post.imageUrl; img.alt = post.name || ''; img.loading = 'lazy';
