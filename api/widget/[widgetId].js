@@ -23,6 +23,7 @@ const PROPS = {
   h3label:     'Highlight 3 Label',
   h4photo:     'Highlight 4 Photo',
   h4label:     'Highlight 4 Label',
+  profilePhoto: 'Profile Photo',
 };
 
 export default async function handler(req, res) {
@@ -142,6 +143,7 @@ function formatProfile(page) {
     displayName: getText(PROPS.displayName),
     bio:         getText(PROPS.bio),
     website:     props[PROPS.website]?.url || null,
+    avatarUrl:   getFile(PROPS.profilePhoto),
     highlights: [
       { photo: getFile(PROPS.h1photo), label: getText(PROPS.h1label) },
       { photo: getFile(PROPS.h2photo), label: getText(PROPS.h2label) },
