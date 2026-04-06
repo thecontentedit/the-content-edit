@@ -111,7 +111,7 @@ function toggleHowto(btn) {
   const isOpen = collapsible.classList.contains('open');
   collapsible.classList.toggle('open', !isOpen);
   btn.classList.toggle('open', !isOpen);
-  btn.querySelector('span') && (btn.querySelector('span').textContent = isOpen ? 'Ver instrucciones paso a paso' : 'Ocultar instrucciones');
+  btn.querySelector('span') && (btn.querySelector('span').textContent = isOpen ? 'Ver instrucciones' : 'Ocultar instrucciones');
 }
 
 init();
