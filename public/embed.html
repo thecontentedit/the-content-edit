@@ -601,31 +601,28 @@ function onPlanDrop(e) {
   const destIndex = parseInt(this.dataset.index);
   if (isNaN(destIndex) || dragSrcIndex === destIndex) return;
 
-  // Intercambiar fechas en planOrder: la imagen src toma la fecha del slot dest
-  // Reordenar planOrder
   const newOrder = [...planOrder];
   const [movedItem] = newOrder.splice(dragSrcIndex, 1);
   newOrder.splice(destIndex, 0, movedItem);
 
-  // Reasignar fechas tentativas según posición
-  // Regla: cada imagen hereda la fecha que tenía la posición de destino en el snapshot original
-  // Implementación: las fechas de los slots originales se mantienen fijas,
-  // las imágenes se mueven entre ellos y toman la fecha del slot donde caen.
-
-  // Obtener las fechas originales por posición (de originalSnapshot)
+  // Las fechas de los slots son fijas (posición 0 tiene la fecha más reciente, etc.)
+  // La imagen arrastrada toma la fecha del slot donde cayó.
+  // El resto conserva su tentativeDate actual — NO se recalcula todo,
+  // solo se actualiza la imagen que el usuario movió.
   const datesByPosition = originalSnapshot.map(p => p.originalDate);
 
-  // Marcar como moved si la fecha cambió respecto a originalDate
   newOrder.forEach((item, idx) => {
-    const tentDate = datesByPosition[idx] || null;
-    const wasOriginallyHere = originalSnapshot[idx]?.pageId === item.pageId;
-    item.tentativeDate = tentDate;
-    item.moved = tentDate !== item.originalDate;
+    item.tentativeDate = datesByPosition[idx] || null;
+    // Solo marcar amarillo si esta imagen fue la que el usuario arrastró
+    // o si ya tenía moved=true de un drag anterior
+    if (item.pageId === movedItem.pageId) {
+      // La imagen movida: amarillo si su nueva fecha ≠ su fecha original
+      item.moved = item.tentativeDate !== item.originalDate;
+    }
+    // Las demás: conservan su estado moved anterior (no tocar)
   });
 
   planOrder = newOrder;
-
-  // Actualizar currentOrder también
   currentOrder = planOrder.map(p => p.pageId);
 
   renderGrid(cachedData.posts, cachedData.plan);
