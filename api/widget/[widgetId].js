@@ -4,26 +4,28 @@ import { decryptToken } from '../setup.js';
 const redis = Redis.fromEnv();
 
 const PROPS = {
-  name:        'Name',
-  publishDate: 'Publish Date',
-  attachment:  'Attachment',
-  link:        'Link',
-  pinned:      'Pinned',
-  mediaType:   'Media Type',
-  type:        'Type',
-  displayName: 'Display Name',
-  username:    'Username',
-  bio:         'Bio',
-  website:     'Website',
+  name:         'Name',
+  publishDate:  'Publish Date',
+  attachment:   'Attachment',
+  link:         'Link',
+  canvaLink:    'Canva Link',
+  tipoImagen:   'Tipo de imagen',
+  pinned:       'Pinned',
+  mediaType:    'Media Type',
+  type:         'Type',
+  displayName:  'Display Name',
+  username:     'Username',
+  bio:          'Bio',
+  website:      'Website',
   profilePhoto: 'Profile Photo',
-  h1photo:     'Highlight 1 Photo',
-  h1label:     'Highlight 1 Label',
-  h2photo:     'Highlight 2 Photo',
-  h2label:     'Highlight 2 Label',
-  h3photo:     'Highlight 3 Photo',
-  h3label:     'Highlight 3 Label',
-  h4photo:     'Highlight 4 Photo',
-  h4label:     'Highlight 4 Label',
+  h1photo:      'Highlight 1 Photo',
+  h1label:      'Highlight 1 Label',
+  h2photo:      'Highlight 2 Photo',
+  h2label:      'Highlight 2 Label',
+  h3photo:      'Highlight 3 Photo',
+  h3label:      'Highlight 3 Label',
+  h4photo:      'Highlight 4 Photo',
+  h4label:      'Highlight 4 Label',
 };
 
 export default async function handler(req, res) {
@@ -153,6 +155,15 @@ function formatProfile(page) {
   };
 }
 
+function normalizeLink(url) {
+  if (!url) return null;
+  // Dropbox: convert dl=0 to raw=1
+  if (url.includes('dropbox.com')) {
+    return url.replace('www.dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0', '').replace('?dl=1', '');
+  }
+  return url;
+}
+
 function formatPost(page) {
   const props = page.properties;
 
@@ -162,25 +173,49 @@ function formatPost(page) {
     ? new Date(dateRaw).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' })
     : null;
 
+  // Tipo de imagen determines which source to use
+  const tipoImagen = props[PROPS.tipoImagen]?.select?.name?.toLowerCase() || '';
+
   // Attachment files (can be multiple for carousel)
   const attachments = props[PROPS.attachment]?.files || [];
   const attachmentUrls = attachments.map(f =>
     f.type === 'file' ? f.file.url : f.external?.url
   ).filter(Boolean);
 
-  // Link field (text, can have multiple URLs separated by newlines)
+  // Link field (text, multiple URLs separated by newlines)
   const linkText = props[PROPS.link]?.rich_text?.map(r => r.plain_text).join('') || '';
-  const linkUrls = linkText.split('\n').map(l => l.trim()).filter(l => l.startsWith('http'));
+  const linkUrls = linkText.split('\n').map(l => normalizeLink(l.trim())).filter(l => l && l.startsWith('http'));
 
-  // Determine images array — attachments take priority over links
+  // Canva link
+  const canvaUrl = props[PROPS.canvaLink]?.url || null;
+
+  // Determine images and source type
   let images = [];
-  if (attachmentUrls.length > 0) {
-    images = attachmentUrls;
-  } else if (linkUrls.length > 0) {
+  let imageSource = 'attachment'; // 'attachment' | 'link' | 'canva'
+
+  if (tipoImagen === 'canva' && canvaUrl) {
+    imageSource = 'canva';
+    images = [canvaUrl];
+  } else if (tipoImagen === 'link' && linkUrls.length > 0) {
+    imageSource = 'link';
     images = linkUrls;
+  } else if (tipoImagen === 'archivo' && attachmentUrls.length > 0) {
+    imageSource = 'attachment';
+    images = attachmentUrls;
+  } else {
+    // Fallback: auto-detect
+    if (attachmentUrls.length > 0) {
+      imageSource = 'attachment';
+      images = attachmentUrls;
+    } else if (canvaUrl) {
+      imageSource = 'canva';
+      images = [canvaUrl];
+    } else if (linkUrls.length > 0) {
+      imageSource = 'link';
+      images = linkUrls;
+    }
   }
 
-  // First image for grid thumbnail
   const imageUrl = images[0] || null;
 
   // Auto-detect carousel if multiple images
@@ -189,5 +224,5 @@ function formatPost(page) {
 
   const pinned = props[PROPS.pinned]?.checkbox || false;
 
-  return { name, publishDate, imageUrl, images, mediaType, pinned, pageId: page.id };
+  return { name, publishDate, imageUrl, images, imageSource, mediaType, pinned, pageId: page.id };
 }
