@@ -545,6 +545,11 @@ function exitPlanMode(save) {
   planOrder = [];
   originalSnapshot = [];
 
+  // Resetear botón Save siempre
+  const btn = document.getElementById('btn-save');
+  btn.disabled = false;
+  btn.textContent = 'Save';
+
   document.getElementById('btn-plan-grid').classList.remove('active');
   document.getElementById('btn-refresh').style.opacity = '';
   document.getElementById('btn-refresh').style.pointerEvents = '';
@@ -556,7 +561,6 @@ function exitPlanMode(save) {
 }
 
 async function savePlanMode() {
-  // Solo guardar los que fueron movidos (fecha cambió)
   const changes = planOrder.filter(p => p.moved);
   if (changes.length === 0) { exitPlanMode(false); return; }
 
@@ -570,11 +574,6 @@ async function savePlanMode() {
   try {
     const orderedIds = planOrder.map(p => p.pageId);
 
-    // dateMap: { pageId: 'YYYY-MM-DD' } — solo los que cambiaron
-    // Necesitamos la fecha ISO original de cada post para hacer el swap correcto.
-    // planOrder tiene originalDate como string legible ("6 abr 2026").
-    // Usamos cachedData.posts que ahora incluye publishDateISO.
-    // dateMap: usa tentativeDateISO que ya está en planOrder — no necesita buscar por string
     const dateMap = {};
     changes.forEach(p => {
       if (p.tentativeDateISO) {
@@ -588,7 +587,7 @@ async function savePlanMode() {
       body: JSON.stringify({ orderedIds, dateMap }),
     });
 
-    // Actualizar cachedData localmente — todos los posts con sus nuevas fechas
+    // Actualizar cachedData localmente con las nuevas fechas
     const newPosts = planOrder.map(p => {
       const post = cachedData.posts.find(x => x.pageId === p.pageId);
       if (!post) return null;
@@ -600,14 +599,18 @@ async function savePlanMode() {
     }).filter(Boolean);
     cachedData.posts = newPosts;
 
+    // Mostrar confirmación brevemente antes de salir
+    indicator.textContent = 'Orden guardado ✓';
+    setTimeout(() => { indicator.style.display = 'none'; }, 1200);
+
     exitPlanMode(true);
     renderGrid(cachedData.posts, cachedData.plan);
+
   } catch(err) {
     console.error('Error saving plan:', err);
-    btn.disabled = false; btn.textContent = 'Save';
-  } finally {
-    setTimeout(() => { indicator.style.display = 'none'; }, 1500);
-    indicator.textContent = 'Orden guardado ✓';
+    indicator.style.display = 'none';
+    btn.disabled = false;
+    btn.textContent = 'Save';
   }
 }
 
