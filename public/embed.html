@@ -132,6 +132,14 @@
 
   #saving-indicator { display: none; position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); background: var(--ink); color: #F9F6F1; padding: 6px 14px; border-radius: 999px; font-size: 11px; z-index: 999; }
 
+  /* CONTENT MAP */
+  .map-legend { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; padding: 0 2px; }
+  .map-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--ink); }
+  .map-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .cell-map-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 6px; }
+  .cell-map-label { font-size: 11px; font-weight: 600; color: #fff; text-align: center; line-height: 1.3; text-shadow: 0 1px 3px rgba(0,0,0,0.3); letter-spacing: .01em; }
+  .map-no-pilar { font-size: 11px; color: var(--muted); font-style: italic; }
+
   /* MODAL */
   #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; }
   #modal.open { display: flex; }
@@ -225,6 +233,7 @@
     <div id="settings-panel">
       <div class="setting-row" onclick="toggleSetting('showBio')"><span>Mostrar bio</span><div class="toggle" id="toggle-showBio"></div></div>
       <div class="setting-row" onclick="toggleSetting('showHighlights')"><span>Mostrar highlights</span><div class="toggle" id="toggle-showHighlights"></div></div>
+      <div class="setting-row" onclick="toggleSetting('showContentMap')"><span>Content Map</span><div class="toggle" id="toggle-showContentMap"></div></div>
       <div class="setting-divider"></div>
       <div class="setting-row" onclick="setSortMode('date')"><span>Ordenar por fecha</span><div class="radio" id="radio-date"></div></div>
     </div>
@@ -239,7 +248,7 @@ const widgetId = location.pathname.split('/').filter(Boolean).pop();
 const API_BASE = location.origin;
 
 const SETTINGS_KEY = `tce_settings_${widgetId}`;
-let settings = { showBio: true, showHighlights: true, sortMode: 'date' };
+let settings = { showBio: true, showHighlights: true, showContentMap: false, sortMode: 'date' };
 try { const s = localStorage.getItem(SETTINGS_KEY); if (s) settings = { ...settings, ...JSON.parse(s) }; } catch(e) {}
 function saveSettings() { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch(e) {} }
 
@@ -291,6 +300,29 @@ async function loadWidget() {
     document.getElementById('loading').style.display = 'none';
     document.getElementById('error').style.display = 'block';
   }
+}
+
+// Paleta de colores para pilares — vibrantes pero elegantes
+const PILAR_PALETTE = [
+  '#C8553D', '#4A7C59', '#2E6BA6', '#8B5E83', '#D4875E',
+  '#5B7FA6', '#A66B2E', '#4E8098', '#7A4F6D', '#3D7A5F',
+  '#B85C38', '#5C7A3E', '#6B4E8C', '#3D6B8C', '#8C6B3D',
+];
+const pilarColorMap = {};
+let pilarColorIndex = 0;
+
+function getPilarColor(pilar) {
+  if (!pilar) return 'rgba(100,100,100,0.65)';
+  if (!pilarColorMap[pilar]) {
+    pilarColorMap[pilar] = PILAR_PALETTE[pilarColorIndex % PILAR_PALETTE.length];
+    pilarColorIndex++;
+  }
+  return pilarColorMap[pilar];
+}
+
+function resetPilarColors() {
+  Object.keys(pilarColorMap).forEach(k => delete pilarColorMap[k]);
+  pilarColorIndex = 0;
 }
 
 function setTab(tab) {
@@ -360,6 +392,10 @@ function renderHighlights(profile) {
 }
 
 function renderGrid(posts, plan) {
+  // Limpiar leyenda anterior si existe
+  const oldLegend = document.querySelector('.map-legend');
+  if (oldLegend) oldLegend.remove();
+
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
 
@@ -390,6 +426,13 @@ function renderGrid(posts, plan) {
   if (slots.length === 0 && currentTab === 'reels') {
     grid.innerHTML = '<div style="padding:2rem;text-align:center;font-size:13px;color:#7A7570;grid-column:1/-1;">No hay reels todavía</div>';
     return;
+  }
+
+  // Content Map: pre-asignar colores si está activo
+  if (settings.showContentMap) {
+    resetPilarColors();
+    const pilaresUnicos = [...new Set(filtered.map(p => p.pilar).filter(Boolean))];
+    pilaresUnicos.forEach(p => getPilarColor(p));
   }
 
   slots.forEach((post, i) => {
@@ -487,6 +530,131 @@ function renderGrid(posts, plan) {
       cell.addEventListener('drop', planModeActive ? onPlanDrop : onDrop);
       cell.addEventListener('dragend', onDragEnd);
     }
+
+    // Content Map overlay
+    if (settings.showContentMap && post) {
+      const overlay = document.createElement('div');
+      overlay.className = 'cell-map-overlay';
+      const color = getPilarColor(post.pilar);
+      overlay.style.background = post.pilar ? color + 'CC' : 'rgba(80,80,80,0.7)';
+      const lbl = document.createElement('div');
+      lbl.className = 'cell-map-label';
+      lbl.textContent = post.pilar || '—';
+      overlay.appendChild(lbl);
+      cell.appendChild(overlay);
+    }
+
+    grid.appendChild(cell);
+  });
+
+  // Leyenda de pilares si Content Map activo
+  if (settings.showContentMap) {
+    const pilaresUnicos = [...new Set(filtered.map(p => p.pilar).filter(Boolean))];
+    if (pilaresUnicos.length > 0) {
+      const legend = document.createElement('div');
+      legend.className = 'map-legend';
+      pilaresUnicos.forEach(pilar => {
+        const item = document.createElement('div');
+        item.className = 'map-legend-item';
+        const dot = document.createElement('div');
+        dot.className = 'map-legend-dot';
+        dot.style.background = getPilarColor(pilar);
+        const lbl = document.createElement('span');
+        lbl.textContent = pilar;
+        item.appendChild(dot);
+        item.appendChild(lbl);
+        legend.appendChild(item);
+      });
+      grid.parentNode.insertBefore(legend, grid);
+    }
+  }
+}
+
+// ── CONTENT MAP ──
+function renderMap(posts) {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+
+  // Reset colores para asignarlos consistentemente
+  resetPilarColors();
+
+  const filtered = posts.filter(p => currentTab !== 'reels' || p.mediaType === 'reel');
+  const sorted = [...filtered].sort((a, b) => (!a.publishDate ? 1 : !b.publishDate ? -1 : 0));
+
+  // Construir leyenda de pilares únicos
+  const pilaresUnicos = [...new Set(sorted.map(p => p.pilar).filter(Boolean))];
+
+  // Pre-asignar colores en orden de aparición
+  pilaresUnicos.forEach(p => getPilarColor(p));
+
+  // Leyenda
+  if (pilaresUnicos.length > 0) {
+    const legend = document.createElement('div');
+    legend.className = 'map-legend';
+    pilaresUnicos.forEach(pilar => {
+      const item = document.createElement('div');
+      item.className = 'map-legend-item';
+      const dot = document.createElement('div');
+      dot.className = 'map-legend-dot';
+      dot.style.background = getPilarColor(pilar);
+      const label = document.createElement('span');
+      label.textContent = pilar;
+      item.appendChild(dot);
+      item.appendChild(label);
+      legend.appendChild(item);
+    });
+    // Insertar leyenda antes del grid
+    grid.parentNode.insertBefore(legend, grid);
+    grid._legendEl = legend;
+  }
+
+  const total = Math.max(sorted.length, 9);
+  const slots = Array.from({ length: total }, (_, i) => sorted[i] || null);
+
+  slots.forEach(post => {
+    if (!post) {
+      const empty = document.createElement('div');
+      empty.className = 'empty-cell';
+      empty.innerHTML = '<span>+ nuevo</span>';
+      grid.appendChild(empty);
+      return;
+    }
+
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.style.cursor = 'default';
+
+    // Imagen de fondo
+    const inner = document.createElement('div');
+    inner.className = 'cell-inner';
+
+    if (post.imageUrl && !post.imageUrl.startsWith('__') && post.imageSource !== 'canva') {
+      const img = document.createElement('img');
+      img.src = post.imageUrl;
+      img.alt = '';
+      img.loading = 'lazy';
+      inner.appendChild(img);
+    } else if (post.imageSource === 'canva' && post.imageUrl) {
+      const iframe = document.createElement('iframe');
+      iframe.src = post.imageUrl;
+      iframe.style.cssText = 'width:120%;height:140%;border:none;pointer-events:none;margin-left:-10%;margin-top:-5%;';
+      inner.appendChild(iframe);
+    }
+    cell.appendChild(inner);
+
+    // Overlay de color del pilar
+    const overlay = document.createElement('div');
+    overlay.className = 'cell-map-overlay';
+    const color = getPilarColor(post.pilar);
+    overlay.style.background = post.pilar
+      ? color + 'CC'  // CC = ~80% opacidad en hex
+      : 'rgba(80,80,80,0.7)';
+
+    const label = document.createElement('div');
+    label.className = 'cell-map-label';
+    label.textContent = post.pilar || '—';
+    overlay.appendChild(label);
+    cell.appendChild(overlay);
 
     grid.appendChild(cell);
   });
@@ -776,6 +944,7 @@ function setSortMode(mode) { settings.sortMode = mode; saveSettings(); renderAll
 function updateSettingsUI() {
   document.getElementById('toggle-showBio').className = 'toggle' + (settings.showBio ? ' on' : '');
   document.getElementById('toggle-showHighlights').className = 'toggle' + (settings.showHighlights ? ' on' : '');
+  document.getElementById('toggle-showContentMap').className = 'toggle' + (settings.showContentMap ? ' on' : '');
   document.getElementById('radio-date').className = 'radio on';
 }
 function makePlaceholder(label) {
