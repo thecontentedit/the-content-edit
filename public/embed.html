@@ -227,7 +227,6 @@
       <div class="setting-row" onclick="toggleSetting('showHighlights')"><span>Mostrar highlights</span><div class="toggle" id="toggle-showHighlights"></div></div>
       <div class="setting-divider"></div>
       <div class="setting-row" onclick="setSortMode('date')"><span>Ordenar por fecha</span><div class="radio" id="radio-date"></div></div>
-      <div class="setting-row" id="drag-setting" onclick="setSortMode('custom')"><span>Orden personalizado<span class="pro-badge">PRO</span></span><div class="radio" id="radio-custom"></div></div>
     </div>
   </div>
 
@@ -308,9 +307,6 @@ function renderAll() {
   renderHighlights(profile);
   renderGrid(posts, plan);
   updateSettingsUI();
-  const dragSetting = document.getElementById('drag-setting');
-  if (plan !== 'pro') { dragSetting.style.opacity = '0.4'; dragSetting.style.pointerEvents = 'none'; }
-
   // Plan Grid button solo visible para Pro
   const btnPlan = document.getElementById('btn-plan-grid');
   if (plan !== 'pro') { btnPlan.style.display = 'none'; }
@@ -780,8 +776,7 @@ function setSortMode(mode) { settings.sortMode = mode; saveSettings(); renderAll
 function updateSettingsUI() {
   document.getElementById('toggle-showBio').className = 'toggle' + (settings.showBio ? ' on' : '');
   document.getElementById('toggle-showHighlights').className = 'toggle' + (settings.showHighlights ? ' on' : '');
-  document.getElementById('radio-date').className = 'radio' + (settings.sortMode === 'date' ? ' on' : '');
-  document.getElementById('radio-custom').className = 'radio' + (settings.sortMode === 'custom' ? ' on' : '');
+  document.getElementById('radio-date').className = 'radio on';
 }
 function makePlaceholder(label) {
   const div = document.createElement('div'); div.className = 'cell-placeholder';
