@@ -387,9 +387,9 @@ function renderGrid(posts, plan) {
     cell.addEventListener('click', () => openModal(post));
 
     // Badges (Pro only)
-    if (plan === 'pro' && (post.mediaType === 'carousel' || post.mediaType === 'reel')) {
+    if (plan === 'pro' && (post.mediaType === 'carrusel' || post.mediaType === 'reel')) {
       const b = document.createElement('div'); b.className = 'badge-tr';
-      b.innerHTML = post.mediaType === 'carousel' ? icons.carousel : icons.reel;
+      b.innerHTML = post.mediaType === 'carrusel' ? icons.carousel : icons.reel;
       cell.appendChild(b);
     }
     if (plan === 'pro' && post.pinned) {
