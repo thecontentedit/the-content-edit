@@ -519,6 +519,8 @@ function enterPlanMode() {
     pageId: p.pageId,
     tentativeDate: p.publishDate || null,
     originalDate: p.publishDate || null,
+    originalDateISO: p.publishDateISO || null,
+    tentativeDateISO: p.publishDateISO || null,
     moved: false,
   }));
 
@@ -572,15 +574,11 @@ async function savePlanMode() {
     // Necesitamos la fecha ISO original de cada post para hacer el swap correcto.
     // planOrder tiene originalDate como string legible ("6 abr 2026").
     // Usamos cachedData.posts que ahora incluye publishDateISO.
+    // dateMap: usa tentativeDateISO que ya está en planOrder — no necesita buscar por string
     const dateMap = {};
     changes.forEach(p => {
-      // Buscar el post que actualmente ocupa el slot de destino para obtener su ISO
-      // La tentativeDate viene del originalDate del slot de destino en el snapshot.
-      // El snapshot guarda originalDate como string legible — necesitamos el ISO.
-      // Lo buscamos en cachedData.posts por publishDate (string legible).
-      const matchPost = cachedData.posts.find(x => x.publishDate === p.tentativeDate);
-      if (matchPost && matchPost.publishDateISO) {
-        dateMap[p.pageId] = matchPost.publishDateISO;
+      if (p.tentativeDateISO) {
+        dateMap[p.pageId] = p.tentativeDateISO;
       }
     });
 
@@ -590,12 +588,15 @@ async function savePlanMode() {
       body: JSON.stringify({ orderedIds, dateMap }),
     });
 
-    // Actualizar cachedData localmente con las nuevas fechas
+    // Actualizar cachedData localmente — todos los posts con sus nuevas fechas
     const newPosts = planOrder.map(p => {
       const post = cachedData.posts.find(x => x.pageId === p.pageId);
       if (!post) return null;
-      const updatedISO = dateMap[p.pageId] || post.publishDateISO;
-      return { ...post, publishDate: p.tentativeDate, publishDateISO: updatedISO };
+      return {
+        ...post,
+        publishDate: p.tentativeDate,
+        publishDateISO: p.tentativeDateISO || post.publishDateISO,
+      };
     }).filter(Boolean);
     cachedData.posts = newPosts;
 
@@ -626,11 +627,16 @@ function onPlanDrop(e) {
   const srcSlotDate = originalSnapshot[dragSrcIndex] ? originalSnapshot[dragSrcIndex].originalDate : null;
   const dstSlotDate = originalSnapshot[destIndex] ? originalSnapshot[destIndex].originalDate : null;
 
+  const srcSlotDateISO = originalSnapshot[dragSrcIndex] ? originalSnapshot[dragSrcIndex].originalDateISO : null;
+  const dstSlotDateISO = originalSnapshot[destIndex] ? originalSnapshot[destIndex].originalDateISO : null;
+
   // Imagen src → va al slot dest → hereda fecha de dest
   newOrder[destIndex] = {
     pageId: srcItem.pageId,
     originalDate: srcItem.originalDate,
+    originalDateISO: srcItem.originalDateISO,
     tentativeDate: dstSlotDate,
+    tentativeDateISO: dstSlotDateISO,
     moved: dstSlotDate !== srcItem.originalDate,
   };
 
@@ -638,7 +644,9 @@ function onPlanDrop(e) {
   newOrder[dragSrcIndex] = {
     pageId: dstItem.pageId,
     originalDate: dstItem.originalDate,
+    originalDateISO: dstItem.originalDateISO,
     tentativeDate: srcSlotDate,
+    tentativeDateISO: srcSlotDateISO,
     moved: srcSlotDate !== dstItem.originalDate,
   };
 
