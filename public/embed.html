@@ -136,7 +136,6 @@
     <button class="modal-nav modal-prev hidden" onclick="modalNav(-1)">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
-    <img class="modal-img" id="modal-img" src="" alt=""/>
     <button class="modal-nav modal-next hidden" onclick="modalNav(1)">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
     </button>
@@ -214,6 +213,7 @@ let currentOrder = [];
 let modalImages = [];
 let modalIndex = 0;
 let modalPost = null;
+let modalIsCanva = false;
 
 const icons = {
   carousel: `<svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M2 8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8z"/><path d="M6 6V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1" fill="white" opacity="0.6"/></svg>`,
@@ -417,6 +417,7 @@ function openModal(post) {
   modalImages = post.images && post.images.length > 0 ? post.images : (post.imageUrl ? [post.imageUrl] : []);
   if (modalImages.length === 0) return;
   modalIndex = 0;
+  modalIsCanva = post.imageSource === 'canva';
   updateModal();
   document.getElementById('modal').classList.add('open');
   document.addEventListener('keydown', onModalKey);
@@ -439,7 +440,32 @@ function modalNav(dir) {
 }
 
 function updateModal() {
-  document.getElementById('modal-img').src = modalImages[modalIndex];
+  const modalInner = document.querySelector('.modal-inner');
+
+  // Remove existing img or iframe
+  const existing = document.getElementById('modal-img');
+  if (existing) existing.remove();
+  const existingIframe = document.getElementById('modal-iframe');
+  if (existingIframe) existingIframe.remove();
+
+  if (modalIsCanva) {
+    const iframe = document.createElement('iframe');
+    iframe.id = 'modal-iframe';
+    iframe.src = modalImages[modalIndex];
+    iframe.style.cssText = 'width:80vw;height:80vh;border:none;border-radius:4px;';
+    iframe.setAttribute('allowfullscreen', '');
+    const prev = document.querySelector('.modal-prev');
+    modalInner.insertBefore(iframe, prev);
+  } else {
+    const img = document.createElement('img');
+    img.id = 'modal-img';
+    img.className = 'modal-img';
+    img.src = modalImages[modalIndex];
+    img.alt = '';
+    const prev = document.querySelector('.modal-prev');
+    modalInner.insertBefore(img, prev);
+  }
+
   document.getElementById('modal-caption').textContent = modalPost?.name || '';
   document.getElementById('modal-date').textContent = modalPost?.publishDate || '';
 
@@ -448,7 +474,6 @@ function updateModal() {
   prev.classList.toggle('hidden', modalIndex === 0 || modalImages.length <= 1);
   next.classList.toggle('hidden', modalIndex === modalImages.length - 1 || modalImages.length <= 1);
 
-  // Dots
   const dots = document.getElementById('modal-dots');
   dots.innerHTML = '';
   if (modalImages.length > 1) {
