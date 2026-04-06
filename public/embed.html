@@ -6,7 +6,7 @@
 <title>The Content Edit</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root { --ink: #1C1915; --cream: #F9F6F1; --muted: #7A7570; --border: rgba(28,25,21,0.12); }
+  :root { --ink: #1C1915; --cream: #F9F6F1; --muted: #7A7570; --border: rgba(28,25,21,0.12); --plan-accent: #F5C842; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: transparent; color: var(--ink); -webkit-font-smoothing: antialiased; }
 
   #loading { display: flex; align-items: center; justify-content: center; min-height: 200px; gap: 8px; font-size: 13px; color: var(--muted); }
@@ -42,9 +42,21 @@
   .toolbar-btn { display: flex; align-items: center; justify-content: center; gap: 5px; padding: 6px 12px; border: none; border-radius: 999px; font-size: 11px; font-weight: 500; cursor: pointer; font-family: inherit; transition: opacity .2s; }
   .toolbar-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
   .btn-refresh { background: var(--ink); color: #F9F6F1; }
+  .btn-plan { background: #F0EDE8; color: var(--ink); }
+  .btn-plan.active { background: var(--ink); color: #F9F6F1; }
   .btn-icon { background: #F0EDE8; color: var(--ink); padding: 6px 10px; }
   .toolbar-btn:hover { opacity: .75; }
   .toolbar-spacer { flex: 1; }
+
+  /* PLAN GRID ACTION BAR */
+  #plan-bar { display: none; align-items: center; gap: 6px; margin-bottom: 8px; padding: 8px 10px; background: #FFFBE8; border: 1px solid rgba(245,200,66,0.4); border-radius: 10px; }
+  #plan-bar.visible { display: flex; }
+  .plan-bar-label { font-size: 11px; font-weight: 600; color: #8A6F00; flex: 1; }
+  .btn-cancel { background: #F0EDE8; color: var(--ink); padding: 5px 12px; border: none; border-radius: 999px; font-size: 11px; font-weight: 500; cursor: pointer; font-family: inherit; transition: opacity .2s; }
+  .btn-cancel:hover { opacity: .75; }
+  .btn-save { background: var(--ink); color: #F9F6F1; padding: 5px 14px; border: none; border-radius: 999px; font-size: 11px; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity .2s; }
+  .btn-save:hover { opacity: .75; }
+  .btn-save:disabled { opacity: .4; cursor: default; }
 
   /* TABS */
   .tabs { display: flex; gap: 0; margin-bottom: 8px; border-bottom: 0.5px solid var(--border); }
@@ -89,8 +101,25 @@
   .badge-tl { position: absolute; top: 5px; left: 5px; filter: drop-shadow(0 1px 2px rgba(0,0,0,.6)); pointer-events: none; z-index: 2; }
   .badge-tl svg { width: 17px; height: 17px; }
 
+  /* PLAN MODE CELL STYLES */
+  .cell.plan-mode { cursor: grab; }
+  .cell.plan-mode:active { cursor: grabbing; }
   .cell.dragging { opacity: 0.4; }
-  .cell.drag-over { outline: 2px solid var(--ink); outline-offset: -2px; }
+  .cell.drag-over { outline: 2px solid var(--plan-accent); outline-offset: -2px; }
+
+  /* DATE CHIP — shown always in plan mode, yellow if tentative */
+  .date-chip {
+    position: absolute; top: 5px; left: 5px;
+    font-size: 9px; font-weight: 700; letter-spacing: .02em;
+    padding: 2px 6px; border-radius: 999px;
+    pointer-events: none; z-index: 3;
+    background: rgba(0,0,0,0.55); color: #fff;
+    transition: background .2s, color .2s;
+  }
+  .date-chip.tentative {
+    background: var(--plan-accent);
+    color: #1C1915;
+  }
 
   .cell-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #EDEAE4; gap: 6px; }
   .cell-placeholder svg { width: 20px; height: 20px; opacity: .4; }
@@ -167,14 +196,25 @@
     <div class="divider"></div>
 
     <div class="toolbar">
-      <button class="toolbar-btn btn-refresh" onclick="loadWidget()">
+      <button class="toolbar-btn btn-refresh" id="btn-refresh" onclick="loadWidget()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
         Refresh
+      </button>
+      <button class="toolbar-btn btn-plan" id="btn-plan-grid" onclick="togglePlanMode()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Plan grid
       </button>
       <div class="toolbar-spacer"></div>
       <button class="toolbar-btn btn-icon" id="settings-btn" onclick="toggleSettings()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
       </button>
+    </div>
+
+    <!-- PLAN BAR: aparece debajo del toolbar cuando Plan Grid está activo -->
+    <div id="plan-bar">
+      <span class="plan-bar-label">Plan grid: ON</span>
+      <button class="btn-cancel" onclick="cancelPlanMode()">Cancel</button>
+      <button class="btn-save" id="btn-save" onclick="savePlanMode()">Save</button>
     </div>
 
     <div class="tabs">
@@ -209,6 +249,11 @@ let cachedData = null;
 let dragSrcIndex = null;
 let currentOrder = [];
 
+// ── PLAN GRID STATE ──
+let planModeActive = false;
+let planOrder = [];          // array of { pageId, tentativeDate, originalDate, moved }
+let originalSnapshot = [];   // snapshot before any drag, para Cancel
+
 // Modal state
 let modalImages = [];
 let modalIndex = 0;
@@ -225,6 +270,11 @@ const icons = {
 };
 
 async function loadWidget() {
+  // Si hay plan mode activo, preguntar antes de recargar
+  if (planModeActive) {
+    if (!confirm('¿Descartar cambios del Plan Grid y recargar?')) return;
+    exitPlanMode(false);
+  }
   document.getElementById('grid').innerHTML = '';
   document.getElementById('widget').style.display = 'none';
   document.getElementById('error').style.display = 'none';
@@ -260,6 +310,10 @@ function renderAll() {
   updateSettingsUI();
   const dragSetting = document.getElementById('drag-setting');
   if (plan !== 'pro') { dragSetting.style.opacity = '0.4'; dragSetting.style.pointerEvents = 'none'; }
+
+  // Plan Grid button solo visible para Pro
+  const btnPlan = document.getElementById('btn-plan-grid');
+  if (plan !== 'pro') { btnPlan.style.display = 'none'; }
 }
 
 function renderBio(profile) {
@@ -315,13 +369,22 @@ function renderGrid(posts, plan) {
 
   let filtered = [...posts];
 
-  // Filter by tab
   if (currentTab === 'reels') {
     filtered = filtered.filter(p => p.mediaType === 'reel');
   }
 
   if (settings.sortMode === 'date') {
     filtered.sort((a, b) => (!a.publishDate ? 1 : !b.publishDate ? -1 : 0));
+  }
+
+  // En plan mode, usar planOrder para ordenar
+  if (planModeActive && planOrder.length > 0) {
+    const planMap = new Map(planOrder.map((p, i) => [p.pageId, i]));
+    filtered.sort((a, b) => {
+      const ai = planMap.has(a.pageId) ? planMap.get(a.pageId) : 999;
+      const bi = planMap.has(b.pageId) ? planMap.get(b.pageId) : 999;
+      return ai - bi;
+    });
   }
 
   currentOrder = filtered.map(p => p.pageId);
@@ -341,6 +404,8 @@ function renderGrid(posts, plan) {
 
     const cell = document.createElement('div');
     cell.className = 'cell'; cell.dataset.index = i; cell.dataset.pageId = post.pageId;
+
+    if (planModeActive) cell.classList.add('plan-mode');
 
     const inner = document.createElement('div'); inner.className = 'cell-inner';
 
@@ -364,52 +429,206 @@ function renderGrid(posts, plan) {
 
     cell.appendChild(inner);
 
-    // Hover info
-    const hoverInfo = document.createElement('div'); hoverInfo.className = 'cell-hover-info';
-    const topRow = document.createElement('div'); topRow.className = 'hover-top-row';
-    const iconDiv = document.createElement('div'); iconDiv.className = 'hover-icon';
-    const isExternal = post.imageSource === 'link';
-    const isCanva = post.imageSource === 'canva';
-    iconDiv.innerHTML = isCanva ? icons.canva : isExternal ? icons.link : icons.attachment;
-    topRow.appendChild(iconDiv);
-    if (post.publishDate) {
-      const dateDiv = document.createElement('div'); dateDiv.className = 'hover-date'; dateDiv.textContent = post.publishDate;
-      topRow.appendChild(dateDiv);
-    }
-    hoverInfo.appendChild(topRow);
-    if (post.name) {
-      const cap = document.createElement('div'); cap.className = 'hover-caption'; cap.textContent = post.name;
-      hoverInfo.appendChild(cap);
-    }
-    cell.appendChild(hoverInfo);
+    // ── DATE CHIP (solo en plan mode) ──
+    if (planModeActive) {
+      const planEntry = planOrder.find(p => p.pageId === post.pageId);
+      const isMoved = planEntry && planEntry.moved;
+      const dateToShow = planEntry ? planEntry.tentativeDate : post.publishDate;
 
-    // Click to open modal
-    cell.addEventListener('click', () => openModal(post));
+      if (dateToShow) {
+        const chip = document.createElement('div');
+        chip.className = 'date-chip' + (isMoved ? ' tentative' : '');
+        chip.textContent = dateToShow;
+        cell.appendChild(chip);
+      }
+    }
 
-    // Badges (Pro only)
+    // Hover info (solo en modo normal)
+    if (!planModeActive) {
+      const hoverInfo = document.createElement('div'); hoverInfo.className = 'cell-hover-info';
+      const topRow = document.createElement('div'); topRow.className = 'hover-top-row';
+      const iconDiv = document.createElement('div'); iconDiv.className = 'hover-icon';
+      const isExternal = post.imageSource === 'link';
+      const isCanva = post.imageSource === 'canva';
+      iconDiv.innerHTML = isCanva ? icons.canva : isExternal ? icons.link : icons.attachment;
+      topRow.appendChild(iconDiv);
+      if (post.publishDate) {
+        const dateDiv = document.createElement('div'); dateDiv.className = 'hover-date'; dateDiv.textContent = post.publishDate;
+        topRow.appendChild(dateDiv);
+      }
+      hoverInfo.appendChild(topRow);
+      if (post.name) {
+        const cap = document.createElement('div'); cap.className = 'hover-caption'; cap.textContent = post.name;
+        hoverInfo.appendChild(cap);
+      }
+      cell.appendChild(hoverInfo);
+    }
+
+    // Click: modal en modo normal, nada en plan mode (solo drag)
+    if (!planModeActive) {
+      cell.addEventListener('click', () => openModal(post));
+    }
+
+    // Badges (Pro only, no en plan mode para no distraer)
     const isCarrusel = post.mediaType === 'carrusel' || (post.images && post.images.length > 1);
-    if (plan === 'pro' && (isCarrusel || post.mediaType === 'reel')) {
+    if (plan === 'pro' && !planModeActive && (isCarrusel || post.mediaType === 'reel')) {
       const b = document.createElement('div'); b.className = 'badge-tr';
       b.innerHTML = post.mediaType === 'reel' ? icons.reel : icons.carousel;
       cell.appendChild(b);
     }
-    if (plan === 'pro' && post.pinned) {
+    if (plan === 'pro' && !planModeActive && post.pinned) {
       const p = document.createElement('div'); p.className = 'badge-tl'; p.innerHTML = icons.pinned;
       cell.appendChild(p);
     }
 
-    // Drag and drop (Pro only)
-    if (plan === 'pro' && settings.sortMode === 'custom') {
-      cell.draggable = true; cell.style.cursor = 'grab';
+    // ── DRAG: en plan mode siempre, en modo normal solo si custom sort ──
+    const isDragEnabled = planModeActive || (plan === 'pro' && settings.sortMode === 'custom');
+    if (isDragEnabled) {
+      cell.draggable = true;
       cell.addEventListener('dragstart', onDragStart);
       cell.addEventListener('dragover', onDragOver);
       cell.addEventListener('dragleave', onDragLeave);
-      cell.addEventListener('drop', onDrop);
+      cell.addEventListener('drop', planModeActive ? onPlanDrop : onDrop);
       cell.addEventListener('dragend', onDragEnd);
     }
 
     grid.appendChild(cell);
   });
+}
+
+// ── PLAN MODE ──
+function togglePlanMode() {
+  if (!planModeActive) {
+    enterPlanMode();
+  } else {
+    // Ya activo: no hacer nada (Cancel/Save están en el plan-bar)
+  }
+}
+
+function enterPlanMode() {
+  if (!cachedData) return;
+  planModeActive = true;
+
+  // Construir planOrder desde el estado actual del grid
+  let filtered = cachedData.posts.filter(p => currentTab === 'reels' ? p.mediaType === 'reel' : true);
+  if (settings.sortMode === 'date') {
+    filtered.sort((a, b) => (!a.publishDate ? 1 : !b.publishDate ? -1 : 0));
+  }
+
+  planOrder = filtered.map(p => ({
+    pageId: p.pageId,
+    tentativeDate: p.publishDate || null,
+    originalDate: p.publishDate || null,
+    moved: false,
+  }));
+
+  // Snapshot para Cancel
+  originalSnapshot = planOrder.map(p => ({ ...p }));
+
+  // UI
+  document.getElementById('btn-plan-grid').classList.add('active');
+  document.getElementById('btn-refresh').style.opacity = '0.4';
+  document.getElementById('btn-refresh').style.pointerEvents = 'none';
+  document.getElementById('plan-bar').classList.add('visible');
+
+  renderGrid(cachedData.posts, cachedData.plan);
+}
+
+function cancelPlanMode() {
+  exitPlanMode(false);
+}
+
+function exitPlanMode(save) {
+  planModeActive = false;
+  planOrder = [];
+  originalSnapshot = [];
+
+  document.getElementById('btn-plan-grid').classList.remove('active');
+  document.getElementById('btn-refresh').style.opacity = '';
+  document.getElementById('btn-refresh').style.pointerEvents = '';
+  document.getElementById('plan-bar').classList.remove('visible');
+
+  if (!save) {
+    renderGrid(cachedData.posts, cachedData.plan);
+  }
+}
+
+async function savePlanMode() {
+  // Solo guardar las que fueron movidas (tienen fecha diferente)
+  const changes = planOrder.filter(p => p.moved && p.tentativeDate !== p.originalDate);
+  if (changes.length === 0) { exitPlanMode(false); return; }
+
+  const btn = document.getElementById('btn-save');
+  btn.disabled = true; btn.textContent = 'Guardando…';
+
+  const indicator = document.getElementById('saving-indicator');
+  indicator.style.display = 'block';
+
+  try {
+    // Construir el payload: array de { pageId, newDate }
+    // La fecha en planOrder ya es string legible (ej: "Mar 14")
+    // Necesitamos enviar también el orden completo como orderedIds para que la API
+    // pueda reasignar las fechas reales en Notion
+    const orderedIds = planOrder.map(p => p.pageId);
+    await fetch(`${API_BASE}/api/widget/${widgetId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderedIds }),
+    });
+
+    // Actualizar cachedData con el nuevo orden
+    const newPosts = planOrder.map(p => {
+      const post = cachedData.posts.find(x => x.pageId === p.pageId);
+      return post ? { ...post, publishDate: p.tentativeDate } : null;
+    }).filter(Boolean);
+    cachedData.posts = newPosts;
+
+    exitPlanMode(true);
+    renderGrid(cachedData.posts, cachedData.plan);
+  } catch(err) {
+    console.error('Error saving plan:', err);
+    btn.disabled = false; btn.textContent = 'Save';
+  } finally {
+    setTimeout(() => { indicator.style.display = 'none'; }, 1500);
+    indicator.textContent = 'Orden guardado ✓';
+  }
+}
+
+// ── PLAN MODE DRAG ──
+function onPlanDrop(e) {
+  e.preventDefault();
+  this.classList.remove('drag-over');
+  const destIndex = parseInt(this.dataset.index);
+  if (isNaN(destIndex) || dragSrcIndex === destIndex) return;
+
+  // Intercambiar fechas en planOrder: la imagen src toma la fecha del slot dest
+  // Reordenar planOrder
+  const newOrder = [...planOrder];
+  const [movedItem] = newOrder.splice(dragSrcIndex, 1);
+  newOrder.splice(destIndex, 0, movedItem);
+
+  // Reasignar fechas tentativas según posición
+  // Regla: cada imagen hereda la fecha que tenía la posición de destino en el snapshot original
+  // Implementación: las fechas de los slots originales se mantienen fijas,
+  // las imágenes se mueven entre ellos y toman la fecha del slot donde caen.
+
+  // Obtener las fechas originales por posición (de originalSnapshot)
+  const datesByPosition = originalSnapshot.map(p => p.originalDate);
+
+  // Marcar como moved si la fecha cambió respecto a originalDate
+  newOrder.forEach((item, idx) => {
+    const tentDate = datesByPosition[idx] || null;
+    const wasOriginallyHere = originalSnapshot[idx]?.pageId === item.pageId;
+    item.tentativeDate = tentDate;
+    item.moved = tentDate !== item.originalDate;
+  });
+
+  planOrder = newOrder;
+
+  // Actualizar currentOrder también
+  currentOrder = planOrder.map(p => p.pageId);
+
+  renderGrid(cachedData.posts, cachedData.plan);
 }
 
 // ── MODAL ──
@@ -442,8 +661,6 @@ function modalNav(dir) {
 
 function updateModal() {
   const modalInner = document.querySelector('.modal-inner');
-
-  // Remove existing img or iframe
   const existing = document.getElementById('modal-img');
   if (existing) existing.remove();
   const existingIframe = document.getElementById('modal-iframe');
@@ -486,12 +703,11 @@ function updateModal() {
   }
 }
 
-// Click outside modal to close
 document.getElementById('modal').addEventListener('click', (e) => {
   if (e.target === document.getElementById('modal')) closeModal();
 });
 
-// ── DRAG AND DROP ──
+// ── DRAG AND DROP (modo normal / custom sort) ──
 function onDragStart(e) { dragSrcIndex = parseInt(this.dataset.index); this.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; }
 function onDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; this.classList.add('drag-over'); }
 function onDragLeave() { this.classList.remove('drag-over'); }
@@ -512,6 +728,7 @@ function onDragEnd() { this.classList.remove('dragging'); document.querySelector
 
 async function saveOrderToNotion(orderedIds) {
   const indicator = document.getElementById('saving-indicator');
+  indicator.textContent = 'Guardando orden…';
   indicator.style.display = 'block';
   try {
     await fetch(`${API_BASE}/api/widget/${widgetId}`, {
