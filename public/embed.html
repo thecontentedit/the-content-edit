@@ -554,32 +554,48 @@ function exitPlanMode(save) {
 }
 
 async function savePlanMode() {
-  // Solo guardar las que fueron movidas (tienen fecha diferente)
-  const changes = planOrder.filter(p => p.moved && p.tentativeDate !== p.originalDate);
+  // Solo guardar los que fueron movidos (fecha cambió)
+  const changes = planOrder.filter(p => p.moved);
   if (changes.length === 0) { exitPlanMode(false); return; }
 
   const btn = document.getElementById('btn-save');
   btn.disabled = true; btn.textContent = 'Guardando…';
 
   const indicator = document.getElementById('saving-indicator');
+  indicator.textContent = 'Guardando orden…';
   indicator.style.display = 'block';
 
   try {
-    // Construir el payload: array de { pageId, newDate }
-    // La fecha en planOrder ya es string legible (ej: "Mar 14")
-    // Necesitamos enviar también el orden completo como orderedIds para que la API
-    // pueda reasignar las fechas reales en Notion
     const orderedIds = planOrder.map(p => p.pageId);
+
+    // dateMap: { pageId: 'YYYY-MM-DD' } — solo los que cambiaron
+    // Necesitamos la fecha ISO original de cada post para hacer el swap correcto.
+    // planOrder tiene originalDate como string legible ("6 abr 2026").
+    // Usamos cachedData.posts que ahora incluye publishDateISO.
+    const dateMap = {};
+    changes.forEach(p => {
+      // Buscar el post que actualmente ocupa el slot de destino para obtener su ISO
+      // La tentativeDate viene del originalDate del slot de destino en el snapshot.
+      // El snapshot guarda originalDate como string legible — necesitamos el ISO.
+      // Lo buscamos en cachedData.posts por publishDate (string legible).
+      const matchPost = cachedData.posts.find(x => x.publishDate === p.tentativeDate);
+      if (matchPost && matchPost.publishDateISO) {
+        dateMap[p.pageId] = matchPost.publishDateISO;
+      }
+    });
+
     await fetch(`${API_BASE}/api/widget/${widgetId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ orderedIds }),
+      body: JSON.stringify({ orderedIds, dateMap }),
     });
 
-    // Actualizar cachedData con el nuevo orden
+    // Actualizar cachedData localmente con las nuevas fechas
     const newPosts = planOrder.map(p => {
       const post = cachedData.posts.find(x => x.pageId === p.pageId);
-      return post ? { ...post, publishDate: p.tentativeDate } : null;
+      if (!post) return null;
+      const updatedISO = dateMap[p.pageId] || post.publishDateISO;
+      return { ...post, publishDate: p.tentativeDate, publishDateISO: updatedISO };
     }).filter(Boolean);
     cachedData.posts = newPosts;
 
@@ -601,29 +617,33 @@ function onPlanDrop(e) {
   const destIndex = parseInt(this.dataset.index);
   if (isNaN(destIndex) || dragSrcIndex === destIndex) return;
 
+  // SWAP: las dos imágenes se intercambian entre sí
   const newOrder = [...planOrder];
-  const [movedItem] = newOrder.splice(dragSrcIndex, 1);
-  newOrder.splice(destIndex, 0, movedItem);
+  const srcItem = Object.assign({}, newOrder[dragSrcIndex]);
+  const dstItem = Object.assign({}, newOrder[destIndex]);
 
-  // Las fechas de los slots son fijas (posición 0 tiene la fecha más reciente, etc.)
-  // La imagen arrastrada toma la fecha del slot donde cayó.
-  // El resto conserva su tentativeDate actual — NO se recalcula todo,
-  // solo se actualiza la imagen que el usuario movió.
-  const datesByPosition = originalSnapshot.map(p => p.originalDate);
+  // Las fechas son fijas por slot (del snapshot original)
+  const srcSlotDate = originalSnapshot[dragSrcIndex] ? originalSnapshot[dragSrcIndex].originalDate : null;
+  const dstSlotDate = originalSnapshot[destIndex] ? originalSnapshot[destIndex].originalDate : null;
 
-  newOrder.forEach((item, idx) => {
-    item.tentativeDate = datesByPosition[idx] || null;
-    // Solo marcar amarillo si esta imagen fue la que el usuario arrastró
-    // o si ya tenía moved=true de un drag anterior
-    if (item.pageId === movedItem.pageId) {
-      // La imagen movida: amarillo si su nueva fecha ≠ su fecha original
-      item.moved = item.tentativeDate !== item.originalDate;
-    }
-    // Las demás: conservan su estado moved anterior (no tocar)
-  });
+  // Imagen src → va al slot dest → hereda fecha de dest
+  newOrder[destIndex] = {
+    pageId: srcItem.pageId,
+    originalDate: srcItem.originalDate,
+    tentativeDate: dstSlotDate,
+    moved: dstSlotDate !== srcItem.originalDate,
+  };
+
+  // Imagen dest → va al slot src → hereda fecha de src
+  newOrder[dragSrcIndex] = {
+    pageId: dstItem.pageId,
+    originalDate: dstItem.originalDate,
+    tentativeDate: srcSlotDate,
+    moved: srcSlotDate !== dstItem.originalDate,
+  };
 
   planOrder = newOrder;
-  currentOrder = planOrder.map(p => p.pageId);
+  currentOrder = planOrder.map(function(p) { return p.pageId; });
 
   renderGrid(cachedData.posts, cachedData.plan);
 }
