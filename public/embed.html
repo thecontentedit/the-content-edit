@@ -145,6 +145,29 @@
   body.bio-mode .highlight-circle { width: 68px; height: 68px; }
   body.bio-mode .highlight-label { font-size: 12px; max-width: 72px; }
 
+  /* BIO MODE REFRESH */
+  #bio-refresh-btn {
+    display: none;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(28,25,21,0.07);
+    border: none;
+    border-radius: 999px;
+    padding: 5px 10px;
+    font-size: 10px;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: opacity .2s;
+  }
+  #bio-refresh-btn:hover { opacity: .7; }
+  #bio-refresh-btn svg { width: 10px; height: 10px; }
+  body:not(.bio-mode) #bio-refresh-btn { display: none !important; }
+
   /* DARK MODE */
   body.dark { --ink: #F0EDE8; --cream: #1C1915; --muted: #9A948E; --border: rgba(240,237,232,0.12); background: #1C1915; }
   body.dark #settings-panel { background: #2A2520; border-color: rgba(240,237,232,0.15); }
@@ -234,6 +257,10 @@
     </div>
 
     <div id="highlights-section"></div>
+    <button id="bio-refresh-btn" onclick="loadWidget()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      Refresh
+    </button>
     <div class="divider"></div>
 
     <div class="toolbar">
@@ -389,6 +416,7 @@ function renderAll() {
     document.querySelector('.tabs').style.display = 'none';
     document.getElementById('grid').style.display = 'none';
     document.querySelector('.watermark').style.display = 'none';
+    document.getElementById('bio-refresh-btn').style.display = 'flex';
     applyDarkMode();
     return;
   }
