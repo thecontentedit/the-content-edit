@@ -67,10 +67,17 @@
   .btn-primary:disabled { opacity: .35; cursor: not-allowed; }
   .btn-ghost { padding: 11px 18px; background: transparent; color: var(--muted); border: 0.5px solid var(--border-strong); border-radius: 999px; font-size: 13px; cursor: pointer; font-family: var(--sans); transition: background .15s; }
   .btn-ghost:hover { background: rgba(28,25,21,.05); }
-  .embed-wrap { position: relative; background: var(--cream); border-radius: var(--radius-sm); padding: 10px 12px; margin-top: 6px; border: 0.5px solid var(--border-strong); }
+
+  /* URL blocks */
+  .url-block { margin-bottom: 12px; }
+  .url-label { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }
+  .url-tag { font-size: 9px; padding: 2px 6px; border-radius: 999px; background: var(--ink); color: var(--cream); letter-spacing: .04em; }
+  .url-tag.bio { background: #5B7FA6; }
+  .embed-wrap { position: relative; background: var(--cream); border-radius: var(--radius-sm); padding: 10px 12px; border: 0.5px solid var(--border-strong); }
   .embed-url { font-family: monospace; font-size: 12px; color: var(--ink); word-break: break-all; line-height: 1.5; padding-right: 60px; }
   .copy-btn { position: absolute; top: 8px; right: 8px; font-size: 11px; padding: 3px 8px; background: #fff; border: 0.5px solid var(--border-strong); border-radius: var(--radius-sm); cursor: pointer; color: var(--muted); font-family: var(--sans); transition: background .15s; }
   .copy-btn:hover { background: var(--cream); }
+
   .success-card { background: var(--success-bg); border: 0.5px solid rgba(45,106,79,.2); border-radius: var(--radius); padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
   .success-card-title { display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 14px; color: var(--success); margin-bottom: 5px; }
   .success-card-body { font-size: 13px; color: var(--success); line-height: 1.55; }
@@ -110,14 +117,24 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         Tu widget ya está activo
       </div>
-      <div class="success-card-body">Ya completaste el setup. Aquí está tu link para pegar en Notion.</div>
+      <div class="success-card-body">Ya completaste el setup. Aquí están tus links para pegar en Notion.</div>
     </div>
     <div class="card">
-      <div class="card-title">Tu link de embed</div>
-      <div class="card-sub">Pégalo en Notion con <code>/embed</code></div>
-      <div class="embed-wrap">
-        <div class="embed-url" id="alreadyEmbedUrl"></div>
-        <button class="copy-btn" onclick="copyEmbed('alreadyEmbedUrl', this)">copiar</button>
+      <div class="card-title">Tus links de embed</div>
+      <div class="card-sub">Tienes dos links — uno para el grid completo y uno solo para tu bio.</div>
+      <div class="url-block">
+        <div class="url-label"><span>Grid completo</span><span class="url-tag">GRID</span></div>
+        <div class="embed-wrap">
+          <div class="embed-url" id="alreadyEmbedUrl"></div>
+          <button class="copy-btn" onclick="copyEmbed('alreadyEmbedUrl', this)">copiar</button>
+        </div>
+      </div>
+      <div class="url-block">
+        <div class="url-label"><span>Solo bio & highlights</span><span class="url-tag bio">BIO</span></div>
+        <div class="embed-wrap">
+          <div class="embed-url" id="alreadyBioUrl"></div>
+          <button class="copy-btn" onclick="copyEmbed('alreadyBioUrl', this)">copiar</button>
+        </div>
       </div>
     </div>
   </div>
@@ -251,26 +268,42 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         ¡Tu widget está listo!
       </div>
-      <div class="success-card-body">Copia tu link personal y pégalo en Notion como un bloque <code>/embed</code></div>
+      <div class="success-card-body">Tienes dos links — pégalos en Notion según donde los necesites.</div>
     </div>
     <div class="card">
-      <div class="card-title">Tu link de embed</div>
-      <div class="card-sub">Este link es único y personal — guárdalo bien.</div>
-      <div class="embed-wrap">
-        <div class="embed-url" id="embedUrl"></div>
-        <button class="copy-btn" id="copyBtnMain" onclick="copyEmbed('embedUrl', this)">copiar</button>
+      <div class="card-title">Tus links de embed</div>
+      <div class="card-sub">Cada link es único y personal — guárdalos bien.</div>
+
+      <!-- Grid URL -->
+      <div class="url-block">
+        <div class="url-label"><span>Grid completo</span><span class="url-tag">GRID</span></div>
+        <div class="embed-wrap">
+          <div class="embed-url" id="embedUrl"></div>
+          <button class="copy-btn" id="copyBtnGrid" onclick="copyEmbed('embedUrl', this)">copiar</button>
+        </div>
       </div>
+
+      <!-- Bio URL -->
+      <div class="url-block">
+        <div class="url-label"><span>Solo bio & highlights</span><span class="url-tag bio">BIO</span></div>
+        <div class="embed-wrap">
+          <div class="embed-url" id="embedBioUrl"></div>
+          <button class="copy-btn" id="copyBtnBio" onclick="copyEmbed('embedBioUrl', this)">copiar</button>
+        </div>
+      </div>
+
       <div class="howto" style="margin-top:14px;">
         <div class="howto-title">Cómo embeber en Notion</div>
         <div class="howto-step"><div class="howto-n">1</div><span>En Notion escribe <code>/embed</code></span></div>
-        <div class="howto-step"><div class="howto-n">2</div><span>Pega tu link y presiona <strong>Embed link</strong></span></div>
+        <div class="howto-step"><div class="howto-n">2</div><span>Pega el link que necesites y presiona <strong>Embed link</strong></span></div>
         <div class="howto-step"><div class="howto-n">3</div><span>Ajusta el tamaño del bloque</span></div>
-        <div class="howto-step"><div class="howto-n">4</div><span>Cada vez que actualices tu DB, solo refresca</span></div>
+        <div class="howto-step"><div class="howto-n">4</div><span>Cada vez que actualices tu DB, solo refresca el widget</span></div>
       </div>
       <div class="note" style="margin-top:12px;"><strong>¿Quieres otro widget?</strong> Puedes repetir el setup con una DB diferente.</div>
     </div>
     <div class="btn-row">
-      <button class="btn-primary" onclick="copyEmbed('embedUrl', document.getElementById('copyBtnMain'))">Copiar mi link →</button>
+      <button class="btn-ghost" id="copyBtnGridMain" onclick="copyEmbed('embedUrl', this)">Copiar link Grid</button>
+      <button class="btn-primary" id="copyBtnBioMain" onclick="copyEmbed('embedBioUrl', this)">Copiar link Bio →</button>
     </div>
   </div>
 
@@ -289,6 +322,7 @@ async function init() {
     const data = await res.json();
     if (data.activated && data.widgetUrl) {
       document.getElementById('alreadyEmbedUrl').textContent = data.widgetUrl;
+      document.getElementById('alreadyBioUrl').textContent = data.widgetUrl + '?mode=bio';
       showScreen('screenAlreadyDone'); return;
     }
     showScreen('screenStep1');
@@ -361,7 +395,11 @@ async function connectNotion() {
 
     status.className = 'status success';
     status.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> ¡Conexión exitosa!`;
+
+    // Setear ambas URLs
     document.getElementById('embedUrl').textContent = data.embedUrl;
+    document.getElementById('embedBioUrl').textContent = data.embedUrl + '?mode=bio';
+
     setTimeout(() => goStep(4), 900);
 
   } catch {
@@ -374,8 +412,9 @@ async function connectNotion() {
 function copyEmbed(id, btn) {
   const text = document.getElementById(id).textContent;
   navigator.clipboard.writeText(text).then(() => {
+    const original = btn.textContent;
     btn.textContent = '✓ copiado';
-    setTimeout(() => btn.textContent = 'copiar', 2000);
+    setTimeout(() => btn.textContent = original, 2000);
   });
 }
 
