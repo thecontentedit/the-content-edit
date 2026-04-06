@@ -173,9 +173,12 @@ function formatPost(page) {
 
   const name = props[PROPS.name]?.title?.[0]?.plain_text || '';
   const dateRaw = props[PROPS.publishDate]?.date?.start;
-  const publishDate = dateRaw
-    ? new Date(dateRaw).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' })
-    : null;
+  let publishDate = null;
+  if (dateRaw) {
+    const [year, month, day] = dateRaw.split('T')[0].split('-');
+    const d = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+    publishDate = d.toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
 
   const tipoImagen = props[PROPS.imagenDesde]?.select?.name?.toLowerCase() || '';
 
