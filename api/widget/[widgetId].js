@@ -12,6 +12,7 @@ const PROPS = {
   mediaType:    'Formato',
   type:         'Type',
   ocultar:      'Ocultar',
+  pilar:        'Pilar',
   displayName:  'Nombre',
   username:     'Usuario',
   bio:          'Bio',
@@ -229,5 +230,7 @@ function formatPost(page) {
   if (images.length > 1 && mediaType === 'foto') mediaType = 'carrusel';
   const pinned = props[PROPS.pinned]?.checkbox || false;
 
-  return { name, publishDate, publishDateISO, imageUrl, images, imageSource, mediaType, pinned, pageId: page.id };
+  const pilar = props[PROPS.pilar]?.select?.name || null;
+
+  return { name, publishDate, publishDateISO, imageUrl, images, imageSource, mediaType, pinned, pilar, pageId: page.id };
 }
