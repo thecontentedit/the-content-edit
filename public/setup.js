@@ -106,4 +106,12 @@ function copyEmbed(id, btn) {
   });
 }
 
+function toggleHowto(btn) {
+  const collapsible = btn.nextElementSibling;
+  const isOpen = collapsible.classList.contains('open');
+  collapsible.classList.toggle('open', !isOpen);
+  btn.classList.toggle('open', !isOpen);
+  btn.querySelector('span') && (btn.querySelector('span').textContent = isOpen ? 'Ver instrucciones paso a paso' : 'Ocultar instrucciones');
+}
+
 init();
