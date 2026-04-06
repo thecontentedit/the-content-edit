@@ -107,7 +107,7 @@
   <div class="screen" id="screenInvalid">
     <div class="center-msg">
       <h2>Link inválido o expirado</h2>
-      <p>Este link de setup ya no es válido.<br/>Revisa tu email o escríbenos a <a href="mailto:hola@thecontentedit.com">hola@thecontentedit.com</a></p>
+      <p>Este link de setup ya no es válido.<br/>Revisa tu email o escríbenos a <a href="/cdn-cgi/l/email-protection#98f0f7f4f9d8ecf0fdfbf7f6ecfdf6ecfdfcf1ecb6fbf7f5"><span class="__cf_email__" data-cfemail="acc4c3c0cdecd8c4c9cfc3c2d8c9c2d8c9c8c5d882cfc3c1">[email&#160;protected]</span></a></p>
     </div>
   </div>
 
@@ -153,21 +153,11 @@
     <div class="card">
       <div class="card-title">Duplica la plantilla de Notion</div>
       <div class="card-sub">Primero necesitas una base de datos con las propiedades correctas. Duplica nuestra plantilla — tarda 2 minutos.</div>
-      <a href="https://thecontentedit.notion.site" target="_blank" style="display:block; background:var(--ink); color:var(--cream); text-align:center; padding:11px; border-radius:999px; font-size:13px; font-weight:500; text-decoration:none; margin-bottom:14px;">Duplicar plantilla →</a>
-      <div class="card-sub" style="margin-bottom:8px; font-size:12px;">¿Usas tu propia base de datos? Necesita estas propiedades exactas:</div>
-      <div class="howto">
-        <div class="howto-title">Propiedades requeridas</div>
-        <div class="howto-step"><div class="howto-n">T</div><span><strong>Name</strong> — Text</span></div>
-        <div class="howto-step"><div class="howto-n">D</div><span><strong>Publish Date</strong> — Date</span></div>
-        <div class="howto-step"><div class="howto-n">A</div><span><strong>Attachment</strong> — Files & Media</span></div>
-        <div class="howto-step"><div class="howto-n">L</div><span><strong>Link</strong> — URL</span></div>
-        <div class="howto-step"><div class="howto-n">P</div><span><strong>Pinned</strong> — Checkbox</span></div>
-        <div class="howto-step"><div class="howto-n">M</div><span><strong>Media Type</strong> — Select: photo / carousel / reel</span></div>
-      </div>
+      <a href="https://thecontentedit.notion.site" target="_blank" style="display:block; background:var(--ink); color:var(--cream); text-align:center; padding:11px; border-radius:999px; font-size:13px; font-weight:500; text-decoration:none; margin-bottom:0;">Duplicar plantilla →</a>
     </div>
     <div id="toggle1" class="toggle-confirm" onclick="toggleConfirm(1)">
       <div class="toggle-switch"></div>
-      <span>Ya tengo mi base de datos lista</span>
+      <span>Ya dupliqué la plantilla</span>
     </div>
     <div class="btn-row">
       <button class="btn-primary" id="btn1" disabled onclick="goStep(2)">Siguiente →</button>
@@ -308,7 +298,7 @@
   </div>
 
 </div>
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const params = new URLSearchParams(location.search);
 const setupToken = params.get('token');
 const BASE_URL = location.origin;
@@ -410,15 +400,4 @@ async function connectNotion() {
 }
 
 function copyEmbed(id, btn) {
-  const text = document.getElementById(id).textContent;
-  navigator.clipboard.writeText(text).then(() => {
-    const original = btn.textContent;
-    btn.textContent = '✓ copiado';
-    setTimeout(() => btn.textContent = original, 2000);
-  });
-}
-
-init();
-</script>
-</body>
-</html>
+  const text = document.getEle
