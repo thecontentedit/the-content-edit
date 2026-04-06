@@ -271,6 +271,8 @@
 <script>
 const widgetId = location.pathname.split('/').filter(Boolean).pop();
 const API_BASE = location.origin;
+const urlParams = new URLSearchParams(location.search);
+const isBioMode = urlParams.get('mode') === 'bio';
 
 const SETTINGS_KEY = `tce_settings_${widgetId}`;
 let settings = { showBio: true, showHighlights: true, showContentMap: false, wideGrid: false, darkMode: false, sortMode: 'date' };
@@ -362,11 +364,24 @@ function setTab(tab) {
 function renderAll() {
   if (!cachedData) return;
   const { posts, plan, profile } = cachedData;
+
+  if (isBioMode) {
+    renderBio(profile);
+    document.getElementById('bio-section').style.display = 'block';
+    renderHighlights(profile);
+    document.querySelector('.divider').style.display = 'none';
+    document.querySelector('.toolbar').style.display = 'none';
+    document.querySelector('.tabs').style.display = 'none';
+    document.getElementById('grid').style.display = 'none';
+    document.querySelector('.watermark').style.display = 'none';
+    applyDarkMode();
+    return;
+  }
+
   renderBio(profile);
   renderHighlights(profile);
   renderGrid(posts, plan);
   updateSettingsUI();
-  // Plan Grid button solo visible para Pro
   const btnPlan = document.getElementById('btn-plan-grid');
   if (plan !== 'pro') { btnPlan.style.display = 'none'; }
   applyDarkMode();
