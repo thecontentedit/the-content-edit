@@ -184,11 +184,11 @@
     <div class="card">
       <div class="card-title">Crea una integración en Notion</div>
       <div class="card-sub">Necesitas una integración gratuita para que el widget pueda leer tu base de datos.</div>
-      <button class="howto-toggle" onclick="toggleHowto(this)">
+      <button class="howto-toggle open" onclick="toggleHowto(this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-        Ver instrucciones paso a paso
+        Ocultar instrucciones
       </button>
-      <div class="howto-collapsible">
+      <div class="howto-collapsible open">
         <div class="howto" style="margin-bottom:14px;">
           <div class="howto-step"><div class="howto-n">1</div><span>Ve a <a href="https://www.notion.so/my-integrations" target="_blank" style="color:var(--ink);">notion.so/my-integrations</a></span></div>
           <div class="howto-step"><div class="howto-n">2</div><span>Click en <strong>"New integration"</strong></span></div>
@@ -225,12 +225,12 @@
     </div>
     <div class="card">
       <div class="card-title">Conecta tu base de datos</div>
-      <div class="card-sub">Primero conecta la integración a tu DB en Notion, luego pega la URL aquí.</div>
-      <button class="howto-toggle" onclick="toggleHowto(this)">
+      <div class="card-sub">Primero conecta la integración a tu base de datos en Notion, luego pega la URL aquí.</div>
+      <button class="howto-toggle open" onclick="toggleHowto(this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-        Ver instrucciones paso a paso
+        Ocultar instrucciones
       </button>
-      <div class="howto-collapsible">
+      <div class="howto-collapsible open">
         <div class="howto" style="margin-bottom:14px;">
           <div class="howto-step"><div class="howto-n">1</div><span>Abre tu base de datos en Notion</span></div>
           <div class="howto-step"><div class="howto-n">2</div><span>Click en <code>···</code> arriba a la derecha</span></div>
@@ -245,7 +245,19 @@
       <div class="field">
         <label>URL de tu base de datos</label>
         <input type="text" id="notionDbUrl" placeholder="https://www.notion.so/workspace/..." oninput="checkStep3()"/>
-        <div class="field-hint">Abre tu DB en el navegador y copia la URL completa de la barra de direcciones.</div>
+        <div class="field-hint">Pega la URL de tu base de datos. <strong>Hazlo desde el navegador web</strong> — en la app de Notion no es posible copiar la URL.</div>
+        <button class="howto-toggle open" onclick="toggleHowto(this)" style="margin-top:10px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          <span>Ocultar instrucciones</span>
+        </button>
+        <div class="howto-collapsible open">
+          <div class="howto" style="margin-top:4px;">
+            <div class="howto-step"><div class="howto-n">1</div><span>Abre tu base de datos en Notion y ábrela en <strong>vista de página completa</strong> — haz click en el ícono de expandir arriba a la derecha</span></div>
+            <div class="howto-step"><div class="howto-n">2</div><span>Copia la URL directamente desde la barra de direcciones del navegador</span></div>
+            <div class="howto-step"><div class="howto-n">3</div><span>También puedes usar <code>···</code> → <strong>Copiar link</strong> dentro de Notion</span></div>
+            <div class="howto-step"><div class="howto-n">!</div><span><strong>Importante:</strong> debe ser el link de la base de datos, no de la página que la contiene. Si tienes varias vistas de la misma base de datos, cualquiera funciona.</span></div>
+          </div>
+        </div>
       </div>
       <div id="connectStatus" class="status idle">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
@@ -293,16 +305,16 @@
           <button class="copy-btn" id="copyBtnBio" onclick="copyEmbed('embedBioUrl', this)">copiar</button>
         </div>
       </div>
-      <button class="howto-toggle" onclick="toggleHowto(this)" style="margin-top:14px;">
+      <button class="howto-toggle open" onclick="toggleHowto(this)" style="margin-top:14px;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         Cómo embeber en Notion
       </button>
-      <div class="howto-collapsible">
+      <div class="howto-collapsible open">
         <div class="howto">
           <div class="howto-step"><div class="howto-n">1</div><span>En Notion escribe <code>/embed</code></span></div>
           <div class="howto-step"><div class="howto-n">2</div><span>Pega el link que necesites y presiona <strong>Embed link</strong></span></div>
           <div class="howto-step"><div class="howto-n">3</div><span>Ajusta el tamaño del bloque</span></div>
-          <div class="howto-step"><div class="howto-n">4</div><span>Cada vez que actualices tu DB, solo refresca el widget</span></div>
+          <div class="howto-step"><div class="howto-n">4</div><span>Cada vez que actualices tu base de datos, solo refresca el widget</span></div>
         </div>
       </div>
       <div class="note" style="margin-top:12px;"><strong>¿Quieres otro widget?</strong> Puedes repetir el setup con una DB diferente.</div>
