@@ -1,18 +1,10 @@
 import { Redis } from '@upstash/redis';
-import { createDecipheriv } from 'crypto';
+import { decryptToken } from '../setup.js';
 
 const redis = new Redis({
   url: process.env.KV_REST_API_URL,
   token: process.env.KV_REST_API_TOKEN,
 });
-
-function decrypt(text) {
-  const key = Buffer.from(process.env.ENCRYPTION_KEY, 'hex');
-  const [ivHex, encrypted] = text.split(':');
-  const iv = Buffer.from(ivHex, 'hex');
-  const decipher = createDecipheriv('aes-256-cbc', key, iv);
-  return decipher.update(encrypted, 'hex', 'utf8') + decipher.final('utf8');
-}
 
 function formatDate(dateStr) {
   if (!dateStr) return null;
@@ -119,7 +111,7 @@ export default async function handler(req, res) {
 
   let notionToken, dbId, plan;
   try {
-    const decrypted = JSON.parse(decrypt(widgetData));
+    const decrypted = JSON.parse(decryptToken(widgetData));
     notionToken = decrypted.notionToken;
     dbId = decrypted.dbId;
     plan = decrypted.plan || 'free';
