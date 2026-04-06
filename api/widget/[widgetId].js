@@ -4,28 +4,29 @@ import { decryptToken } from '../setup.js';
 const redis = Redis.fromEnv();
 
 const PROPS = {
-  name:         'Name',
-  publishDate:  'Publish Date',
+  name:         'Título',
+  publishDate:  'Fecha de publicación',
   attachment:   'Attachment',
   link:         'Link',
   canvaLink:    'Canva Link',
-  tipoImagen:   'Tipo de imagen',
-  pinned:       'Pinned',
-  mediaType:    'Media Type',
+  imagenDesde:  'Imagen desde',
+  pinned:       'Fijado',
+  mediaType:    'Formato',
   type:         'Type',
-  displayName:  'Display Name',
-  username:     'Username',
+  ocultar:      'Ocultar',
+  displayName:  'Nombre',
+  username:     'Usuario',
   bio:          'Bio',
-  website:      'Website',
-  profilePhoto: 'Profile Photo',
-  h1photo:      'Highlight 1 Photo',
-  h1label:      'Highlight 1 Label',
-  h2photo:      'Highlight 2 Photo',
-  h2label:      'Highlight 2 Label',
-  h3photo:      'Highlight 3 Photo',
-  h3label:      'Highlight 3 Label',
-  h4photo:      'Highlight 4 Photo',
-  h4label:      'Highlight 4 Label',
+  website:      'Sitio web',
+  profilePhoto: 'Foto de perfil',
+  h1photo:      'Highlight 1 Foto',
+  h1label:      'Highlight 1 Nombre',
+  h2photo:      'Highlight 2 Foto',
+  h2label:      'Highlight 2 Nombre',
+  h3photo:      'Highlight 3 Foto',
+  h3label:      'Highlight 3 Nombre',
+  h4photo:      'Highlight 4 Foto',
+  h4label:      'Highlight 4 Nombre',
 };
 
 export default async function handler(req, res) {
@@ -68,7 +69,7 @@ export default async function handler(req, res) {
             'Notion-Version': '2022-06-28',
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ properties: { 'Publish Date': { date: { start: dateStr } } } }),
+          body: JSON.stringify({ properties: { [PROPS.publishDate]: { date: { start: dateStr } } } }),
         });
       }));
       return res.status(200).json({ success: true });
@@ -85,7 +86,11 @@ export default async function handler(req, res) {
 
     const postPages = allPages.filter(p => {
       const typeVal = p.properties[PROPS.type]?.select?.name?.toLowerCase();
-      return typeVal !== 'profile';
+      if (typeVal === 'profile') return false;
+      // Filter out hidden posts
+      const ocultar = p.properties[PROPS.ocultar]?.checkbox;
+      if (ocultar) return false;
+      return true;
     });
 
     const profile = profilePage ? formatProfile(profilePage) : null;
@@ -113,7 +118,7 @@ async function fetchAllPages(token, dbId, limit) {
       'Notion-Version': '2022-06-28',
     },
     body: JSON.stringify({
-      page_size: limit + 1,
+      page_size: limit + 5,
       sorts: [{ property: PROPS.publishDate, direction: 'descending' }],
     }),
   });
@@ -157,7 +162,6 @@ function formatProfile(page) {
 
 function normalizeLink(url) {
   if (!url) return null;
-  // Dropbox: convert dl=0 to raw=1
   if (url.includes('dropbox.com')) {
     return url.replace('www.dropbox.com', 'dl.dropboxusercontent.com').replace('?dl=0', '').replace('?dl=1', '');
   }
@@ -173,28 +177,23 @@ function formatPost(page) {
     ? new Date(dateRaw).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' })
     : null;
 
-  // Tipo de imagen determines which source to use
-  const tipoImagen = props[PROPS.tipoImagen]?.select?.name?.toLowerCase() || '';
+  const tipoImagen = props[PROPS.imagenDesde]?.select?.name?.toLowerCase() || '';
 
-  // Attachment files (can be multiple for carousel)
   const attachments = props[PROPS.attachment]?.files || [];
   const attachmentUrls = attachments.map(f =>
     f.type === 'file' ? f.file.url : f.external?.url
   ).filter(Boolean);
 
-  // Link field (text, multiple URLs separated by newlines)
   const linkText = props[PROPS.link]?.rich_text?.map(r => r.plain_text).join('') || '';
   const linkUrls = linkText.split('\n').map(l => normalizeLink(l.trim())).filter(l => l && l.startsWith('http'));
 
-  // Canva link
   let canvaUrl = props[PROPS.canvaLink]?.url || null;
   if (canvaUrl && !canvaUrl.includes('?embed')) {
     canvaUrl = canvaUrl.split('?')[0] + '?embed';
   }
 
-  // Determine images and source type
   let images = [];
-  let imageSource = 'attachment'; // 'attachment' | 'link' | 'canva'
+  let imageSource = 'attachment';
 
   if (tipoImagen === 'canva' && canvaUrl) {
     imageSource = 'canva';
@@ -206,7 +205,6 @@ function formatPost(page) {
     imageSource = 'attachment';
     images = attachmentUrls;
   } else {
-    // Fallback: auto-detect
     if (attachmentUrls.length > 0) {
       imageSource = 'attachment';
       images = attachmentUrls;
@@ -221,9 +219,8 @@ function formatPost(page) {
 
   const imageUrl = images[0] || null;
 
-  // Auto-detect carousel if multiple images
-  let mediaType = props[PROPS.mediaType]?.select?.name?.toLowerCase() || 'photo';
-  if (images.length > 1 && mediaType === 'photo') mediaType = 'carousel';
+  let mediaType = props[PROPS.mediaType]?.select?.name?.toLowerCase() || 'foto';
+  if (images.length > 1 && mediaType === 'foto') mediaType = 'carrusel';
 
   const pinned = props[PROPS.pinned]?.checkbox || false;
 
