@@ -6,57 +6,34 @@
 <title>The Content Edit — Grid Preview</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --ink: #1C1915; --cream: #F9F6F1; --muted: #7A7570; --border: rgba(28,25,21,0.12); }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: transparent; color: var(--ink); -webkit-font-smoothing: antialiased; }
 
-  :root {
-    --ink: #1C1915;
-    --cream: #F9F6F1;
-    --muted: #7A7570;
-    --border: rgba(28,25,21,0.12);
-    --accent: #E8572A;
-  }
-
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: transparent;
-    color: var(--ink);
-    -webkit-font-smoothing: antialiased;
-  }
-
-  #loading {
-    display: flex; align-items: center; justify-content: center;
-    min-height: 200px; gap: 8px;
-    font-size: 13px; color: var(--muted);
-  }
-  .spinner {
-    width: 16px; height: 16px;
-    border: 1.5px solid var(--border);
-    border-top-color: var(--ink);
-    border-radius: 50%;
-    animation: spin .7s linear infinite;
-  }
+  #loading { display: flex; align-items: center; justify-content: center; min-height: 200px; gap: 8px; font-size: 13px; color: var(--muted); }
+  .spinner { width: 16px; height: 16px; border: 1.5px solid var(--border); border-top-color: var(--ink); border-radius: 50%; animation: spin .7s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  #error {
-    display: none; padding: 1.5rem; text-align: center;
-    font-size: 13px; color: var(--muted); line-height: 1.6;
-  }
-
+  #error { display: none; padding: 1.5rem; text-align: center; font-size: 13px; color: var(--muted); line-height: 1.6; }
   #widget { display: none; }
 
   /* BIO */
-  #bio-section { padding: 12px 4px 8px; }
+  #bio-section { padding: 12px 4px 10px; }
+  .bio-top { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 10px; }
+  .bio-avatar { width: 72px; height: 72px; border-radius: 50%; background: #E8E4DD; overflow: hidden; border: 2px solid rgba(28,25,21,0.1); flex-shrink: 0; }
+  .bio-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .bio-avatar-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 600; color: #fff; background: #C8B89A; }
+  .bio-info { flex: 1; }
   .bio-username { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
-  .bio-displayname { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
-  .bio-text { font-size: 12px; color: var(--ink); line-height: 1.5; margin-bottom: 5px; white-space: pre-line; }
-  .bio-website { font-size: 12px; color: #0077CC; text-decoration: none; font-weight: 500; display: block; margin-bottom: 10px; }
+  .bio-displayname { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 5px; }
+  .bio-text { font-size: 12px; color: var(--ink); line-height: 1.5; margin-bottom: 4px; white-space: pre-line; }
+  .bio-website { font-size: 12px; color: #0077CC; text-decoration: none; font-weight: 500; }
   .bio-website:hover { text-decoration: underline; }
 
   /* HIGHLIGHTS */
-  #highlights-section { display: flex; gap: 14px; padding: 4px 4px 12px; overflow-x: auto; }
-  .highlight-item { display: flex; flex-direction: column; align-items: center; gap: 5px; flex-shrink: 0; }
-  .highlight-circle { width: 56px; height: 56px; border-radius: 50%; background: #E8E4DD; overflow: hidden; border: 2px solid rgba(28,25,21,0.1); }
+  #highlights-section { display: flex; gap: 12px; padding: 8px 4px 10px; overflow-x: auto; border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); margin-bottom: 8px; }
+  .highlight-item { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; }
+  .highlight-circle { width: 52px; height: 52px; border-radius: 50%; background: #E8E4DD; overflow: hidden; border: 2px solid rgba(28,25,21,0.12); }
   .highlight-circle img { width: 100%; height: 100%; object-fit: cover; }
-  .highlight-label { font-size: 10px; color: var(--ink); text-align: center; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .highlight-label { font-size: 10px; color: var(--ink); text-align: center; max-width: 56px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
   .divider { height: 0.5px; background: var(--border); margin: 0 0 8px; }
 
@@ -69,86 +46,84 @@
   .toolbar-btn:hover { opacity: .75; }
   .toolbar-spacer { flex: 1; }
 
-  /* SETTINGS PANEL */
+  /* SETTINGS */
   .widget-wrapper { position: relative; }
-  #settings-panel {
-    display: none; position: absolute; right: 4px; top: 100%;
-    background: #fff; border: 0.5px solid rgba(28,25,21,0.15);
-    border-radius: 14px; padding: 6px 0; width: 240px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12); z-index: 100;
-  }
+  #settings-panel { display: none; position: absolute; right: 4px; top: 100%; background: #fff; border: 0.5px solid rgba(28,25,21,0.15); border-radius: 14px; padding: 6px 0; width: 240px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); z-index: 100; }
   #settings-panel.open { display: block; }
   .setting-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; font-size: 14px; color: var(--ink); cursor: pointer; }
   .setting-row:hover { background: #F9F6F1; }
   .setting-divider { height: 0.5px; background: var(--border); margin: 4px 0; }
-
   .toggle { width: 36px; height: 20px; border-radius: 999px; background: #ccc; position: relative; flex-shrink: 0; transition: background .2s; }
   .toggle::after { content: ''; position: absolute; width: 14px; height: 14px; border-radius: 50%; background: white; top: 3px; left: 3px; transition: transform .2s; }
-  .toggle.on { background: var(--accent); }
+  .toggle.on { background: #E8572A; }
   .toggle.on::after { transform: translateX(16px); }
-
   .radio { width: 18px; height: 18px; border-radius: 50%; border: 2px solid #ccc; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .radio.on { border-color: var(--accent); }
-  .radio.on::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .radio.on { border-color: #E8572A; }
+  .radio.on::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #E8572A; }
+  .pro-badge { font-size: 9px; background: #1C1915; color: #F9F6F1; padding: 2px 6px; border-radius: 999px; margin-left: 6px; }
 
   /* GRID */
   .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
 
-  .cell { position: relative; aspect-ratio: 1; overflow: visible; cursor: pointer; background: #e8e4dd; }
+  /* CELL */
+  .cell { position: relative; aspect-ratio: 1; cursor: pointer; background: #e8e4dd; overflow: hidden; }
   .cell-inner { width: 100%; height: 100%; overflow: hidden; position: relative; }
   .cell img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .22s ease; }
   .cell:hover .cell-inner img { transform: scale(1.04); }
-  .cell-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0); transition: background .2s; }
-  .cell:hover .cell-overlay { background: rgba(0,0,0,0.22); }
 
-  .cell-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #EDEAE4; gap: 6px; }
-  .cell-placeholder svg { width: 20px; height: 20px; opacity: .4; }
-  .cell-placeholder span { font-size: 10px; color: var(--muted); letter-spacing: .04em; }
+  /* HOVER OVERLAY — bottom only */
+  .cell-hover-info { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0) 100%); padding: 22px 8px 7px; opacity: 0; transition: opacity .2s; pointer-events: none; }
+  .cell:hover .cell-hover-info { opacity: 1; }
+  .hover-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
+  .hover-icon svg { width: 13px; height: 13px; }
+  .hover-date { font-size: 10px; color: rgba(255,255,255,0.9); font-weight: 500; }
+  .hover-caption { font-size: 11px; color: #fff; font-weight: 500; line-height: 1.3; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
+  /* BADGES */
   .badge-tr { position: absolute; top: 5px; right: 5px; filter: drop-shadow(0 1px 2px rgba(0,0,0,.6)); pointer-events: none; z-index: 2; }
   .badge-tr svg { width: 17px; height: 17px; }
   .badge-tl { position: absolute; top: 5px; left: 5px; filter: drop-shadow(0 1px 2px rgba(0,0,0,.6)); pointer-events: none; z-index: 2; }
   .badge-tl svg { width: 17px; height: 17px; }
 
-  .tooltip { position: absolute; bottom: calc(100% + 7px); left: 50%; transform: translateX(-50%) translateY(4px); background: #fff; border: 0.5px solid rgba(28,25,21,.18); border-radius: 8px; padding: 7px 10px; width: 155px; pointer-events: none; opacity: 0; transition: opacity .15s, transform .15s; z-index: 200; box-shadow: 0 4px 14px rgba(0,0,0,.1); }
-  .cell:hover .tooltip { opacity: 1; transform: translateX(-50%) translateY(0); }
-  .tooltip-name { font-size: 11px; font-weight: 500; color: var(--ink); line-height: 1.35; margin-bottom: 4px; }
-  .tooltip-date { font-size: 10px; color: var(--muted); display: flex; align-items: center; gap: 3px; }
-  .tooltip-date svg { width: 10px; height: 10px; flex-shrink: 0; }
-  .tooltip-arrow { position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%) rotate(45deg); width: 7px; height: 7px; background: #fff; border-right: 0.5px solid rgba(28,25,21,.18); border-bottom: 0.5px solid rgba(28,25,21,.18); }
-  .cell.flip-tooltip .tooltip { bottom: auto; top: calc(100% + 7px); transform: translateX(-50%) translateY(-4px); }
-  .cell.flip-tooltip:hover .tooltip { transform: translateX(-50%) translateY(0); }
-  .cell.flip-tooltip .tooltip-arrow { bottom: auto; top: -4px; border-right: none; border-bottom: none; border-left: 0.5px solid rgba(28,25,21,.18); border-top: 0.5px solid rgba(28,25,21,.18); }
+  /* DRAG */
+  .cell.dragging { opacity: 0.4; }
+  .cell.drag-over { outline: 2px solid var(--ink); outline-offset: -2px; }
+
+  .cell-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #EDEAE4; gap: 6px; }
+  .cell-placeholder svg { width: 20px; height: 20px; opacity: .4; }
+  .cell-placeholder span { font-size: 10px; color: var(--muted); letter-spacing: .04em; }
 
   .empty-cell { aspect-ratio: 1; background: #F4F1EC; border: 1.5px dashed rgba(28,25,21,.12); display: flex; align-items: center; justify-content: center; }
   .empty-cell span { font-size: 11px; color: var(--muted); }
 
   .watermark { text-align: center; margin-top: 8px; font-size: 10px; color: rgba(28,25,21,.25); letter-spacing: .06em; text-transform: uppercase; }
+
+  #saving-indicator { display: none; position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); background: var(--ink); color: #F9F6F1; padding: 6px 14px; border-radius: 999px; font-size: 11px; z-index: 999; }
 </style>
 </head>
 <body>
 
-<div id="loading">
-  <div class="spinner"></div>
-  Cargando tu grid…
-</div>
-
-<div id="error">
-  <p>No se pudo cargar el grid.</p>
-  <p style="margin-top:4px;font-size:11px;">Verifica que tu integración de Notion esté activa.</p>
-</div>
+<div id="loading"><div class="spinner"></div>Cargando tu grid…</div>
+<div id="error"><p>No se pudo cargar el grid.</p><p style="margin-top:4px;font-size:11px;">Verifica que tu integración de Notion esté activa.</p></div>
+<div id="saving-indicator">Guardando orden…</div>
 
 <div id="widget">
   <div class="widget-wrapper">
     <div id="bio-section">
-      <div class="bio-username" id="bio-username"></div>
-      <div class="bio-displayname" id="bio-displayname"></div>
-      <div class="bio-text" id="bio-text"></div>
-      <a class="bio-website" id="bio-website" href="#" target="_blank"></a>
+      <div class="bio-top">
+        <div class="bio-avatar" id="bio-avatar">
+          <div class="bio-avatar-placeholder" id="bio-avatar-placeholder"></div>
+        </div>
+        <div class="bio-info">
+          <div class="bio-username" id="bio-username"></div>
+          <div class="bio-displayname" id="bio-displayname"></div>
+          <div class="bio-text" id="bio-text"></div>
+          <a class="bio-website" id="bio-website" href="#" target="_blank"></a>
+        </div>
+      </div>
     </div>
 
     <div id="highlights-section"></div>
-
     <div class="divider"></div>
 
     <div class="toolbar">
@@ -166,23 +141,11 @@
     </div>
 
     <div id="settings-panel">
-      <div class="setting-row" onclick="toggleSetting('showBio')">
-        <span>Show Bio</span>
-        <div class="toggle" id="toggle-showBio"></div>
-      </div>
-      <div class="setting-row" onclick="toggleSetting('showHighlights')">
-        <span>Show Highlights</span>
-        <div class="toggle" id="toggle-showHighlights"></div>
-      </div>
+      <div class="setting-row" onclick="toggleSetting('showBio')"><span>Mostrar bio</span><div class="toggle" id="toggle-showBio"></div></div>
+      <div class="setting-row" onclick="toggleSetting('showHighlights')"><span>Mostrar highlights</span><div class="toggle" id="toggle-showHighlights"></div></div>
       <div class="setting-divider"></div>
-      <div class="setting-row" onclick="setSortMode('date')">
-        <span>Sort by publish date</span>
-        <div class="radio" id="radio-date"></div>
-      </div>
-      <div class="setting-row" onclick="setSortMode('custom')">
-        <span>Custom order</span>
-        <div class="radio" id="radio-custom"></div>
-      </div>
+      <div class="setting-row" onclick="setSortMode('date')"><span>Ordenar por fecha</span><div class="radio" id="radio-date"></div></div>
+      <div class="setting-row" id="drag-setting" onclick="setSortMode('custom')"><span>Orden personalizado<span class="pro-badge">PRO</span></span><div class="radio" id="radio-custom"></div></div>
     </div>
   </div>
 
@@ -196,24 +159,21 @@ const API_BASE = location.origin;
 
 const SETTINGS_KEY = `tce_settings_${widgetId}`;
 let settings = { showBio: true, showHighlights: true, sortMode: 'date' };
-try {
-  const saved = localStorage.getItem(SETTINGS_KEY);
-  if (saved) settings = { ...settings, ...JSON.parse(saved) };
-} catch(e) {}
-
-function saveSettings() {
-  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch(e) {}
-}
+try { const s = localStorage.getItem(SETTINGS_KEY); if (s) settings = { ...settings, ...JSON.parse(s) }; } catch(e) {}
+function saveSettings() { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch(e) {} }
 
 const icons = {
   carousel: `<svg viewBox="0 0 48 48" fill="white"><path d="M34.8 29.7V11c0-2.9-2.3-5.2-5.2-5.2H11c-2.9 0-5.2 2.3-5.2 5.2v18.7c0 2.9 2.3 5.2 5.2 5.2h18.6c2.9 0 5.2-2.3 5.2-5.2zm-3.7 0c0 .8-.7 1.5-1.5 1.5H11c-.8 0-1.5-.7-1.5-1.5V11c0-.8.7-1.5 1.5-1.5h18.6c.8 0 1.5.7 1.5 1.5v18.7zm6-21.7V32c0 2-1.6 3.7-3.7 3.7H10.6c-.6 0-1-.4-1-1s.4-1 1-1H33.4c.9 0 1.7-.8 1.7-1.7V8c0-.6.4-1 1-1s1 .4 1 1z"/></svg>`,
   reel: `<svg viewBox="0 0 24 24" fill="white"><path d="M10 15.5v-7l6 3.5-6 3.5zM21 3H3C1.9 3 1 3.9 1 5v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/></svg>`,
   pinned: `<svg viewBox="0 0 24 24" fill="white"><path d="M17 4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v1l1 1v5l-2 2v2h5v5l1 1 1-1v-5h5v-2l-2-2V6l1-1V4z"/></svg>`,
-  calendar: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,
+  link: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`,
+  attachment: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>`,
   canva: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M12 8v8"/></svg>`,
 };
 
 let cachedData = null;
+let dragSrcIndex = null;
+let currentOrder = [];
 
 async function loadWidget() {
   document.getElementById('grid').innerHTML = '';
@@ -242,6 +202,8 @@ function renderAll() {
   renderHighlights(profile);
   renderGrid(posts, plan);
   updateSettingsUI();
+  const dragSetting = document.getElementById('drag-setting');
+  if (plan !== 'pro') { dragSetting.style.opacity = '0.4'; dragSetting.style.pointerEvents = 'none'; }
 }
 
 function renderBio(profile) {
@@ -249,25 +211,32 @@ function renderBio(profile) {
   section.style.display = (settings.showBio && profile) ? 'block' : 'none';
   if (!profile) return;
 
-  const username = document.getElementById('bio-username');
-  const displayName = document.getElementById('bio-displayname');
-  const bioText = document.getElementById('bio-text');
-  const website = document.getElementById('bio-website');
-
-  username.textContent = profile.username ? `@${profile.username.replace(/^@/, '')}` : '';
-  username.style.display = profile.username ? 'block' : 'none';
-  displayName.textContent = profile.displayName || '';
-  displayName.style.display = profile.displayName ? 'block' : 'none';
-  bioText.textContent = profile.bio || '';
-  bioText.style.display = profile.bio ? 'block' : 'none';
-
-  if (profile.website) {
-    website.href = profile.website;
-    website.textContent = profile.website.replace(/^https?:\/\//, '');
-    website.style.display = 'block';
+  const avatarEl = document.getElementById('bio-avatar');
+  const placeholder = document.getElementById('bio-avatar-placeholder');
+  if (profile.avatarUrl) {
+    const img = document.createElement('img');
+    img.src = profile.avatarUrl;
+    img.alt = '';
+    avatarEl.innerHTML = '';
+    avatarEl.appendChild(img);
   } else {
-    website.style.display = 'none';
+    const initials = (profile.displayName || profile.username || '?').charAt(0).toUpperCase();
+    placeholder.textContent = initials;
   }
+
+  const u = document.getElementById('bio-username');
+  const d = document.getElementById('bio-displayname');
+  const b = document.getElementById('bio-text');
+  const w = document.getElementById('bio-website');
+
+  u.textContent = profile.username ? `@${profile.username.replace(/^@/, '')}` : '';
+  u.style.display = profile.username ? 'block' : 'none';
+  d.textContent = profile.displayName || '';
+  d.style.display = profile.displayName ? 'block' : 'none';
+  b.textContent = profile.bio || '';
+  b.style.display = profile.bio ? 'block' : 'none';
+  if (profile.website) { w.href = profile.website; w.textContent = profile.website.replace(/^https?:\/\//, ''); w.style.display = 'block'; }
+  else { w.style.display = 'none'; }
 }
 
 function renderHighlights(profile) {
@@ -276,18 +245,12 @@ function renderHighlights(profile) {
   const show = settings.showHighlights && profile && profile.highlights && profile.highlights.length > 0;
   section.style.display = show ? 'flex' : 'none';
   if (!show) return;
-
   profile.highlights.forEach(h => {
     const item = document.createElement('div');
     item.className = 'highlight-item';
     const circle = document.createElement('div');
     circle.className = 'highlight-circle';
-    if (h.photo) {
-      const img = document.createElement('img');
-      img.src = h.photo;
-      img.alt = h.label || '';
-      circle.appendChild(img);
-    }
+    if (h.photo) { const img = document.createElement('img'); img.src = h.photo; img.alt = ''; circle.appendChild(img); }
     const label = document.createElement('div');
     label.className = 'highlight-label';
     label.textContent = h.label || '';
@@ -301,8 +264,14 @@ function renderGrid(posts, plan) {
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
 
-  const total = Math.max(posts.length, 9);
-  const slots = Array.from({ length: total }, (_, i) => posts[i] || null);
+  let ordered = [...posts];
+  if (settings.sortMode === 'date') {
+    ordered.sort((a, b) => (!a.publishDate ? 1 : !b.publishDate ? -1 : 0));
+  }
+
+  currentOrder = ordered.map(p => p.pageId);
+  const total = Math.max(ordered.length, 9);
+  const slots = Array.from({ length: total }, (_, i) => ordered[i] || null);
 
   slots.forEach((post, i) => {
     if (!post) {
@@ -313,21 +282,17 @@ function renderGrid(posts, plan) {
       return;
     }
 
-    const row = Math.floor(i / 3);
-    const totalRows = Math.ceil(slots.length / 3);
-    const isLastRow = row === totalRows - 1;
-
     const cell = document.createElement('div');
-    cell.className = 'cell' + (isLastRow ? ' flip-tooltip' : '');
+    cell.className = 'cell';
+    cell.dataset.index = i;
+    cell.dataset.pageId = post.pageId;
 
     const inner = document.createElement('div');
     inner.className = 'cell-inner';
 
     if (post.imageUrl && !post.imageUrl.startsWith('__')) {
       const img = document.createElement('img');
-      img.src = post.imageUrl;
-      img.alt = post.name || '';
-      img.loading = 'lazy';
+      img.src = post.imageUrl; img.alt = post.name || ''; img.loading = 'lazy';
       img.onerror = () => { img.style.display = 'none'; inner.appendChild(makePlaceholder('imagen no disponible')); };
       inner.appendChild(img);
     } else {
@@ -335,46 +300,116 @@ function renderGrid(posts, plan) {
       inner.appendChild(makePlaceholder(label));
     }
 
-    const overlay = document.createElement('div');
-    overlay.className = 'cell-overlay';
-    inner.appendChild(overlay);
     cell.appendChild(inner);
 
+    // Hover info bottom
+    const hoverInfo = document.createElement('div');
+    hoverInfo.className = 'cell-hover-info';
+
+    const topRow = document.createElement('div');
+    topRow.className = 'hover-top-row';
+
+    const iconDiv = document.createElement('div');
+    iconDiv.className = 'hover-icon';
+    const isExternal = post.imageUrl && post.imageUrl.startsWith('http') && !post.imageUrl.includes('prod-files');
+    iconDiv.innerHTML = isExternal ? icons.link : icons.attachment;
+    topRow.appendChild(iconDiv);
+
+    if (post.publishDate) {
+      const dateDiv = document.createElement('div');
+      dateDiv.className = 'hover-date';
+      dateDiv.textContent = post.publishDate;
+      topRow.appendChild(dateDiv);
+    }
+
+    hoverInfo.appendChild(topRow);
+
+    if (post.name) {
+      const cap = document.createElement('div');
+      cap.className = 'hover-caption';
+      cap.textContent = post.name;
+      hoverInfo.appendChild(cap);
+    }
+
+    cell.appendChild(hoverInfo);
+
     if (plan === 'pro' && (post.mediaType === 'carousel' || post.mediaType === 'reel')) {
-      const b = document.createElement('div');
-      b.className = 'badge-tr';
+      const b = document.createElement('div'); b.className = 'badge-tr';
       b.innerHTML = post.mediaType === 'carousel' ? icons.carousel : icons.reel;
       cell.appendChild(b);
     }
 
     if (plan === 'pro' && post.pinned) {
-      const p = document.createElement('div');
-      p.className = 'badge-tl';
+      const p = document.createElement('div'); p.className = 'badge-tl';
       p.innerHTML = icons.pinned;
       cell.appendChild(p);
     }
 
-    if (post.name || post.publishDate) {
-      const tooltip = document.createElement('div');
-      tooltip.className = 'tooltip';
-      tooltip.innerHTML = `
-        ${post.name ? `<div class="tooltip-name">${escapeHtml(post.name)}</div>` : ''}
-        ${post.publishDate ? `<div class="tooltip-date">${icons.calendar} ${escapeHtml(post.publishDate)}</div>` : ''}
-        <div class="tooltip-arrow"></div>`;
-      cell.appendChild(tooltip);
+    if (plan === 'pro' && settings.sortMode === 'custom') {
+      cell.draggable = true;
+      cell.style.cursor = 'grab';
+      cell.addEventListener('dragstart', onDragStart);
+      cell.addEventListener('dragover', onDragOver);
+      cell.addEventListener('dragleave', onDragLeave);
+      cell.addEventListener('drop', onDrop);
+      cell.addEventListener('dragend', onDragEnd);
     }
 
     grid.appendChild(cell);
   });
 }
 
-function toggleSettings() {
-  document.getElementById('settings-panel').classList.toggle('open');
+function onDragStart(e) {
+  dragSrcIndex = parseInt(this.dataset.index);
+  this.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
 }
 
-function closeSettings() {
-  document.getElementById('settings-panel').classList.remove('open');
+function onDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  this.classList.add('drag-over');
 }
+
+function onDragLeave() { this.classList.remove('drag-over'); }
+
+async function onDrop(e) {
+  e.preventDefault();
+  this.classList.remove('drag-over');
+  const destIndex = parseInt(this.dataset.index);
+  if (dragSrcIndex === destIndex || isNaN(destIndex)) return;
+
+  const newOrder = [...currentOrder];
+  const [moved] = newOrder.splice(dragSrcIndex, 1);
+  newOrder.splice(destIndex, 0, moved);
+  currentOrder = newOrder;
+
+  const reordered = newOrder.map(id => cachedData.posts.find(p => p.pageId === id)).filter(Boolean);
+  cachedData.posts = reordered;
+  renderGrid(reordered, cachedData.plan);
+  await saveOrderToNotion(newOrder);
+}
+
+function onDragEnd() {
+  this.classList.remove('dragging');
+  document.querySelectorAll('.cell').forEach(c => c.classList.remove('drag-over'));
+}
+
+async function saveOrderToNotion(orderedIds) {
+  const indicator = document.getElementById('saving-indicator');
+  indicator.style.display = 'block';
+  try {
+    await fetch(`${API_BASE}/api/widget/${widgetId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderedIds }),
+    });
+  } catch (err) { console.error('Error saving order:', err); }
+  finally { setTimeout(() => { indicator.style.display = 'none'; }, 1500); }
+}
+
+function toggleSettings() { document.getElementById('settings-panel').classList.toggle('open'); }
+function closeSettings() { document.getElementById('settings-panel').classList.remove('open'); }
 
 document.addEventListener('click', (e) => {
   const panel = document.getElementById('settings-panel');
@@ -382,17 +417,8 @@ document.addEventListener('click', (e) => {
   if (!panel.contains(e.target) && !btn.contains(e.target)) closeSettings();
 });
 
-function toggleSetting(key) {
-  settings[key] = !settings[key];
-  saveSettings();
-  renderAll();
-}
-
-function setSortMode(mode) {
-  settings.sortMode = mode;
-  saveSettings();
-  renderAll();
-}
+function toggleSetting(key) { settings[key] = !settings[key]; saveSettings(); renderAll(); }
+function setSortMode(mode) { settings.sortMode = mode; saveSettings(); renderAll(); }
 
 function updateSettingsUI() {
   document.getElementById('toggle-showBio').className = 'toggle' + (settings.showBio ? ' on' : '');
@@ -406,10 +432,6 @@ function makePlaceholder(label) {
   div.className = 'cell-placeholder';
   div.innerHTML = `${icons.canva}<span>${label}</span>`;
   return div;
-}
-
-function escapeHtml(str) {
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 loadWidget();
