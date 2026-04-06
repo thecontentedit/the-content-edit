@@ -187,7 +187,10 @@ function formatPost(page) {
   const linkUrls = linkText.split('\n').map(l => normalizeLink(l.trim())).filter(l => l && l.startsWith('http'));
 
   // Canva link
-  const canvaUrl = props[PROPS.canvaLink]?.url || null;
+  let canvaUrl = props[PROPS.canvaLink]?.url || null;
+  if (canvaUrl && !canvaUrl.includes('?embed')) {
+    canvaUrl = canvaUrl.split('?')[0] + '?embed';
+  }
 
   // Determine images and source type
   let images = [];
