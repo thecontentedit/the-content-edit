@@ -97,7 +97,18 @@ async function connectNotion() {
     status.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> ¡Conexión exitosa!`;
 
     document.getElementById('embedUrl').textContent = data.embedUrl;
-    document.getElementById('embedBioUrl').textContent = data.embedUrl + '?mode=bio';
+
+    // Solo mostrar Bio URL si es Pro
+    const bioBlock = document.getElementById('step4-bio-block');
+    const upgradeCardStep4 = document.getElementById('upgrade-card-step4');
+    if (data.plan === 'pro') {
+      document.getElementById('embedBioUrl').textContent = data.embedUrl + '?mode=bio';
+      if (bioBlock) bioBlock.style.display = 'block';
+      if (upgradeCardStep4) upgradeCardStep4.style.display = 'none';
+    } else {
+      if (bioBlock) bioBlock.style.display = 'none';
+      if (upgradeCardStep4) upgradeCardStep4.style.display = 'block';
+    }
 
     setTimeout(() => goStep(4), 900);
 
