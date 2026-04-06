@@ -11,7 +11,18 @@ async function init() {
     const data = await res.json();
     if (data.activated && data.widgetUrl) {
       document.getElementById('alreadyEmbedUrl').textContent = data.widgetUrl;
-      document.getElementById('alreadyBioUrl').textContent = data.widgetUrl + '?mode=bio';
+
+      if (data.plan === 'pro') {
+        // Pro: mostrar URL de bio, ocultar botón upgrade
+        document.getElementById('alreadyBioUrl').textContent = data.widgetUrl + '?mode=bio';
+        document.getElementById('already-bio-block').style.display = 'block';
+        document.getElementById('upgrade-card').style.display = 'none';
+      } else {
+        // Free: ocultar URL de bio, mostrar botón upgrade
+        document.getElementById('already-bio-block').style.display = 'none';
+        document.getElementById('upgrade-card').style.display = 'block';
+      }
+
       showScreen('screenAlreadyDone'); return;
     }
     showScreen('screenStep1');
