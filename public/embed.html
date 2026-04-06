@@ -132,6 +132,26 @@
 
   #saving-indicator { display: none; position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); background: var(--ink); color: #F9F6F1; padding: 6px 14px; border-radius: 999px; font-size: 11px; z-index: 999; }
 
+  /* DARK MODE */
+  body.dark { --ink: #F0EDE8; --cream: #1C1915; --muted: #9A948E; --border: rgba(240,237,232,0.12); background: #1C1915; }
+  body.dark #settings-panel { background: #2A2520; border-color: rgba(240,237,232,0.15); }
+  body.dark .setting-row:hover { background: #332D28; }
+  body.dark #plan-bar { background: #2A2400; border-color: rgba(245,200,66,0.3); }
+  body.dark .btn-cancel { background: #2A2520; color: #F0EDE8; }
+  body.dark .cell { background: #2A2520; }
+  body.dark .empty-cell { background: #232018; border-color: rgba(240,237,232,0.1); }
+  body.dark .cell-placeholder { background: #2A2520; }
+  body.dark #modal { background: rgba(0,0,0,0.92); }
+  body.dark .btn-refresh { background: #F0EDE8; color: #1C1915; }
+  body.dark .btn-plan { background: #2A2520; color: #F0EDE8; }
+  body.dark .btn-plan.active { background: #F0EDE8; color: #1C1915; }
+  body.dark .btn-icon { background: #2A2520; color: #F0EDE8; }
+  body.dark .highlight-circle { background: #2A2520; }
+  body.dark .bio-avatar { background: #2A2520; }
+
+  /* WIDE GRID */
+  .grid.wide { grid-template-columns: repeat(5, 1fr); }
+
   /* CONTENT MAP */
   .map-legend { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; padding: 0 2px; }
   .map-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--ink); }
@@ -213,6 +233,10 @@
         Plan grid
       </button>
       <div class="toolbar-spacer"></div>
+      <button class="toolbar-btn btn-icon" id="btn-darkmode" onclick="toggleDarkMode()" title="Dark mode">
+        <svg id="icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg id="icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
       <button class="toolbar-btn btn-icon" id="settings-btn" onclick="toggleSettings()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
       </button>
@@ -234,6 +258,7 @@
       <div class="setting-row" onclick="toggleSetting('showBio')"><span>Mostrar bio</span><div class="toggle" id="toggle-showBio"></div></div>
       <div class="setting-row" onclick="toggleSetting('showHighlights')"><span>Mostrar highlights</span><div class="toggle" id="toggle-showHighlights"></div></div>
       <div class="setting-row" onclick="toggleSetting('showContentMap')"><span>Content Map</span><div class="toggle" id="toggle-showContentMap"></div></div>
+      <div class="setting-row" onclick="toggleSetting('wideGrid')"><span>Vista 5 columnas</span><div class="toggle" id="toggle-wideGrid"></div></div>
       <div class="setting-divider"></div>
       <div class="setting-row" onclick="setSortMode('date')"><span>Ordenar por fecha</span><div class="radio" id="radio-date"></div></div>
     </div>
@@ -248,9 +273,11 @@ const widgetId = location.pathname.split('/').filter(Boolean).pop();
 const API_BASE = location.origin;
 
 const SETTINGS_KEY = `tce_settings_${widgetId}`;
-let settings = { showBio: true, showHighlights: true, showContentMap: false, sortMode: 'date' };
+let settings = { showBio: true, showHighlights: true, showContentMap: false, wideGrid: false, darkMode: false, sortMode: 'date' };
 try { const s = localStorage.getItem(SETTINGS_KEY); if (s) settings = { ...settings, ...JSON.parse(s) }; } catch(e) {}
 function saveSettings() { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch(e) {} }
+// Aplicar dark mode inmediatamente para evitar flash
+if (settings.darkMode) document.body.classList.add('dark');
 
 let currentTab = 'grid';
 let cachedData = null;
@@ -342,6 +369,8 @@ function renderAll() {
   // Plan Grid button solo visible para Pro
   const btnPlan = document.getElementById('btn-plan-grid');
   if (plan !== 'pro') { btnPlan.style.display = 'none'; }
+  applyDarkMode();
+  applyWideGrid();
 }
 
 function renderBio(profile) {
@@ -546,6 +575,9 @@ function renderGrid(posts, plan) {
 
     grid.appendChild(cell);
   });
+
+  // Aplicar wide grid
+  applyWideGrid();
 
   // Leyenda de pilares si Content Map activo
   if (settings.showContentMap) {
@@ -939,14 +971,50 @@ document.addEventListener('click', (e) => {
   const btn = document.getElementById('settings-btn');
   if (!panel.contains(e.target) && !btn.contains(e.target)) closeSettings();
 });
-function toggleSetting(key) { settings[key] = !settings[key]; saveSettings(); renderAll(); }
+function toggleSetting(key) {
+  settings[key] = !settings[key];
+  saveSettings();
+  if (key === 'wideGrid') {
+    applyWideGrid();
+    updateSettingsUI();
+  } else {
+    renderAll();
+  }
+}
 function setSortMode(mode) { settings.sortMode = mode; saveSettings(); renderAll(); }
 function updateSettingsUI() {
   document.getElementById('toggle-showBio').className = 'toggle' + (settings.showBio ? ' on' : '');
   document.getElementById('toggle-showHighlights').className = 'toggle' + (settings.showHighlights ? ' on' : '');
   document.getElementById('toggle-showContentMap').className = 'toggle' + (settings.showContentMap ? ' on' : '');
+  document.getElementById('toggle-wideGrid').className = 'toggle' + (settings.wideGrid ? ' on' : '');
   document.getElementById('radio-date').className = 'radio on';
 }
+// ── DARK MODE ──
+function toggleDarkMode() {
+  settings.darkMode = !settings.darkMode;
+  saveSettings();
+  applyDarkMode();
+}
+
+function applyDarkMode() {
+  document.body.classList.toggle('dark', settings.darkMode);
+  const iconDark = document.getElementById('icon-dark');
+  const iconLight = document.getElementById('icon-light');
+  if (settings.darkMode) {
+    iconDark.style.display = 'none';
+    iconLight.style.display = '';
+  } else {
+    iconDark.style.display = '';
+    iconLight.style.display = 'none';
+  }
+}
+
+// ── WIDE GRID ──
+function applyWideGrid() {
+  const grid = document.getElementById('grid');
+  if (grid) grid.classList.toggle('wide', settings.wideGrid);
+}
+
 function makePlaceholder(label) {
   const div = document.createElement('div'); div.className = 'cell-placeholder';
   div.innerHTML = `${icons.canva}<span>${label}</span>`; return div;
