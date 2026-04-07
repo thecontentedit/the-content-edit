@@ -8,14 +8,11 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root { --ink: #1C1915; --cream: #F9F6F1; --muted: #7A7570; --border: rgba(28,25,21,0.12); --plan-accent: #F5C842; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: transparent; color: var(--ink); -webkit-font-smoothing: antialiased; }
-
   #loading { display: flex; align-items: center; justify-content: center; min-height: 200px; gap: 8px; font-size: 13px; color: var(--muted); }
   .spinner { width: 16px; height: 16px; border: 1.5px solid var(--border); border-top-color: var(--ink); border-radius: 50%; animation: spin .7s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
   #error { display: none; padding: 1.5rem; text-align: center; font-size: 13px; color: var(--muted); line-height: 1.6; }
   #widget { display: none; }
-
-  /* BIO */
   #bio-section { padding: 12px 4px 10px; }
   .bio-top { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 10px; }
   .bio-avatar { width: 72px; height: 72px; border-radius: 50%; background: #E8E4DD; overflow: hidden; border: 2px solid rgba(28,25,21,0.1); flex-shrink: 0; }
@@ -27,17 +24,12 @@
   .bio-text { font-size: 12px; color: var(--ink); line-height: 1.5; margin-bottom: 4px; white-space: pre-line; }
   .bio-website { font-size: 12px; color: #0077CC; text-decoration: none; font-weight: 500; }
   .bio-website:hover { text-decoration: underline; }
-
-  /* HIGHLIGHTS */
   #highlights-section { display: flex; gap: 12px; padding: 8px 4px 10px; overflow-x: auto; border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); margin-bottom: 8px; }
   .highlight-item { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; }
   .highlight-circle { width: 52px; height: 52px; border-radius: 50%; background: #E8E4DD; overflow: hidden; border: 2px solid rgba(28,25,21,0.12); }
   .highlight-circle img { width: 100%; height: 100%; object-fit: cover; }
   .highlight-label { font-size: 10px; color: var(--ink); text-align: center; max-width: 56px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
   .divider { height: 0.5px; background: var(--border); margin: 0 0 8px; }
-
-  /* TOOLBAR */
   .toolbar { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; padding: 0 4px; }
   .toolbar-btn { display: flex; align-items: center; justify-content: center; gap: 5px; padding: 6px 12px; border: none; border-radius: 999px; font-size: 11px; font-weight: 500; cursor: pointer; font-family: inherit; transition: opacity .2s; }
   .toolbar-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
@@ -47,8 +39,6 @@
   .btn-icon { background: #F0EDE8; color: var(--ink); padding: 6px 10px; }
   .toolbar-btn:hover { opacity: .75; }
   .toolbar-spacer { flex: 1; }
-
-  /* PLAN GRID ACTION BAR */
   #plan-bar { display: none; align-items: center; gap: 6px; margin-bottom: 8px; padding: 8px 10px; background: #FFFBE8; border: 1px solid rgba(245,200,66,0.4); border-radius: 10px; }
   #plan-bar.visible { display: flex; }
   .plan-bar-label { font-size: 11px; font-weight: 600; color: #8A6F00; flex: 1; }
@@ -57,14 +47,10 @@
   .btn-save { background: var(--ink); color: #F9F6F1; padding: 5px 14px; border: none; border-radius: 999px; font-size: 11px; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity .2s; }
   .btn-save:hover { opacity: .75; }
   .btn-save:disabled { opacity: .4; cursor: default; }
-
-  /* TABS */
   .tabs { display: flex; gap: 0; margin-bottom: 8px; border-bottom: 0.5px solid var(--border); }
   .tab { flex: 1; text-align: center; padding: 8px 0; font-size: 11px; font-weight: 500; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; letter-spacing: .04em; text-transform: uppercase; }
   .tab.active { color: var(--ink); border-bottom-color: var(--ink); }
   .tab:hover { color: var(--ink); }
-
-  /* SETTINGS */
   .widget-wrapper { position: relative; }
   #settings-panel { display: none; position: absolute; right: 4px; top: 100%; background: #fff; border: 0.5px solid rgba(28,25,21,0.15); border-radius: 14px; padding: 6px 0; width: 240px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); z-index: 100; }
   #settings-panel.open { display: block; }
@@ -79,60 +65,34 @@
   .radio.on { border-color: #E8572A; }
   .radio.on::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #E8572A; }
   .pro-badge { font-size: 9px; background: #1C1915; color: #F9F6F1; padding: 2px 6px; border-radius: 999px; margin-left: 6px; }
-
-  /* GRID */
   .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
-
-  /* CELL */
   .cell { position: relative; aspect-ratio: 4/5; cursor: pointer; background: #e8e4dd; overflow: hidden; }
   .cell-inner { width: 100%; height: 100%; overflow: hidden; position: relative; }
   .cell img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .22s ease; }
   .cell:hover .cell-inner img { transform: scale(1.04); }
-
   .cell-hover-info { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0) 100%); padding: 32px 8px 8px; opacity: 0; transition: opacity .2s; pointer-events: none; }
   .cell:hover .cell-hover-info { opacity: 1; }
   .hover-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
   .hover-icon svg { width: 13px; height: 13px; }
   .hover-date { font-size: 10px; color: rgba(255,255,255,0.9); font-weight: 500; }
   .hover-caption { font-size: 11px; color: #fff; font-weight: 500; line-height: 1.3; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-
   .badge-tr { position: absolute; top: 5px; right: 5px; filter: drop-shadow(0 1px 2px rgba(0,0,0,.6)); pointer-events: none; z-index: 2; }
   .badge-tr svg { width: 17px; height: 17px; }
   .badge-tl { position: absolute; top: 5px; left: 5px; filter: drop-shadow(0 1px 2px rgba(0,0,0,.6)); pointer-events: none; z-index: 2; }
   .badge-tl svg { width: 17px; height: 17px; }
-
-  /* PLAN MODE CELL STYLES */
   .cell.plan-mode { cursor: grab; }
   .cell.plan-mode:active { cursor: grabbing; }
   .cell.dragging { opacity: 0.4; }
   .cell.drag-over { outline: 2px solid var(--plan-accent); outline-offset: -2px; }
-
-  /* DATE CHIP — shown always in plan mode, yellow if tentative */
-  .date-chip {
-    position: absolute; top: 5px; left: 5px;
-    font-size: 9px; font-weight: 700; letter-spacing: .02em;
-    padding: 2px 6px; border-radius: 999px;
-    pointer-events: none; z-index: 3;
-    background: rgba(0,0,0,0.55); color: #fff;
-    transition: background .2s, color .2s;
-  }
-  .date-chip.tentative {
-    background: var(--plan-accent);
-    color: #1C1915;
-  }
-
+  .date-chip { position: absolute; top: 5px; left: 5px; font-size: 9px; font-weight: 700; letter-spacing: .02em; padding: 2px 6px; border-radius: 999px; pointer-events: none; z-index: 3; background: rgba(0,0,0,0.55); color: #fff; transition: background .2s, color .2s; }
+  .date-chip.tentative { background: var(--plan-accent); color: #1C1915; }
   .cell-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #EDEAE4; gap: 6px; }
   .cell-placeholder svg { width: 20px; height: 20px; opacity: .4; }
   .cell-placeholder span { font-size: 10px; color: var(--muted); letter-spacing: .04em; }
-
   .empty-cell { aspect-ratio: 4/5; background: #F4F1EC; border: 1.5px dashed rgba(28,25,21,.12); display: flex; align-items: center; justify-content: center; }
   .empty-cell span { font-size: 11px; color: var(--muted); }
-
   .watermark { text-align: center; margin-top: 8px; font-size: 10px; color: rgba(28,25,21,.25); letter-spacing: .06em; text-transform: uppercase; }
-
   #saving-indicator { display: none; position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); background: var(--ink); color: #F9F6F1; padding: 6px 14px; border-radius: 999px; font-size: 11px; z-index: 999; }
-
-  /* BIO MODE */
   body.bio-mode #bio-section { padding: 24px 16px 20px; }
   body.bio-mode .bio-avatar { width: 100px; height: 100px; }
   body.bio-mode .bio-avatar-placeholder { font-size: 36px; }
@@ -144,31 +104,10 @@
   body.bio-mode #highlights-section { padding: 12px 16px 16px; gap: 16px; }
   body.bio-mode .highlight-circle { width: 68px; height: 68px; }
   body.bio-mode .highlight-label { font-size: 12px; max-width: 72px; }
-
-  /* BIO MODE REFRESH */
-  #bio-refresh-btn {
-    display: none;
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    background: rgba(28,25,21,0.07);
-    border: none;
-    border-radius: 999px;
-    padding: 5px 10px;
-    font-size: 10px;
-    color: var(--muted);
-    cursor: pointer;
-    font-family: inherit;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    transition: opacity .2s;
-  }
+  #bio-refresh-btn { display: none; position: absolute; bottom: 10px; right: 10px; background: rgba(28,25,21,0.07); border: none; border-radius: 999px; padding: 5px 10px; font-size: 10px; color: var(--muted); cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 4px; transition: opacity .2s; }
   #bio-refresh-btn:hover { opacity: .7; }
   #bio-refresh-btn svg { width: 10px; height: 10px; }
   body:not(.bio-mode) #bio-refresh-btn { display: none !important; }
-
-  /* DARK MODE */
   body.dark { --ink: #F0EDE8; --cream: #1C1915; --muted: #9A948E; --border: rgba(240,237,232,0.12); background: #1C1915; }
   body.dark #settings-panel { background: #2A2520; border-color: rgba(240,237,232,0.15); }
   body.dark .setting-row:hover { background: #332D28; }
@@ -184,19 +123,9 @@
   body.dark .btn-icon { background: #2A2520; color: #F0EDE8; }
   body.dark .highlight-circle { background: #2A2520; }
   body.dark .bio-avatar { background: #2A2520; }
-
-  /* WIDE GRID */
   .grid.wide { grid-template-columns: repeat(5, 1fr); }
-
-  /* CONTENT MAP */
-  .map-legend { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; padding: 0 2px; }
-  .map-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--ink); }
-  .map-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
   .cell-map-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 6px; }
   .cell-map-label { font-size: 11px; font-weight: 600; color: #fff; text-align: center; line-height: 1.3; text-shadow: 0 1px 3px rgba(0,0,0,0.3); letter-spacing: .01em; }
-  .map-no-pilar { font-size: 11px; color: var(--muted); font-style: italic; }
-
-  /* MODAL */
   #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; }
   #modal.open { display: flex; }
   .modal-inner { position: relative; max-width: 90vw; max-height: 90vh; display: flex; align-items: center; justify-content: center; }
@@ -217,36 +146,23 @@
 </style>
 </head>
 <body>
-
 <div id="loading"><div class="spinner"></div>Cargando tu grid…</div>
 <div id="error"><p>No se pudo cargar el grid.</p><p style="margin-top:4px;font-size:11px;">Verifica que tu integración de Notion esté activa.</p></div>
 <div id="saving-indicator">Guardando orden…</div>
-
-<!-- MODAL -->
 <div id="modal">
   <button class="modal-close" onclick="closeModal()">✕</button>
   <div class="modal-inner">
-    <button class="modal-nav modal-prev hidden" onclick="modalNav(-1)">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-    </button>
-    <button class="modal-nav modal-next hidden" onclick="modalNav(1)">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-    </button>
+    <button class="modal-nav modal-prev hidden" onclick="modalNav(-1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <button class="modal-nav modal-next hidden" onclick="modalNav(1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
     <div class="modal-dots" id="modal-dots"></div>
-    <div class="modal-info">
-      <div class="modal-caption" id="modal-caption"></div>
-      <div class="modal-date" id="modal-date"></div>
-    </div>
+    <div class="modal-info"><div class="modal-caption" id="modal-caption"></div><div class="modal-date" id="modal-date"></div></div>
   </div>
 </div>
-
 <div id="widget">
   <div class="widget-wrapper">
     <div id="bio-section">
       <div class="bio-top">
-        <div class="bio-avatar" id="bio-avatar">
-          <div class="bio-avatar-placeholder" id="bio-avatar-placeholder"></div>
-        </div>
+        <div class="bio-avatar" id="bio-avatar"><div class="bio-avatar-placeholder" id="bio-avatar-placeholder"></div></div>
         <div class="bio-info">
           <div class="bio-username" id="bio-username"></div>
           <div class="bio-displayname" id="bio-displayname"></div>
@@ -255,14 +171,12 @@
         </div>
       </div>
     </div>
-
     <div id="highlights-section"></div>
     <button id="bio-refresh-btn" onclick="loadWidget()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
       Refresh
     </button>
     <div class="divider"></div>
-
     <div class="toolbar">
       <button class="toolbar-btn btn-refresh" id="btn-refresh" onclick="loadWidget()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
@@ -281,19 +195,15 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
       </button>
     </div>
-
-    <!-- PLAN BAR: aparece debajo del toolbar cuando Plan Grid está activo -->
     <div id="plan-bar">
       <span class="plan-bar-label">Plan grid: ON</span>
       <button class="btn-cancel" onclick="cancelPlanMode()">Cancel</button>
       <button class="btn-save" id="btn-save" onclick="savePlanMode()">Save</button>
     </div>
-
     <div class="tabs">
       <div class="tab active" id="tab-grid" onclick="setTab('grid')">Grid</div>
       <div class="tab" id="tab-reels" onclick="setTab('reels')">Reels</div>
     </div>
-
     <div id="settings-panel">
       <div class="setting-row" onclick="toggleSetting('showBio')"><span>Mostrar bio</span><div class="toggle" id="toggle-showBio"></div></div>
       <div class="setting-row" onclick="toggleSetting('showHighlights')"><span>Mostrar highlights</span><div class="toggle" id="toggle-showHighlights"></div></div>
@@ -303,42 +213,31 @@
       <div class="setting-row" onclick="setSortMode('date')"><span>Ordenar por fecha</span><div class="radio" id="radio-date"></div></div>
     </div>
   </div>
-
   <div class="grid" id="grid"></div>
   <div class="watermark">The Content Edit</div>
 </div>
-
 <script>
 const widgetId = location.pathname.split('/').filter(Boolean).pop();
 const API_BASE = location.origin;
 const urlParams = new URLSearchParams(location.search);
 const isBioMode = urlParams.get('mode') === 'bio';
-
 const SETTINGS_KEY = `tce_settings_${widgetId}`;
 let settings = { showBio: true, showHighlights: true, showContentMap: false, wideGrid: false, darkMode: false, sortMode: 'date' };
 try { const s = localStorage.getItem(SETTINGS_KEY); if (s) settings = { ...settings, ...JSON.parse(s) }; } catch(e) {}
 function saveSettings() { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch(e) {} }
-// Aplicar dark mode inmediatamente para evitar flash
 if (settings.darkMode) document.body.classList.add('dark');
-// Aplicar bio mode inmediatamente
 if (isBioMode) document.body.classList.add('bio-mode');
-
 let currentTab = 'grid';
 let cachedData = null;
 let dragSrcIndex = null;
 let currentOrder = [];
-
-// ── PLAN GRID STATE ──
 let planModeActive = false;
-let planOrder = [];          // array of { pageId, tentativeDate, originalDate, moved }
-let originalSnapshot = [];   // snapshot before any drag, para Cancel
-
-// Modal state
+let planOrder = [];
+let originalSnapshot = [];
 let modalImages = [];
 let modalIndex = 0;
 let modalPost = null;
 let modalIsCanva = false;
-
 const icons = {
   carousel: `<svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M2 8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8z"/><path d="M6 6V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1" fill="white" opacity="0.6"/></svg>`,
   reel: `<svg viewBox="0 0 24 24" fill="white"><path d="M10 15.5v-7l6 3.5-6 3.5zM21 3H3C1.9 3 1 3.9 1 5v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/></svg>`,
@@ -347,19 +246,22 @@ const icons = {
   attachment: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>`,
   canva: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M12 8v8"/></svg>`,
 };
-
+const PILAR_PALETTE = ['#C8553D','#4A7C59','#2E6BA6','#8B5E83','#D4875E','#5B7FA6','#A66B2E','#4E8098','#7A4F6D','#3D7A5F','#B85C38','#5C7A3E','#6B4E8C','#3D6B8C','#8C6B3D'];
+const pilarColorMap = {};
+let pilarColorIndex = 0;
+function getPilarColor(pilar) {
+  if (!pilar) return 'rgba(100,100,100,0.65)';
+  if (!pilarColorMap[pilar]) { pilarColorMap[pilar] = PILAR_PALETTE[pilarColorIndex % PILAR_PALETTE.length]; pilarColorIndex++; }
+  return pilarColorMap[pilar];
+}
+function resetPilarColors() { Object.keys(pilarColorMap).forEach(k => delete pilarColorMap[k]); pilarColorIndex = 0; }
 async function loadWidget() {
-  // Si hay plan mode activo, preguntar antes de recargar
-  if (planModeActive) {
-    if (!confirm('¿Descartar cambios del Plan Grid y recargar?')) return;
-    exitPlanMode(false);
-  }
+  if (planModeActive) { if (!confirm('¿Descartar cambios del Plan Grid y recargar?')) return; exitPlanMode(false); }
   document.getElementById('grid').innerHTML = '';
   document.getElementById('widget').style.display = 'none';
   document.getElementById('error').style.display = 'none';
   document.getElementById('loading').style.display = 'flex';
   closeSettings();
-
   try {
     const res = await fetch(`${API_BASE}/api/widget/${widgetId}`);
     if (!res.ok) throw new Error(res.status);
@@ -372,673 +274,183 @@ async function loadWidget() {
     document.getElementById('error').style.display = 'block';
   }
 }
-
-// Paleta de colores para pilares — vibrantes pero elegantes
-const PILAR_PALETTE = [
-  '#C8553D', '#4A7C59', '#2E6BA6', '#8B5E83', '#D4875E',
-  '#5B7FA6', '#A66B2E', '#4E8098', '#7A4F6D', '#3D7A5F',
-  '#B85C38', '#5C7A3E', '#6B4E8C', '#3D6B8C', '#8C6B3D',
-];
-const pilarColorMap = {};
-let pilarColorIndex = 0;
-
-function getPilarColor(pilar) {
-  if (!pilar) return 'rgba(100,100,100,0.65)';
-  if (!pilarColorMap[pilar]) {
-    pilarColorMap[pilar] = PILAR_PALETTE[pilarColorIndex % PILAR_PALETTE.length];
-    pilarColorIndex++;
-  }
-  return pilarColorMap[pilar];
-}
-
-function resetPilarColors() {
-  Object.keys(pilarColorMap).forEach(k => delete pilarColorMap[k]);
-  pilarColorIndex = 0;
-}
-
 function setTab(tab) {
   currentTab = tab;
   document.getElementById('tab-grid').className = 'tab' + (tab === 'grid' ? ' active' : '');
   document.getElementById('tab-reels').className = 'tab' + (tab === 'reels' ? ' active' : '');
   if (cachedData) renderGrid(cachedData.posts, cachedData.plan);
 }
-
 function renderAll() {
   if (!cachedData) return;
   const { posts, plan, profile } = cachedData;
-
   if (isBioMode) {
-    renderBio(profile);
-    document.getElementById('bio-section').style.display = 'block';
-    renderHighlights(profile);
-    document.querySelector('.divider').style.display = 'none';
-    document.querySelector('.toolbar').style.display = 'none';
-    document.querySelector('.tabs').style.display = 'none';
-    document.getElementById('grid').style.display = 'none';
-    document.querySelector('.watermark').style.display = 'none';
-    document.getElementById('bio-refresh-btn').style.display = 'flex';
-    applyDarkMode();
-    return;
+    renderBio(profile); document.getElementById('bio-section').style.display = 'block';
+    renderHighlights(profile); document.querySelector('.divider').style.display = 'none';
+    document.querySelector('.toolbar').style.display = 'none'; document.querySelector('.tabs').style.display = 'none';
+    document.getElementById('grid').style.display = 'none'; document.querySelector('.watermark').style.display = 'none';
+    document.getElementById('bio-refresh-btn').style.display = 'flex'; applyDarkMode(); return;
   }
-
-  renderBio(profile);
-  renderHighlights(profile);
-  renderGrid(posts, plan);
-  updateSettingsUI();
+  renderBio(profile); renderHighlights(profile); renderGrid(posts, plan); updateSettingsUI();
   const btnPlan = document.getElementById('btn-plan-grid');
   if (plan !== 'pro') { btnPlan.style.display = 'none'; }
-  applyDarkMode();
-  applyWideGrid();
+  applyDarkMode(); applyWideGrid();
 }
-
 function renderBio(profile) {
   const section = document.getElementById('bio-section');
   section.style.display = (settings.showBio && profile) ? 'block' : 'none';
   if (!profile) return;
-
   const avatarEl = document.getElementById('bio-avatar');
   const placeholder = document.getElementById('bio-avatar-placeholder');
-  if (profile.avatarUrl) {
-    const img = document.createElement('img');
-    img.src = profile.avatarUrl; img.alt = '';
-    avatarEl.innerHTML = ''; avatarEl.appendChild(img);
-  } else {
-    const initials = (profile.displayName || profile.username || '?').charAt(0).toUpperCase();
-    placeholder.textContent = initials;
-  }
-
-  const u = document.getElementById('bio-username');
-  const d = document.getElementById('bio-displayname');
-  const b = document.getElementById('bio-text');
-  const w = document.getElementById('bio-website');
-
-  u.textContent = profile.username ? `@${profile.username.replace(/^@/, '')}` : '';
-  u.style.display = profile.username ? 'block' : 'none';
-  d.textContent = profile.displayName || '';
-  d.style.display = profile.displayName ? 'block' : 'none';
-  b.textContent = profile.bio || '';
-  b.style.display = profile.bio ? 'block' : 'none';
-  if (profile.website) { w.href = profile.website; w.textContent = profile.website.replace(/^https?:\/\//, ''); w.style.display = 'block'; }
-  else { w.style.display = 'none'; }
+  if (profile.avatarUrl) { const img = document.createElement('img'); img.src = profile.avatarUrl; img.alt = ''; avatarEl.innerHTML = ''; avatarEl.appendChild(img); }
+  else { const initials = (profile.displayName || profile.username || '?').charAt(0).toUpperCase(); placeholder.textContent = initials; }
+  const u = document.getElementById('bio-username'); const d = document.getElementById('bio-displayname');
+  const b = document.getElementById('bio-text'); const w = document.getElementById('bio-website');
+  u.textContent = profile.username ? `@${profile.username.replace(/^@/, '')}` : ''; u.style.display = profile.username ? 'block' : 'none';
+  d.textContent = profile.displayName || ''; d.style.display = profile.displayName ? 'block' : 'none';
+  b.textContent = profile.bio || ''; b.style.display = profile.bio ? 'block' : 'none';
+  if (profile.website) { w.href = profile.website; w.textContent = profile.website.replace(/^https?:\/\//, ''); w.style.display = 'block'; } else { w.style.display = 'none'; }
 }
-
 function renderHighlights(profile) {
-  const section = document.getElementById('highlights-section');
-  section.innerHTML = '';
+  const section = document.getElementById('highlights-section'); section.innerHTML = '';
   const show = settings.showHighlights && profile && profile.highlights && profile.highlights.length > 0;
-  section.style.display = show ? 'flex' : 'none';
-  if (!show) return;
+  section.style.display = show ? 'flex' : 'none'; if (!show) return;
   profile.highlights.forEach(h => {
     const item = document.createElement('div'); item.className = 'highlight-item';
     const circle = document.createElement('div'); circle.className = 'highlight-circle';
     if (h.photo) { const img = document.createElement('img'); img.src = h.photo; img.alt = ''; circle.appendChild(img); }
     const label = document.createElement('div'); label.className = 'highlight-label'; label.textContent = h.label || '';
-    item.appendChild(circle); item.appendChild(label);
-    section.appendChild(item);
+    item.appendChild(circle); item.appendChild(label); section.appendChild(item);
   });
 }
-
 function renderGrid(posts, plan) {
-  // Limpiar leyenda anterior si existe
-  const oldLegend = document.querySelector('.map-legend');
-  if (oldLegend) oldLegend.remove();
-
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '';
-
+  const grid = document.getElementById('grid'); grid.innerHTML = '';
   let filtered = [...posts];
-
-  if (currentTab === 'reels') {
-    filtered = filtered.filter(p => p.mediaType === 'reel');
-  }
-
-  if (settings.sortMode === 'date') {
-    filtered.sort((a, b) => (!a.publishDate ? 1 : !b.publishDate ? -1 : 0));
-  }
-
-  // En plan mode, usar planOrder para ordenar
+  if (currentTab === 'reels') filtered = filtered.filter(p => p.mediaType === 'reel');
+  if (settings.sortMode === 'date') filtered.sort((a, b) => (!a.publishDate ? 1 : !b.publishDate ? -1 : 0));
   if (planModeActive && planOrder.length > 0) {
     const planMap = new Map(planOrder.map((p, i) => [p.pageId, i]));
-    filtered.sort((a, b) => {
-      const ai = planMap.has(a.pageId) ? planMap.get(a.pageId) : 999;
-      const bi = planMap.has(b.pageId) ? planMap.get(b.pageId) : 999;
-      return ai - bi;
-    });
+    filtered.sort((a, b) => { const ai = planMap.has(a.pageId) ? planMap.get(a.pageId) : 999; const bi = planMap.has(b.pageId) ? planMap.get(b.pageId) : 999; return ai - bi; });
   }
-
   currentOrder = filtered.map(p => p.pageId);
   const total = Math.max(filtered.length, currentTab === 'reels' ? 0 : 9);
   const slots = Array.from({ length: total }, (_, i) => filtered[i] || null);
-
-  if (slots.length === 0 && currentTab === 'reels') {
-    grid.innerHTML = '<div style="padding:2rem;text-align:center;font-size:13px;color:#7A7570;grid-column:1/-1;">No hay reels todavía</div>';
-    return;
-  }
-
-  // Content Map: pre-asignar colores si está activo
-  if (settings.showContentMap) {
-    resetPilarColors();
-    const pilaresUnicos = [...new Set(filtered.map(p => p.pilar).filter(Boolean))];
-    pilaresUnicos.forEach(p => getPilarColor(p));
-  }
-
+  if (slots.length === 0 && currentTab === 'reels') { grid.innerHTML = '<div style="padding:2rem;text-align:center;font-size:13px;color:#7A7570;grid-column:1/-1;">No hay reels todavía</div>'; return; }
+  if (settings.showContentMap) { resetPilarColors(); const pilaresUnicos = [...new Set(filtered.map(p => p.pilar).filter(Boolean))]; pilaresUnicos.forEach(p => getPilarColor(p)); }
   slots.forEach((post, i) => {
-    if (!post) {
-      const empty = document.createElement('div'); empty.className = 'empty-cell';
-      empty.innerHTML = '<span>+ nuevo</span>'; grid.appendChild(empty); return;
-    }
-
-    const cell = document.createElement('div');
-    cell.className = 'cell'; cell.dataset.index = i; cell.dataset.pageId = post.pageId;
-
+    if (!post) { const empty = document.createElement('div'); empty.className = 'empty-cell'; empty.innerHTML = '<span>+ nuevo</span>'; grid.appendChild(empty); return; }
+    const cell = document.createElement('div'); cell.className = 'cell'; cell.dataset.index = i; cell.dataset.pageId = post.pageId;
     if (planModeActive) cell.classList.add('plan-mode');
-
     const inner = document.createElement('div'); inner.className = 'cell-inner';
-
     if (post.imageSource === 'canva' && post.imageUrl) {
-      const wrapper = document.createElement('div');
-      wrapper.style.cssText = 'position:relative;width:100%;height:100%;overflow:hidden;';
-      const iframe = document.createElement('iframe');
-      iframe.src = post.imageUrl;
-      iframe.style.cssText = 'width:120%;height:140%;border:none;pointer-events:none;margin-left:-10%;margin-top:-5%;';
-      iframe.setAttribute('allowfullscreen', '');
-      wrapper.appendChild(iframe);
-      inner.appendChild(wrapper);
+      const wrapper = document.createElement('div'); wrapper.style.cssText = 'position:relative;width:100%;height:100%;overflow:hidden;';
+      const iframe = document.createElement('iframe'); iframe.src = post.imageUrl; iframe.style.cssText = 'width:120%;height:140%;border:none;pointer-events:none;margin-left:-10%;margin-top:-5%;'; iframe.setAttribute('allowfullscreen', ''); wrapper.appendChild(iframe); inner.appendChild(wrapper);
     } else if (post.imageUrl && !post.imageUrl.startsWith('__')) {
-      const img = document.createElement('img');
-      img.src = post.imageUrl; img.alt = post.name || ''; img.loading = 'lazy';
-      img.onerror = () => { img.style.display = 'none'; inner.appendChild(makePlaceholder('imagen no disponible')); };
-      inner.appendChild(img);
-    } else {
-      inner.appendChild(makePlaceholder('Link'));
-    }
-
+      const img = document.createElement('img'); img.src = post.imageUrl; img.alt = post.name || ''; img.loading = 'lazy'; img.onerror = () => { img.style.display = 'none'; inner.appendChild(makePlaceholder('imagen no disponible')); }; inner.appendChild(img);
+    } else { inner.appendChild(makePlaceholder('Link')); }
     cell.appendChild(inner);
-
-    // ── DATE CHIP (solo en plan mode) ──
     if (planModeActive) {
-      const planEntry = planOrder.find(p => p.pageId === post.pageId);
-      const isMoved = planEntry && planEntry.moved;
-      const dateToShow = planEntry ? planEntry.tentativeDate : post.publishDate;
-
-      if (dateToShow) {
-        const chip = document.createElement('div');
-        chip.className = 'date-chip' + (isMoved ? ' tentative' : '');
-        chip.textContent = dateToShow;
-        cell.appendChild(chip);
-      }
+      const planEntry = planOrder.find(p => p.pageId === post.pageId); const isMoved = planEntry && planEntry.moved; const dateToShow = planEntry ? planEntry.tentativeDate : post.publishDate;
+      if (dateToShow) { const chip = document.createElement('div'); chip.className = 'date-chip' + (isMoved ? ' tentative' : ''); chip.textContent = dateToShow; cell.appendChild(chip); }
     }
-
-    // Hover info (solo en modo normal)
     if (!planModeActive) {
       const hoverInfo = document.createElement('div'); hoverInfo.className = 'cell-hover-info';
       const topRow = document.createElement('div'); topRow.className = 'hover-top-row';
-      const iconDiv = document.createElement('div'); iconDiv.className = 'hover-icon';
-      const isExternal = post.imageSource === 'link';
-      const isCanva = post.imageSource === 'canva';
-      iconDiv.innerHTML = isCanva ? icons.canva : isExternal ? icons.link : icons.attachment;
-      topRow.appendChild(iconDiv);
-      if (post.publishDate) {
-        const dateDiv = document.createElement('div'); dateDiv.className = 'hover-date'; dateDiv.textContent = post.publishDate;
-        topRow.appendChild(dateDiv);
-      }
+      const iconDiv = document.createElement('div'); iconDiv.className = 'hover-icon'; const isCanva = post.imageSource === 'canva'; const isExternal = post.imageSource === 'link';
+      iconDiv.innerHTML = isCanva ? icons.canva : isExternal ? icons.link : icons.attachment; topRow.appendChild(iconDiv);
+      if (post.publishDate) { const dateDiv = document.createElement('div'); dateDiv.className = 'hover-date'; dateDiv.textContent = post.publishDate; topRow.appendChild(dateDiv); }
       hoverInfo.appendChild(topRow);
-      if (post.name) {
-        const cap = document.createElement('div'); cap.className = 'hover-caption'; cap.textContent = post.name;
-        hoverInfo.appendChild(cap);
-      }
+      if (post.name) { const cap = document.createElement('div'); cap.className = 'hover-caption'; cap.textContent = post.name; hoverInfo.appendChild(cap); }
       cell.appendChild(hoverInfo);
     }
-
-    // Click: modal en modo normal, nada en plan mode (solo drag)
-    if (!planModeActive) {
-      cell.addEventListener('click', () => openModal(post));
-    }
-
-    // Badges (Pro only, no en plan mode para no distraer)
+    if (!planModeActive) cell.addEventListener('click', () => openModal(post));
     const isCarrusel = post.mediaType === 'carrusel' || (post.images && post.images.length > 1);
-    if (plan === 'pro' && !planModeActive && (isCarrusel || post.mediaType === 'reel')) {
-      const b = document.createElement('div'); b.className = 'badge-tr';
-      b.innerHTML = post.mediaType === 'reel' ? icons.reel : icons.carousel;
-      cell.appendChild(b);
-    }
-    if (plan === 'pro' && !planModeActive && post.pinned) {
-      const p = document.createElement('div'); p.className = 'badge-tl'; p.innerHTML = icons.pinned;
-      cell.appendChild(p);
-    }
-
-    // ── DRAG: en plan mode siempre, en modo normal solo si custom sort ──
+    if (plan === 'pro' && !planModeActive && (isCarrusel || post.mediaType === 'reel')) { const b = document.createElement('div'); b.className = 'badge-tr'; b.innerHTML = post.mediaType === 'reel' ? icons.reel : icons.carousel; cell.appendChild(b); }
+    if (plan === 'pro' && !planModeActive && post.pinned) { const p = document.createElement('div'); p.className = 'badge-tl'; p.innerHTML = icons.pinned; cell.appendChild(p); }
     const isDragEnabled = planModeActive || (plan === 'pro' && settings.sortMode === 'custom');
-    if (isDragEnabled) {
-      cell.draggable = true;
-      cell.addEventListener('dragstart', onDragStart);
-      cell.addEventListener('dragover', onDragOver);
-      cell.addEventListener('dragleave', onDragLeave);
-      cell.addEventListener('drop', planModeActive ? onPlanDrop : onDrop);
-      cell.addEventListener('dragend', onDragEnd);
-    }
-
-    // Content Map overlay
+    if (isDragEnabled) { cell.draggable = true; cell.addEventListener('dragstart', onDragStart); cell.addEventListener('dragover', onDragOver); cell.addEventListener('dragleave', onDragLeave); cell.addEventListener('drop', planModeActive ? onPlanDrop : onDrop); cell.addEventListener('dragend', onDragEnd); }
     if (settings.showContentMap && post) {
-      const overlay = document.createElement('div');
-      overlay.className = 'cell-map-overlay';
-      const color = getPilarColor(post.pilar);
-      overlay.style.background = post.pilar ? color + 'CC' : 'rgba(80,80,80,0.7)';
-      const lbl = document.createElement('div');
-      lbl.className = 'cell-map-label';
-      lbl.textContent = post.pilar || '—';
-      overlay.appendChild(lbl);
-      cell.appendChild(overlay);
+      const overlay = document.createElement('div'); overlay.className = 'cell-map-overlay';
+      const color = getPilarColor(post.pilar); overlay.style.background = post.pilar ? color + 'CC' : 'rgba(80,80,80,0.7)';
+      const lbl = document.createElement('div'); lbl.className = 'cell-map-label'; lbl.textContent = post.pilar || '—'; overlay.appendChild(lbl); cell.appendChild(overlay);
     }
-
     grid.appendChild(cell);
   });
-
-  // Aplicar wide grid
   applyWideGrid();
-
-  // Leyenda de pilares si Content Map activo
-  if (settings.showContentMap) {
-    const pilaresUnicos = [...new Set(filtered.map(p => p.pilar).filter(Boolean))];
-    if (pilaresUnicos.length > 0) {
-      const legend = document.createElement('div');
-      legend.className = 'map-legend';
-      pilaresUnicos.forEach(pilar => {
-        const item = document.createElement('div');
-        item.className = 'map-legend-item';
-        const dot = document.createElement('div');
-        dot.className = 'map-legend-dot';
-        dot.style.background = getPilarColor(pilar);
-        const lbl = document.createElement('span');
-        lbl.textContent = pilar;
-        item.appendChild(dot);
-        item.appendChild(lbl);
-        legend.appendChild(item);
-      });
-      grid.parentNode.insertBefore(legend, grid);
-    }
-  }
+  // Leyenda eliminada — cada celda ya muestra el nombre del pilar
 }
-
-// ── CONTENT MAP ──
-function renderMap(posts) {
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '';
-
-  // Reset colores para asignarlos consistentemente
-  resetPilarColors();
-
-  const filtered = posts.filter(p => currentTab !== 'reels' || p.mediaType === 'reel');
-  const sorted = [...filtered].sort((a, b) => (!a.publishDate ? 1 : !b.publishDate ? -1 : 0));
-
-  // Construir leyenda de pilares únicos
-  const pilaresUnicos = [...new Set(sorted.map(p => p.pilar).filter(Boolean))];
-
-  // Pre-asignar colores en orden de aparición
-  pilaresUnicos.forEach(p => getPilarColor(p));
-
-  // Leyenda
-  if (pilaresUnicos.length > 0) {
-    const legend = document.createElement('div');
-    legend.className = 'map-legend';
-    pilaresUnicos.forEach(pilar => {
-      const item = document.createElement('div');
-      item.className = 'map-legend-item';
-      const dot = document.createElement('div');
-      dot.className = 'map-legend-dot';
-      dot.style.background = getPilarColor(pilar);
-      const label = document.createElement('span');
-      label.textContent = pilar;
-      item.appendChild(dot);
-      item.appendChild(label);
-      legend.appendChild(item);
-    });
-    // Insertar leyenda antes del grid
-    grid.parentNode.insertBefore(legend, grid);
-    grid._legendEl = legend;
-  }
-
-  const total = Math.max(sorted.length, 9);
-  const slots = Array.from({ length: total }, (_, i) => sorted[i] || null);
-
-  slots.forEach(post => {
-    if (!post) {
-      const empty = document.createElement('div');
-      empty.className = 'empty-cell';
-      empty.innerHTML = '<span>+ nuevo</span>';
-      grid.appendChild(empty);
-      return;
-    }
-
-    const cell = document.createElement('div');
-    cell.className = 'cell';
-    cell.style.cursor = 'default';
-
-    // Imagen de fondo
-    const inner = document.createElement('div');
-    inner.className = 'cell-inner';
-
-    if (post.imageUrl && !post.imageUrl.startsWith('__') && post.imageSource !== 'canva') {
-      const img = document.createElement('img');
-      img.src = post.imageUrl;
-      img.alt = '';
-      img.loading = 'lazy';
-      inner.appendChild(img);
-    } else if (post.imageSource === 'canva' && post.imageUrl) {
-      const iframe = document.createElement('iframe');
-      iframe.src = post.imageUrl;
-      iframe.style.cssText = 'width:120%;height:140%;border:none;pointer-events:none;margin-left:-10%;margin-top:-5%;';
-      inner.appendChild(iframe);
-    }
-    cell.appendChild(inner);
-
-    // Overlay de color del pilar
-    const overlay = document.createElement('div');
-    overlay.className = 'cell-map-overlay';
-    const color = getPilarColor(post.pilar);
-    overlay.style.background = post.pilar
-      ? color + 'CC'  // CC = ~80% opacidad en hex
-      : 'rgba(80,80,80,0.7)';
-
-    const label = document.createElement('div');
-    label.className = 'cell-map-label';
-    label.textContent = post.pilar || '—';
-    overlay.appendChild(label);
-    cell.appendChild(overlay);
-
-    grid.appendChild(cell);
-  });
-}
-
-// ── PLAN MODE ──
-function togglePlanMode() {
-  if (!planModeActive) {
-    enterPlanMode();
-  } else {
-    // Ya activo: no hacer nada (Cancel/Save están en el plan-bar)
-  }
-}
-
+function togglePlanMode() { if (!planModeActive) { enterPlanMode(); } }
 function enterPlanMode() {
-  if (!cachedData) return;
-  planModeActive = true;
-
-  // Construir planOrder desde el estado actual del grid
+  if (!cachedData) return; planModeActive = true;
   let filtered = cachedData.posts.filter(p => currentTab === 'reels' ? p.mediaType === 'reel' : true);
-  if (settings.sortMode === 'date') {
-    filtered.sort((a, b) => (!a.publishDate ? 1 : !b.publishDate ? -1 : 0));
-  }
-
-  planOrder = filtered.map(p => ({
-    pageId: p.pageId,
-    tentativeDate: p.publishDate || null,
-    originalDate: p.publishDate || null,
-    originalDateISO: p.publishDateISO || null,
-    tentativeDateISO: p.publishDateISO || null,
-    moved: false,
-  }));
-
-  // Snapshot para Cancel
+  if (settings.sortMode === 'date') filtered.sort((a, b) => (!a.publishDate ? 1 : !b.publishDate ? -1 : 0));
+  planOrder = filtered.map(p => ({ pageId: p.pageId, tentativeDate: p.publishDate || null, originalDate: p.publishDate || null, originalDateISO: p.publishDateISO || null, tentativeDateISO: p.publishDateISO || null, moved: false }));
   originalSnapshot = planOrder.map(p => ({ ...p }));
-
-  // UI
-  document.getElementById('btn-plan-grid').classList.add('active');
-  document.getElementById('btn-refresh').style.opacity = '0.4';
-  document.getElementById('btn-refresh').style.pointerEvents = 'none';
-  document.getElementById('plan-bar').classList.add('visible');
-
+  document.getElementById('btn-plan-grid').classList.add('active'); document.getElementById('btn-refresh').style.opacity = '0.4'; document.getElementById('btn-refresh').style.pointerEvents = 'none'; document.getElementById('plan-bar').classList.add('visible');
   renderGrid(cachedData.posts, cachedData.plan);
 }
-
-function cancelPlanMode() {
-  exitPlanMode(false);
-}
-
+function cancelPlanMode() { exitPlanMode(false); }
 function exitPlanMode(save) {
-  planModeActive = false;
-  planOrder = [];
-  originalSnapshot = [];
-
-  // Resetear botón Save siempre
-  const btn = document.getElementById('btn-save');
-  btn.disabled = false;
-  btn.textContent = 'Save';
-
-  document.getElementById('btn-plan-grid').classList.remove('active');
-  document.getElementById('btn-refresh').style.opacity = '';
-  document.getElementById('btn-refresh').style.pointerEvents = '';
-  document.getElementById('plan-bar').classList.remove('visible');
-
-  if (!save) {
-    renderGrid(cachedData.posts, cachedData.plan);
-  }
+  planModeActive = false; planOrder = []; originalSnapshot = [];
+  const btn = document.getElementById('btn-save'); btn.disabled = false; btn.textContent = 'Save';
+  document.getElementById('btn-plan-grid').classList.remove('active'); document.getElementById('btn-refresh').style.opacity = ''; document.getElementById('btn-refresh').style.pointerEvents = ''; document.getElementById('plan-bar').classList.remove('visible');
+  if (!save) renderGrid(cachedData.posts, cachedData.plan);
 }
-
 async function savePlanMode() {
-  const changes = planOrder.filter(p => p.moved);
-  if (changes.length === 0) { exitPlanMode(false); return; }
-
-  const btn = document.getElementById('btn-save');
-  btn.disabled = true; btn.textContent = 'Guardando…';
-
-  const indicator = document.getElementById('saving-indicator');
-  indicator.textContent = 'Guardando orden…';
-  indicator.style.display = 'block';
-
+  const changes = planOrder.filter(p => p.moved); if (changes.length === 0) { exitPlanMode(false); return; }
+  const btn = document.getElementById('btn-save'); btn.disabled = true; btn.textContent = 'Guardando…';
+  const indicator = document.getElementById('saving-indicator'); indicator.textContent = 'Guardando orden…'; indicator.style.display = 'block';
   try {
-    const orderedIds = planOrder.map(p => p.pageId);
-
-    const dateMap = {};
-    changes.forEach(p => {
-      if (p.tentativeDateISO) {
-        dateMap[p.pageId] = p.tentativeDateISO;
-      }
-    });
-
-    await fetch(`${API_BASE}/api/widget/${widgetId}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ orderedIds, dateMap }),
-    });
-
-    // Actualizar cachedData localmente con las nuevas fechas
-    const newPosts = planOrder.map(p => {
-      const post = cachedData.posts.find(x => x.pageId === p.pageId);
-      if (!post) return null;
-      return {
-        ...post,
-        publishDate: p.tentativeDate,
-        publishDateISO: p.tentativeDateISO || post.publishDateISO,
-      };
-    }).filter(Boolean);
-    cachedData.posts = newPosts;
-
-    // Mostrar confirmación brevemente antes de salir
-    indicator.textContent = 'Orden guardado ✓';
-    setTimeout(() => { indicator.style.display = 'none'; }, 1200);
-
-    exitPlanMode(true);
-    renderGrid(cachedData.posts, cachedData.plan);
-
-  } catch(err) {
-    console.error('Error saving plan:', err);
-    indicator.style.display = 'none';
-    btn.disabled = false;
-    btn.textContent = 'Save';
-  }
+    const orderedIds = planOrder.map(p => p.pageId); const dateMap = {}; changes.forEach(p => { if (p.tentativeDateISO) dateMap[p.pageId] = p.tentativeDateISO; });
+    await fetch(`${API_BASE}/api/widget/${widgetId}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ orderedIds, dateMap }) });
+    const newPosts = planOrder.map(p => { const post = cachedData.posts.find(x => x.pageId === p.pageId); if (!post) return null; return { ...post, publishDate: p.tentativeDate, publishDateISO: p.tentativeDateISO || post.publishDateISO }; }).filter(Boolean);
+    cachedData.posts = newPosts; indicator.textContent = 'Orden guardado ✓'; setTimeout(() => { indicator.style.display = 'none'; }, 1200); exitPlanMode(true); renderGrid(cachedData.posts, cachedData.plan);
+  } catch(err) { console.error('Error saving plan:', err); indicator.style.display = 'none'; btn.disabled = false; btn.textContent = 'Save'; }
 }
-
-// ── PLAN MODE DRAG ──
 function onPlanDrop(e) {
-  e.preventDefault();
-  this.classList.remove('drag-over');
-  const destIndex = parseInt(this.dataset.index);
-  if (isNaN(destIndex) || dragSrcIndex === destIndex) return;
-
-  // SWAP: las dos imágenes se intercambian entre sí
-  const newOrder = [...planOrder];
-  const srcItem = Object.assign({}, newOrder[dragSrcIndex]);
-  const dstItem = Object.assign({}, newOrder[destIndex]);
-
-  // Las fechas son fijas por slot (del snapshot original)
-  const srcSlotDate = originalSnapshot[dragSrcIndex] ? originalSnapshot[dragSrcIndex].originalDate : null;
-  const dstSlotDate = originalSnapshot[destIndex] ? originalSnapshot[destIndex].originalDate : null;
-
-  const srcSlotDateISO = originalSnapshot[dragSrcIndex] ? originalSnapshot[dragSrcIndex].originalDateISO : null;
-  const dstSlotDateISO = originalSnapshot[destIndex] ? originalSnapshot[destIndex].originalDateISO : null;
-
-  // Imagen src → va al slot dest → hereda fecha de dest
-  newOrder[destIndex] = {
-    pageId: srcItem.pageId,
-    originalDate: srcItem.originalDate,
-    originalDateISO: srcItem.originalDateISO,
-    tentativeDate: dstSlotDate,
-    tentativeDateISO: dstSlotDateISO,
-    moved: dstSlotDate !== srcItem.originalDate,
-  };
-
-  // Imagen dest → va al slot src → hereda fecha de src
-  newOrder[dragSrcIndex] = {
-    pageId: dstItem.pageId,
-    originalDate: dstItem.originalDate,
-    originalDateISO: dstItem.originalDateISO,
-    tentativeDate: srcSlotDate,
-    tentativeDateISO: srcSlotDateISO,
-    moved: srcSlotDate !== dstItem.originalDate,
-  };
-
-  planOrder = newOrder;
-  currentOrder = planOrder.map(function(p) { return p.pageId; });
-
-  renderGrid(cachedData.posts, cachedData.plan);
+  e.preventDefault(); this.classList.remove('drag-over'); const destIndex = parseInt(this.dataset.index); if (isNaN(destIndex) || dragSrcIndex === destIndex) return;
+  const newOrder = [...planOrder]; const srcItem = Object.assign({}, newOrder[dragSrcIndex]); const dstItem = Object.assign({}, newOrder[destIndex]);
+  const srcSlotDate = originalSnapshot[dragSrcIndex] ? originalSnapshot[dragSrcIndex].originalDate : null; const dstSlotDate = originalSnapshot[destIndex] ? originalSnapshot[destIndex].originalDate : null;
+  const srcSlotDateISO = originalSnapshot[dragSrcIndex] ? originalSnapshot[dragSrcIndex].originalDateISO : null; const dstSlotDateISO = originalSnapshot[destIndex] ? originalSnapshot[destIndex].originalDateISO : null;
+  newOrder[destIndex] = { pageId: srcItem.pageId, originalDate: srcItem.originalDate, originalDateISO: srcItem.originalDateISO, tentativeDate: dstSlotDate, tentativeDateISO: dstSlotDateISO, moved: dstSlotDate !== srcItem.originalDate };
+  newOrder[dragSrcIndex] = { pageId: dstItem.pageId, originalDate: dstItem.originalDate, originalDateISO: dstItem.originalDateISO, tentativeDate: srcSlotDate, tentativeDateISO: srcSlotDateISO, moved: srcSlotDate !== dstItem.originalDate };
+  planOrder = newOrder; currentOrder = planOrder.map(function(p) { return p.pageId; }); renderGrid(cachedData.posts, cachedData.plan);
 }
-
-// ── MODAL ──
 function openModal(post) {
-  modalPost = post;
-  modalImages = post.images && post.images.length > 0 ? post.images : (post.imageUrl ? [post.imageUrl] : []);
-  if (modalImages.length === 0) return;
-  modalIndex = 0;
-  modalIsCanva = post.imageSource === 'canva';
-  updateModal();
-  document.getElementById('modal').classList.add('open');
-  document.addEventListener('keydown', onModalKey);
+  modalPost = post; modalImages = post.images && post.images.length > 0 ? post.images : (post.imageUrl ? [post.imageUrl] : []); if (modalImages.length === 0) return;
+  modalIndex = 0; modalIsCanva = post.imageSource === 'canva'; updateModal(); document.getElementById('modal').classList.add('open'); document.addEventListener('keydown', onModalKey);
 }
-
-function closeModal() {
-  document.getElementById('modal').classList.remove('open');
-  document.removeEventListener('keydown', onModalKey);
-}
-
-function onModalKey(e) {
-  if (e.key === 'Escape') closeModal();
-  if (e.key === 'ArrowRight') modalNav(1);
-  if (e.key === 'ArrowLeft') modalNav(-1);
-}
-
-function modalNav(dir) {
-  modalIndex = Math.max(0, Math.min(modalImages.length - 1, modalIndex + dir));
-  updateModal();
-}
-
+function closeModal() { document.getElementById('modal').classList.remove('open'); document.removeEventListener('keydown', onModalKey); }
+function onModalKey(e) { if (e.key === 'Escape') closeModal(); if (e.key === 'ArrowRight') modalNav(1); if (e.key === 'ArrowLeft') modalNav(-1); }
+function modalNav(dir) { modalIndex = Math.max(0, Math.min(modalImages.length - 1, modalIndex + dir)); updateModal(); }
 function updateModal() {
-  const modalInner = document.querySelector('.modal-inner');
-  const existing = document.getElementById('modal-img');
-  if (existing) existing.remove();
-  const existingIframe = document.getElementById('modal-iframe');
-  if (existingIframe) existingIframe.remove();
-
-  if (modalIsCanva) {
-    const iframe = document.createElement('iframe');
-    iframe.id = 'modal-iframe';
-    iframe.src = modalImages[modalIndex];
-    iframe.style.cssText = 'width:80vw;height:80vh;border:none;border-radius:4px;';
-    iframe.setAttribute('allowfullscreen', '');
-    const prev = document.querySelector('.modal-prev');
-    modalInner.insertBefore(iframe, prev);
-  } else {
-    const img = document.createElement('img');
-    img.id = 'modal-img';
-    img.className = 'modal-img';
-    img.src = modalImages[modalIndex];
-    img.alt = '';
-    const prev = document.querySelector('.modal-prev');
-    modalInner.insertBefore(img, prev);
-  }
-
-  document.getElementById('modal-caption').textContent = modalPost?.name || '';
-  document.getElementById('modal-date').textContent = modalPost?.publishDate || '';
-
-  const prev = document.querySelector('.modal-prev');
-  const next = document.querySelector('.modal-next');
-  prev.classList.toggle('hidden', modalIndex === 0 || modalImages.length <= 1);
-  next.classList.toggle('hidden', modalIndex === modalImages.length - 1 || modalImages.length <= 1);
-
-  const dots = document.getElementById('modal-dots');
-  dots.innerHTML = '';
-  if (modalImages.length > 1) {
-    modalImages.forEach((_, i) => {
-      const dot = document.createElement('div');
-      dot.className = 'modal-dot' + (i === modalIndex ? ' active' : '');
-      dots.appendChild(dot);
-    });
-  }
+  const modalInner = document.querySelector('.modal-inner'); const existing = document.getElementById('modal-img'); if (existing) existing.remove(); const existingIframe = document.getElementById('modal-iframe'); if (existingIframe) existingIframe.remove();
+  if (modalIsCanva) { const iframe = document.createElement('iframe'); iframe.id = 'modal-iframe'; iframe.src = modalImages[modalIndex]; iframe.style.cssText = 'width:80vw;height:80vh;border:none;border-radius:4px;'; iframe.setAttribute('allowfullscreen', ''); const prev = document.querySelector('.modal-prev'); modalInner.insertBefore(iframe, prev); }
+  else { const img = document.createElement('img'); img.id = 'modal-img'; img.className = 'modal-img'; img.src = modalImages[modalIndex]; img.alt = ''; const prev = document.querySelector('.modal-prev'); modalInner.insertBefore(img, prev); }
+  document.getElementById('modal-caption').textContent = modalPost?.name || ''; document.getElementById('modal-date').textContent = modalPost?.publishDate || '';
+  const prev = document.querySelector('.modal-prev'); const next = document.querySelector('.modal-next');
+  prev.classList.toggle('hidden', modalIndex === 0 || modalImages.length <= 1); next.classList.toggle('hidden', modalIndex === modalImages.length - 1 || modalImages.length <= 1);
+  const dots = document.getElementById('modal-dots'); dots.innerHTML = '';
+  if (modalImages.length > 1) { modalImages.forEach((_, i) => { const dot = document.createElement('div'); dot.className = 'modal-dot' + (i === modalIndex ? ' active' : ''); dots.appendChild(dot); }); }
 }
-
-document.getElementById('modal').addEventListener('click', (e) => {
-  if (e.target === document.getElementById('modal')) closeModal();
-});
-
-// ── DRAG AND DROP (modo normal / custom sort) ──
+document.getElementById('modal').addEventListener('click', (e) => { if (e.target === document.getElementById('modal')) closeModal(); });
 function onDragStart(e) { dragSrcIndex = parseInt(this.dataset.index); this.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; }
 function onDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; this.classList.add('drag-over'); }
 function onDragLeave() { this.classList.remove('drag-over'); }
 async function onDrop(e) {
-  e.preventDefault(); this.classList.remove('drag-over');
-  const destIndex = parseInt(this.dataset.index);
-  if (dragSrcIndex === destIndex || isNaN(destIndex)) return;
-  const newOrder = [...currentOrder];
-  const [moved] = newOrder.splice(dragSrcIndex, 1);
-  newOrder.splice(destIndex, 0, moved);
-  currentOrder = newOrder;
-  const reordered = newOrder.map(id => cachedData.posts.find(p => p.pageId === id)).filter(Boolean);
-  cachedData.posts = reordered;
-  renderGrid(reordered, cachedData.plan);
-  await saveOrderToNotion(newOrder);
+  e.preventDefault(); this.classList.remove('drag-over'); const destIndex = parseInt(this.dataset.index); if (dragSrcIndex === destIndex || isNaN(destIndex)) return;
+  const newOrder = [...currentOrder]; const [moved] = newOrder.splice(dragSrcIndex, 1); newOrder.splice(destIndex, 0, moved); currentOrder = newOrder;
+  const reordered = newOrder.map(id => cachedData.posts.find(p => p.pageId === id)).filter(Boolean); cachedData.posts = reordered; renderGrid(reordered, cachedData.plan); await saveOrderToNotion(newOrder);
 }
 function onDragEnd() { this.classList.remove('dragging'); document.querySelectorAll('.cell').forEach(c => c.classList.remove('drag-over')); }
-
 async function saveOrderToNotion(orderedIds) {
-  const indicator = document.getElementById('saving-indicator');
-  indicator.textContent = 'Guardando orden…';
-  indicator.style.display = 'block';
-  try {
-    await fetch(`${API_BASE}/api/widget/${widgetId}`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ orderedIds }),
-    });
-  } catch (err) { console.error('Error saving order:', err); }
+  const indicator = document.getElementById('saving-indicator'); indicator.textContent = 'Guardando orden…'; indicator.style.display = 'block';
+  try { await fetch(`${API_BASE}/api/widget/${widgetId}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ orderedIds }) }); } catch (err) { console.error('Error saving order:', err); }
   finally { setTimeout(() => { indicator.style.display = 'none'; }, 1500); }
 }
-
-// ── SETTINGS ──
 function toggleSettings() { document.getElementById('settings-panel').classList.toggle('open'); }
 function closeSettings() { document.getElementById('settings-panel').classList.remove('open'); }
-document.addEventListener('click', (e) => {
-  const panel = document.getElementById('settings-panel');
-  const btn = document.getElementById('settings-btn');
-  if (!panel.contains(e.target) && !btn.contains(e.target)) closeSettings();
-});
-function toggleSetting(key) {
-  settings[key] = !settings[key];
-  saveSettings();
-  if (key === 'wideGrid') {
-    applyWideGrid();
-    updateSettingsUI();
-  } else {
-    renderAll();
-  }
-}
+document.addEventListener('click', (e) => { const panel = document.getElementById('settings-panel'); const btn = document.getElementById('settings-btn'); if (!panel.contains(e.target) && !btn.contains(e.target)) closeSettings(); });
+function toggleSetting(key) { settings[key] = !settings[key]; saveSettings(); if (key === 'wideGrid') { applyWideGrid(); updateSettingsUI(); } else { renderAll(); } }
 function setSortMode(mode) { settings.sortMode = mode; saveSettings(); renderAll(); }
 function updateSettingsUI() {
   document.getElementById('toggle-showBio').className = 'toggle' + (settings.showBio ? ' on' : '');
@@ -1047,37 +459,14 @@ function updateSettingsUI() {
   document.getElementById('toggle-wideGrid').className = 'toggle' + (settings.wideGrid ? ' on' : '');
   document.getElementById('radio-date').className = 'radio on';
 }
-// ── DARK MODE ──
-function toggleDarkMode() {
-  settings.darkMode = !settings.darkMode;
-  saveSettings();
-  applyDarkMode();
-}
-
+function toggleDarkMode() { settings.darkMode = !settings.darkMode; saveSettings(); applyDarkMode(); }
 function applyDarkMode() {
   document.body.classList.toggle('dark', settings.darkMode);
-  const iconDark = document.getElementById('icon-dark');
-  const iconLight = document.getElementById('icon-light');
-  if (settings.darkMode) {
-    iconDark.style.display = 'none';
-    iconLight.style.display = '';
-  } else {
-    iconDark.style.display = '';
-    iconLight.style.display = 'none';
-  }
+  document.getElementById('icon-dark').style.display = settings.darkMode ? 'none' : '';
+  document.getElementById('icon-light').style.display = settings.darkMode ? '' : 'none';
 }
-
-// ── WIDE GRID ──
-function applyWideGrid() {
-  const grid = document.getElementById('grid');
-  if (grid) grid.classList.toggle('wide', settings.wideGrid);
-}
-
-function makePlaceholder(label) {
-  const div = document.createElement('div'); div.className = 'cell-placeholder';
-  div.innerHTML = `${icons.canva}<span>${label}</span>`; return div;
-}
-
+function applyWideGrid() { const grid = document.getElementById('grid'); if (grid) grid.classList.toggle('wide', settings.wideGrid); }
+function makePlaceholder(label) { const div = document.createElement('div'); div.className = 'cell-placeholder'; div.innerHTML = `${icons.canva}<span>${label}</span>`; return div; }
 loadWidget();
 </script>
 </body>
