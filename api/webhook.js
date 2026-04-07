@@ -70,7 +70,7 @@ export default async function handler(req, res) {
 
           // Mandar email de upgrade exitoso
           await resend.emails.send({
-            from: 'The Content Edit <onboarding@resend.dev>',
+            from: 'The Content Edit <hola@thecontentedit.digital>',
             to: email,
             subject: '✦ ¡Ya eres Pro! Tu widget se actualizó',
             html: getUpgradeEmailHTML({ customerName, setupUrl }),
@@ -108,7 +108,7 @@ export default async function handler(req, res) {
     const setupUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/setup.html?token=${setupToken}`;
 
     await resend.emails.send({
-      from: 'The Content Edit <onboarding@resend.dev>',
+      from: 'The Content Edit <hola@thecontentedit.digital>',
       to: email,
       subject: '✦ Tu widget está listo — empieza el setup',
       html: getEmailHTML({ customerName, licenseKey, setupUrl, plan }),
