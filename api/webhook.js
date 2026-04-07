@@ -57,7 +57,6 @@ export default async function handler(req, res) {
         if (raw) {
           const existingData = typeof raw === 'string' ? JSON.parse(raw) : raw;
 
-          // Actualizar plan a Pro en el registro existente
           const updated = {
             ...existingData,
             plan: 'pro',
@@ -65,14 +64,12 @@ export default async function handler(req, res) {
           };
           await redis.set(`setup:${existingSetupToken}`, JSON.stringify(updated));
 
-          // Calcular la URL del setup para que recuperen sus links
           const setupUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/setup.html?token=${existingSetupToken}`;
 
-          // Mandar email de upgrade exitoso
           await resend.emails.send({
             from: 'The Content Edit <hola@thecontentedit.digital>',
             to: email,
-            subject: '✦ ¡Ya eres Pro! Tu widget se actualizó',
+            subject: '¡Ya eres Pro! Tu widget se actualizó',
             html: getUpgradeEmailHTML({ customerName, setupUrl }),
           });
 
@@ -101,8 +98,6 @@ export default async function handler(req, res) {
 
     await redis.set(`setup:${setupToken}`, JSON.stringify(licenseData), { ex: 60 * 60 * 24 * 30 });
     await redis.set(`license:${licenseKey}`, setupToken);
-
-    // Guardar índice email → setupToken para poder buscar en upgrades futuros
     await redis.set(`email:${email}`, setupToken);
 
     const setupUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/setup.html?token=${setupToken}`;
@@ -110,7 +105,7 @@ export default async function handler(req, res) {
     await resend.emails.send({
       from: 'The Content Edit <hola@thecontentedit.digital>',
       to: email,
-      subject: '✦ Tu widget está listo — empieza el setup',
+      subject: `Tu widget está listo, ${customerName.split(' ')[0]}`,
       html: getEmailHTML({ customerName, licenseKey, setupUrl, plan }),
     });
 
@@ -132,24 +127,41 @@ async function getRawBody(req) {
 }
 
 function getEmailHTML({ customerName, licenseKey, setupUrl, plan }) {
+  const firstName = customerName.split(' ')[0];
   return `<!DOCTYPE html>
 <html>
-<head><meta charset="utf-8"/></head>
+<head>
+  <meta charset="utf-8"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+</head>
 <body style="margin:0;padding:0;background:#F9F6F1;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-  <div style="max-width:520px;margin:40px auto;background:#fff;border-radius:12px;border:1px solid rgba(28,25,21,0.1);overflow:hidden;">
-    <div style="background:#1C1915;padding:28px 32px;">
-      <p style="margin:0;font-size:15px;letter-spacing:0.06em;text-transform:uppercase;color:rgba(249,246,241,0.6);">The Content Edit</p>
+  <div style="max-width:520px;margin:40px auto;background:#F9F6F1;border-radius:12px;border:1px solid rgba(28,25,21,0.1);overflow:hidden;">
+
+    <div style="background:#1C1915;padding:24px 32px;">
+      <p style="margin:0;font-size:22px;color:#F9F6F1;font-family:'DM Serif Display',Georgia,serif;font-weight:400;">The Content Edit</p>
     </div>
-    <div style="padding:32px;">
-      <h1 style="margin:0 0 8px;font-size:24px;font-weight:500;color:#1C1915;">Hola ${customerName} ✦</h1>
-      <p style="margin:0 0 24px;font-size:15px;color:#7A7570;line-height:1.6;">Tu widget ${plan === 'pro' ? 'Pro' : ''} está listo. Guarda este email — aquí están tus credenciales únicas.</p>
-      <div style="background:#F9F6F1;border-radius:8px;padding:16px 20px;margin-bottom:24px;">
-        <p style="margin:0 0 4px;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#7A7570;">Tu license key</p>
-        <p style="margin:0;font-size:18px;font-weight:500;color:#1C1915;letter-spacing:0.06em;font-family:monospace;">${licenseKey}</p>
+
+    <div style="padding:32px 32px 24px;">
+      <h1 style="margin:0 0 6px;font-size:22px;font-weight:500;color:#1C1915;">Hola, ${firstName} 🤍</h1>
+      <p style="margin:0 0 20px;font-size:13px;color:#5F5E5A;line-height:1.5;">Tu widget está listo. Guarda este email — aquí están tus credenciales únicas.</p>
+
+      <div style="background:#ECEAE5;border-radius:8px;padding:14px 16px;margin-bottom:20px;">
+        <p style="margin:0 0 5px;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:#888780;">Tu license key</p>
+        <p style="margin:0;font-size:15px;font-weight:500;color:#1C1915;letter-spacing:0.05em;font-family:monospace;">${licenseKey}</p>
       </div>
-      <a href="${setupUrl}" style="display:block;background:#1C1915;color:#F9F6F1;text-align:center;padding:14px;border-radius:999px;font-size:14px;font-weight:500;text-decoration:none;margin-bottom:20px;">Empezar setup →</a>
-      <p style="margin:0;font-size:12px;color:#aaa;line-height:1.6;">¿Quieres upgrade a Pro en el futuro? Usa este mismo email para que tu widget se actualice automáticamente.<br/><br/>© 2025 The Content Edit</p>
+
+      <a href="${setupUrl}" style="display:block;background:#1C1915;color:#F9F6F1;text-align:center;padding:13px 20px;border-radius:999px;font-size:14px;font-weight:500;text-decoration:none;margin-bottom:20px;">Empezar setup →</a>
+
+      <div style="background:#F0EDE7;border-radius:8px;padding:14px 16px;">
+        <p style="margin:0 0 8px;font-size:13px;color:#5F5E5A;line-height:1.55;">¿Quieres usar imágenes de Canva o links externos? Eso es exclusivo del plan Pro.</p>
+        <a href="https://thecontentedit.lemonsqueezy.com/checkout/buy/827cbae3-e9c5-4912-ad09-701097b4c3d6?logo=0&discount=0" style="font-size:13px;color:#1C1915;font-weight:500;text-decoration:underline;">Ver plan Pro →</a>
+      </div>
     </div>
+
+    <div style="padding:18px 32px 20px;border-top:0.5px solid #D3D1C7;">
+      <p style="margin:0;font-size:12px;color:#888780;line-height:1.6;">¿Dudas? Escríbeme a <a href="mailto:hola@thecontentedit.digital" style="color:#888780;text-decoration:underline;">hola@thecontentedit.digital</a><br/>© The Content Edit. Solo para uso personal — prohibida su redistribución o reventa.</p>
+    </div>
+
   </div>
 </body>
 </html>`;
@@ -158,21 +170,32 @@ function getEmailHTML({ customerName, licenseKey, setupUrl, plan }) {
 function getUpgradeEmailHTML({ customerName, setupUrl }) {
   return `<!DOCTYPE html>
 <html>
-<head><meta charset="utf-8"/></head>
+<head>
+  <meta charset="utf-8"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+</head>
 <body style="margin:0;padding:0;background:#F9F6F1;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-  <div style="max-width:520px;margin:40px auto;background:#fff;border-radius:12px;border:1px solid rgba(28,25,21,0.1);overflow:hidden;">
-    <div style="background:#1C1915;padding:28px 32px;">
-      <p style="margin:0;font-size:15px;letter-spacing:0.06em;text-transform:uppercase;color:rgba(249,246,241,0.6);">The Content Edit</p>
+  <div style="max-width:520px;margin:40px auto;background:#F9F6F1;border-radius:12px;border:1px solid rgba(28,25,21,0.1);overflow:hidden;">
+
+    <div style="background:#1C1915;padding:24px 32px;">
+      <p style="margin:0;font-size:22px;color:#F9F6F1;font-family:'DM Serif Display',Georgia,serif;font-weight:400;">The Content Edit</p>
     </div>
-    <div style="padding:32px;">
-      <h1 style="margin:0 0 8px;font-size:24px;font-weight:500;color:#1C1915;">¡Ya eres Pro, ${customerName}! ✦</h1>
-      <p style="margin:0 0 24px;font-size:15px;color:#7A7570;line-height:1.6;">Tu widget se actualizó automáticamente. Solo refresca el widget en Notion y ya tendrás todas las funciones Pro activas.</p>
-      <div style="background:#EAF4EE;border-radius:8px;padding:16px 20px;margin-bottom:24px;">
-        <p style="margin:0;font-size:14px;color:#2D6A4F;line-height:1.6;">✓ Plan Grid<br/>✓ Content Map<br/>✓ Dark mode<br/>✓ Vista 5 columnas<br/>✓ Profile Preview (Bio mode)</p>
+
+    <div style="padding:32px 32px 24px;">
+      <h1 style="margin:0 0 8px;font-size:22px;font-weight:500;color:#1C1915;">¡Ya eres Pro, ${customerName.split(' ')[0]}! 🤍</h1>
+      <p style="margin:0 0 24px;font-size:13px;color:#5F5E5A;line-height:1.6;">Tu widget se actualizó automáticamente. Solo refresca el widget en Notion y ya tendrás todas las funciones Pro activas.</p>
+
+      <div style="background:#ECEAE5;border-radius:8px;padding:16px 20px;margin-bottom:24px;">
+        <p style="margin:0;font-size:13px;color:#1C1915;line-height:1.8;">✓ Plan Grid<br/>✓ Imágenes desde Canva y links externos<br/>✓ Profile Preview (Bio mode)</p>
       </div>
-      <a href="${setupUrl}" style="display:block;background:#1C1915;color:#F9F6F1;text-align:center;padding:14px;border-radius:999px;font-size:14px;font-weight:500;text-decoration:none;margin-bottom:20px;">Ver mis links →</a>
-      <p style="margin:0;font-size:12px;color:#aaa;line-height:1.6;">¿Algo no funciona? Escríbeme y lo resolvemos.<br/>© 2025 The Content Edit</p>
+
+      <a href="${setupUrl}" style="display:block;background:#1C1915;color:#F9F6F1;text-align:center;padding:13px 20px;border-radius:999px;font-size:14px;font-weight:500;text-decoration:none;margin-bottom:0;">Ver mis links →</a>
     </div>
+
+    <div style="padding:18px 32px 20px;border-top:0.5px solid #D3D1C7;">
+      <p style="margin:0;font-size:12px;color:#888780;line-height:1.6;">¿Algo no funciona? Escríbeme a <a href="mailto:hola@thecontentedit.digital" style="color:#888780;text-decoration:underline;">hola@thecontentedit.digital</a><br/>© The Content Edit. Solo para uso personal — prohibida su redistribución o reventa.</p>
+    </div>
+
   </div>
 </body>
 </html>`;
