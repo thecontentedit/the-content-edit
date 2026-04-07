@@ -2,421 +2,454 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8"/>
- <link rel="icon" type="image/png" href="/TCE.png"/>
+<link rel="icon" type="image/png" href="/TCE.png"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>The Content Edit — Tu grid de Instagram en Notion</title>
 <meta name="description" content="Conecta tu base de datos de Notion y visualiza tu feed de Instagram en tiempo real. Sin salir de Notion."/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --cream: #F7F7F5;
-    --ink: #1C1915;
-    --muted: #7A7570;
-    --border: rgba(28,25,21,0.1);
-    --border-strong: rgba(28,25,21,0.22);
-    --accent: #C17F3E;
-    --serif: 'Playfair Display', Georgia, serif;
-    --serif-italic: 'Cormorant Garamond', Georgia, serif;
-    --sans: 'DM Sans', system-ui, sans-serif;
-    --radius: 12px;
-    --radius-sm: 8px;
-  }
+:root {
+  --cream: #FAFAF8;
+  --ink: #1C1915;
+  --muted: #7A7570;
+  --border: rgba(28,25,21,0.08);
+  --border-strong: rgba(28,25,21,0.18);
+  --accent: #7A3B4A;
+  --accent-bg: rgba(122,59,74,0.06);
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans: 'Inter', system-ui, sans-serif;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
 
-  html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; }
 
-  body {
-    font-family: var(--sans);
-    background: var(--cream);
-    color: var(--ink);
-    font-size: 15px;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
+body {
+  font-family: var(--sans);
+  background: var(--cream);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
 
-  nav {
-    position: sticky; top: 0; z-index: 100;
-    background: var(--cream);
-    border-bottom: 0.5px solid var(--border);
-    padding: 0 2rem;
-    display: flex; align-items: center; justify-content: space-between;
-    height: 56px;
-  }
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--cream);
+  border-bottom: 0.5px solid var(--border);
+  padding: 0 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+}
 
-  .nav-logo {
-    font-family: var(--serif);
-    font-size: 17px; letter-spacing: -0.01em;
-    color: var(--ink); text-decoration: none;
-  }
+.nav-logo {
+  font-family: var(--serif);
+  font-size: 17px;
+  color: var(--ink); text-decoration: none;
+}
 
-  .nav-links {
-    display: flex; align-items: center; gap: 2rem;
-    list-style: none;
-  }
+.nav-links {
+  display: flex; align-items: center; gap: 2rem;
+  list-style: none;
+}
 
-  .nav-links a {
-    font-size: 13px; color: var(--muted);
-    text-decoration: none; transition: color .2s;
-  }
-  .nav-links a:hover { color: var(--ink); }
+.nav-links a {
+  font-size: 13px; color: var(--muted);
+  text-decoration: none; transition: color .2s; font-weight: 300;
+}
+.nav-links a:hover { color: var(--ink); }
 
-  .nav-cta {
-    background: var(--ink); color: var(--cream);
-    border: none; border-radius: 999px;
-    padding: 8px 20px; font-size: 13px; font-weight: 500;
-    cursor: pointer; transition: opacity .2s;
-    font-family: var(--sans); text-decoration: none;
-  }
-  .nav-cta:hover { opacity: .75; }
+.nav-cta {
+  background: var(--ink); color: var(--cream);
+  border: none; border-radius: 999px;
+  padding: 8px 20px; font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: opacity .2s;
+  font-family: var(--sans); text-decoration: none;
+}
+.nav-cta:hover { opacity: .75; }
 
-  .container { max-width: 680px; margin: 0 auto; padding: 0 1.5rem; }
-  .container-wide { max-width: 860px; margin: 0 auto; padding: 0 1.5rem; }
+/* CONTAINERS */
+.container { max-width: 680px; margin: 0 auto; padding: 0 1.5rem; }
+.container-wide { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; }
 
-  section { padding: 5rem 0; }
-  section + section { border-top: 0.5px solid var(--border); }
+/* LABELS */
+.label {
+  font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted); display: block; margin-bottom: .75rem; font-weight: 400;
+}
 
-  .label {
-    font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
-    color: var(--muted); display: block; margin-bottom: .75rem;
-  }
+/* HERO BLOQUE 1 — BLANCO */
+.hero {
+  padding: 72px 0 64px;
+  text-align: center;
+  background: var(--cream);
+}
 
-  .hero { padding: 6rem 0 5rem; text-align: center; background: #503b31; }
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(42px, 7vw, 64px);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.25rem;
+  color: var(--ink);
+}
 
-  .hero h1 {
-    font-family: var(--serif);
-    font-size: clamp(38px, 7vw, 58px);
-    line-height: 1.1; letter-spacing: -0.02em;
-    margin-bottom: 1.25rem; color: #F9F6F1;
-  }
+.hero h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
 
-  .hero h1 em { font-style: italic; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.08em; color: rgba(249,246,241,0.4); }
+.hero-sub {
+  font-size: 14px; color: var(--muted); line-height: 1.6;
+  max-width: 360px; margin: 0 auto 2rem; font-weight: 300;
+}
 
-  .hero-sub {
-    font-size: 16px; color: rgba(249,246,241,0.55); line-height: 1.65;
-    max-width: 420px; margin: 0 auto 2rem;
-  }
+.hero-btns {
+  display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+}
 
-  .hero-btns {
-    display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
-    margin-bottom: 3rem;
-  }
+.btn-primary {
+  background: var(--ink); color: var(--cream);
+  border: none; border-radius: 999px;
+  padding: 12px 28px; font-size: 14px; font-weight: 500;
+  cursor: pointer; transition: opacity .2s;
+  font-family: var(--sans); text-decoration: none; display: inline-block;
+}
+.btn-primary:hover { opacity: .75; }
 
-  .btn-primary {
-    background: #F9F6F1; color: #503b31;
-    border: none; border-radius: 999px;
-    padding: 12px 28px; font-size: 14px; font-weight: 500;
-    cursor: pointer; transition: opacity .2s;
-    font-family: var(--sans);
-  }
-  .btn-primary:hover { opacity: .75; }
+.btn-ghost {
+  background: transparent; color: var(--muted);
+  border: 0.5px solid var(--border-strong); border-radius: 999px;
+  padding: 12px 28px; font-size: 14px; font-weight: 300;
+  cursor: pointer; transition: background .2s;
+  font-family: var(--sans);
+}
+.btn-ghost:hover { background: rgba(28,25,21,.04); }
 
-  .btn-ghost {
-    background: transparent; color: rgba(249,246,241,0.6);
-    border: 0.5px solid rgba(249,246,241,0.25); border-radius: 999px;
-    padding: 12px 28px; font-size: 14px;
-    cursor: pointer; transition: background .2s;
-    font-family: var(--sans);
-  }
-  .btn-ghost:hover { background: rgba(249,246,241,0.08); }
+/* HERO BLOQUE 2 — BURDEOS */
+.hero-visual {
+  background: var(--accent);
+  padding: 56px 2rem 0;
+  text-align: center;
+}
 
-  .ticker-section {
-    padding: 0;
-    border-top: 0.5px solid var(--border);
-    border-bottom: 0.5px solid var(--border);
-    overflow: hidden;
-  }
+.hero-visual-label {
+  font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+  color: rgba(255,255,255,0.4); display: block; margin-bottom: 12px; font-weight: 400;
+}
 
-  .ticker-track {
-    display: flex; width: max-content;
-    animation: ticker 22s linear infinite;
-    padding: 10px 0;
-  }
+.hero-visual h2 {
+  font-family: var(--serif);
+  font-size: clamp(22px, 3.5vw, 30px);
+  color: #fff; font-weight: 400;
+  line-height: 1.2; margin-bottom: 8px;
+}
 
-  .ticker-track span {
-    font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
-    color: var(--muted); white-space: nowrap; padding: 0 1.5rem;
-  }
+.hero-visual h2 em {
+  font-style: italic;
+  color: rgba(255,255,255,0.55);
+}
 
-  .ticker-track span.dot { padding: 0; color: var(--accent); }
+.hero-visual p {
+  font-size: 13px; color: rgba(255,255,255,0.5);
+  font-weight: 300; margin-bottom: 40px;
+}
 
-  @keyframes ticker {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
-  }
+.hero-visual-img {
+  max-width: 700px; margin: 0 auto; display: block; width: 100%;
+}
 
-  .grid-demo {
-    display: inline-block;
-    border-radius: var(--radius);
-    overflow: hidden;
-    border: 0.5px solid rgba(249,246,241,0.2);
-    max-width: 320px; width: 100%;
-  }
+/* TICKER */
+.ticker-section {
+  padding: 0;
+  border-top: 0.5px solid var(--border);
+  border-bottom: 0.5px solid var(--border);
+  overflow: hidden;
+  background: var(--cream);
+}
 
-  .grid-demo-inner {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
-    background: rgba(249,246,241,0.08);
-  }
+.ticker-track {
+  display: flex; width: max-content;
+  animation: ticker 28s linear infinite;
+  padding: 10px 0;
+}
 
-  .grid-demo-cell { aspect-ratio: 1; overflow: hidden; background: rgba(249,246,241,0.06); }
+.ticker-track span {
+  font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted); white-space: nowrap; padding: 0 1.5rem; font-weight: 300;
+}
 
-  .grid-demo-cell img {
-    width: 100%; height: 100%; object-fit: cover; display: block;
-    transition: transform .3s ease;
-  }
-  .grid-demo-cell:hover img { transform: scale(1.06); }
+.ticker-track span.dot { padding: 0; color: var(--accent); }
 
-  .problem-text {
-    font-family: var(--serif);
-    font-size: clamp(20px, 3.5vw, 26px);
-    line-height: 1.45; color: var(--ink);
-    margin-bottom: 1.25rem;
-  }
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
 
-  .problem-text em { font-style: italic; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.08em; color: var(--muted); }
+/* SECTIONS */
+section { padding: 5rem 0; }
+section + section { border-top: 0.5px solid var(--border); }
 
-  .problem-body {
-    font-size: 15px; color: var(--muted); line-height: 1.7;
-    max-width: 520px;
-  }
+/* PROBLEM */
+.problem-text {
+  font-family: var(--serif);
+  font-size: clamp(20px, 3.5vw, 28px);
+  line-height: 1.35; color: var(--ink);
+  margin-bottom: 1.25rem;
+}
 
-  .feat-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    margin-top: 2rem;
-  }
+.problem-text em {
+  font-style: italic;
+  color: var(--muted);
+}
 
-  .feat-card { background: var(--cream); padding: 1.5rem; transition: background .2s; }
-  .feat-card:hover { background: #F2EDE5; }
+.problem-body {
+  font-size: 15px; color: var(--muted); line-height: 1.7; font-weight: 300;
+  max-width: 520px;
+}
 
-  .feat-icon {
-    width: 32px; height: 32px;
-    border: 0.5px solid var(--border-strong);
-    border-radius: var(--radius-sm);
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 1rem; font-size: 14px;
-  }
+/* FEATURES */
+.feat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-top: 2rem;
+}
 
-  .feat-title { font-family: var(--serif); font-size: 16px; margin-bottom: 5px; letter-spacing: -0.01em; }
-  .feat-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
+.feat-card {
+  background: var(--cream); padding: 22px 20px;
+  transition: background .2s;
+}
+.feat-card:hover { background: #F0EAE2; }
 
-  .who-list { display: flex; flex-direction: column; gap: 1px; margin-top: 2rem; }
+.feat-icon { font-size: 22px; margin-bottom: 12px; display: block; }
+.feat-title { font-family: var(--serif); font-size: 16px; margin-bottom: 6px; color: var(--ink); font-weight: 400; }
+.feat-desc { font-size: 12px; color: var(--muted); line-height: 1.6; font-weight: 300; }
 
-  .who-item {
-    display: flex; align-items: center; gap: 1rem;
-    padding: 1.1rem 1.25rem;
-    background: var(--cream);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-size: 14px; color: var(--ink);
-    transition: background .2s;
-  }
-  .who-item:hover { background: #E0D8CC; }
+/* WHO */
+.who-list { display: flex; flex-direction: column; gap: 1px; margin-top: 2rem; }
 
-  .who-icon {
-    width: 28px; height: 28px; border-radius: 50%;
-    background: rgba(28,25,21,.06);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .who-icon svg { width: 13px; height: 13px; }
+.who-item {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1.1rem 1.25rem;
+  background: var(--cream);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px; color: var(--ink); font-weight: 300;
+  transition: background .2s;
+}
+.who-item:hover { background: #F0EAE2; }
 
-  .steps { display: flex; flex-direction: column; gap: 0; margin-top: 2rem; }
+.who-icon {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(28,25,21,.06);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.who-icon svg { width: 13px; height: 13px; }
 
-  .step {
-    display: flex; gap: 1.25rem; padding: 1.25rem 0;
-    border-bottom: 0.5px solid var(--border);
-    align-items: flex-start;
-  }
-  .step:last-child { border-bottom: none; }
+/* STEPS */
+.steps { display: flex; flex-direction: column; gap: 0; margin-top: 2rem; }
 
-  .step-num {
-    width: 28px; height: 28px; border-radius: 50%;
-    border: 0.5px solid var(--border-strong);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 500; color: var(--muted);
-    flex-shrink: 0; margin-top: 2px;
-  }
+.step {
+  display: flex; gap: 1.25rem; padding: 1.25rem 0;
+  border-bottom: 0.5px solid var(--border);
+  align-items: flex-start;
+}
+.step:last-child { border-bottom: none; }
 
-  .step-title { font-weight: 500; font-size: 14px; margin-bottom: 3px; }
-  .step-desc  { font-size: 13px; color: var(--muted); line-height: 1.55; }
+.step-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 0.5px solid var(--border-strong);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 400; color: var(--muted);
+  flex-shrink: 0; margin-top: 2px;
+}
 
-  .plans {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-    margin-top: 2rem;
-  }
+.step-title { font-weight: 500; font-size: 14px; margin-bottom: 3px; }
+.step-desc  { font-size: 13px; color: var(--muted); line-height: 1.55; font-weight: 300; }
 
-  .plan {
-    background: var(--cream);
-    border: 0.5px solid var(--border-strong);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-  }
+/* TESTIMONIOS */
+.t-card {
+  position: absolute;
+  background: #fff;
+  border: 0.5px solid rgba(28,25,21,0.1);
+  border-radius: 10px;
+  padding: 14px 16px;
+  max-width: 200px;
+  will-change: transform;
+}
 
-  .plan.featured {
-    border: 1.5px solid #503b31;
-    background: #503b31; color: var(--cream);
-  }
+.t-body { font-size: 12px; line-height: 1.55; color: var(--ink); margin: 0 0 8px; font-weight: 300; }
+.t-name { font-size: 11px; color: var(--muted); font-style: italic; margin: 0; }
 
-  .plan-tag {
-    display: inline-block;
-    font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
-    border: 0.5px solid rgba(249,246,241,.35);
-    color: rgba(249,246,241,.7);
-    padding: 3px 10px; border-radius: 999px;
-    margin-bottom: 1rem;
-  }
+/* PRICING */
+.plans {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-top: 2rem;
+}
 
-  .plan-name { font-family: 'DM Serif Display', Georgia, serif; font-size: 22px; margin-bottom: 4px; letter-spacing: -0.01em; }
-  .plan-desc { font-size: 12px; margin-bottom: 1.25rem; line-height: 1.5; }
-  .plan .plan-desc { color: var(--muted); }
-  .plan.featured .plan-desc { color: rgba(249,246,241,.6); }
-  .plan-price { font-family: 'DM Serif Display', Georgia, serif; font-size: 36px; letter-spacing: -0.03em; margin-bottom: 2px; }
-  .plan-period { font-size: 12px; margin-bottom: 1.5rem; }
-  .plan .plan-period { color: var(--muted); }
-  .plan.featured .plan-period { color: rgba(249,246,241,.5); }
-  .plan-divider { height: 0.5px; margin-bottom: 1.25rem; background: var(--border); }
-  .plan.featured .plan-divider { background: rgba(249,246,241,.15); }
+.plan {
+  background: var(--cream);
+  border: 0.5px solid var(--border-strong);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
 
-  .plan-feats { list-style: none; margin-bottom: 1.5rem; }
+.plan.featured {
+  border: 1.5px solid var(--accent);
+  background: var(--accent); color: var(--cream);
+}
 
-  .plan-feats li {
-    display: flex; align-items: flex-start; gap: 7px;
-    font-size: 13px; padding: 5px 0;
-    border-bottom: 0.5px solid var(--border);
-    line-height: 1.4;
-  }
-  .plan.featured .plan-feats li { border-bottom-color: rgba(249,246,241,.1); color: rgba(249,246,241,.85); }
-  .plan-feats li:last-child { border-bottom: none; }
-  .plan-feats li svg { width: 12px; height: 12px; flex-shrink: 0; margin-top: 2px; }
-  .plan-feats li.muted { color: var(--muted); }
-  .plan.featured .plan-feats li.muted { color: rgba(249,246,241,.35); }
+.plan-tag {
+  display: inline-block;
+  font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+  border: 0.5px solid rgba(249,246,241,.35);
+  color: rgba(249,246,241,.7);
+  padding: 3px 10px; border-radius: 999px;
+  margin-bottom: 1rem; font-weight: 400;
+}
 
-  .plan-btn {
-    width: 100%; padding: 11px;
-    border-radius: 999px; font-size: 13px; font-weight: 500;
-    cursor: pointer; font-family: var(--sans);
-    transition: opacity .2s;
-  }
+.plan-name { font-family: var(--serif); font-size: 22px; margin-bottom: 4px; font-weight: 400; }
+.plan-desc { font-size: 12px; margin-bottom: 1.25rem; line-height: 1.5; font-weight: 300; }
+.plan .plan-desc { color: var(--muted); }
+.plan.featured .plan-desc { color: rgba(249,246,241,.6); }
+.plan-price { font-family: var(--serif); font-size: 36px; letter-spacing: -0.03em; margin-bottom: 2px; font-weight: 400; }
+.plan-period { font-size: 12px; margin-bottom: 1.5rem; font-weight: 300; }
+.plan .plan-period { color: var(--muted); }
+.plan.featured .plan-period { color: rgba(249,246,241,.5); }
+.plan-divider { height: 0.5px; margin-bottom: 1.25rem; background: var(--border); }
+.plan.featured .plan-divider { background: rgba(249,246,241,.15); }
 
-  .plan-btn.light {
-    background: transparent; color: var(--ink);
-    border: 0.5px solid var(--border-strong);
-  }
-  .plan-btn.light:hover { background: rgba(28,25,21,.05); }
+.plan-feats { list-style: none; margin-bottom: 1.5rem; }
 
-  .plan-btn.dark { background: var(--cream); color: var(--ink); border: none; }
-  .plan-btn.dark:hover { opacity: .85; }
+.plan-feats li {
+  display: flex; align-items: flex-start; gap: 7px;
+  font-size: 13px; padding: 5px 0;
+  border-bottom: 0.5px solid var(--border);
+  line-height: 1.4; font-weight: 300;
+}
+.plan.featured .plan-feats li { border-bottom-color: rgba(249,246,241,.1); color: rgba(249,246,241,.85); }
+.plan-feats li:last-child { border-bottom: none; }
+.plan-feats li svg { width: 12px; height: 12px; flex-shrink: 0; margin-top: 2px; }
+.plan-feats li.dim { color: var(--muted); }
+.plan.featured .plan-feats li.dim { color: rgba(249,246,241,.35); }
 
-  .note-card {
-    background: #F9F6F1;
-    border-radius: var(--radius);
-    padding: 2rem;
-    border: 0.5px solid var(--border);
-  }
+.plan-btn {
+  width: 100%; padding: 11px;
+  border-radius: 999px; font-size: 13px; font-weight: 500;
+  cursor: pointer; font-family: var(--sans);
+  transition: opacity .2s;
+}
 
-  .note-from {
-    font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
-    color: var(--muted); margin-bottom: 1rem; display: block;
-  }
+.plan-btn.light {
+  background: transparent; color: var(--ink);
+  border: 0.5px solid var(--border-strong);
+}
+.plan-btn.light:hover { background: rgba(28,25,21,.05); }
+.plan-btn.dark { background: var(--cream); color: var(--ink); border: none; }
+.plan-btn.dark:hover { opacity: .85; }
 
-  .note-body {
-    font-family: var(--serif);
-    font-size: 16px;
-    line-height: 1.55; color: var(--ink);
-    margin-bottom: 1.25rem;
-  }
+/* NOTE */
+.note-card {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 2rem;
+  border: 0.5px solid var(--border);
+}
 
-  .note-body em { font-style: italic; color: var(--muted); }
-  .note-sig { font-size: 13px; color: var(--muted); }
+.note-from {
+  font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 1rem; display: block; font-weight: 400;
+}
 
-  .faq-list { margin-top: 2rem; }
-  .faq-item { border-bottom: 0.5px solid var(--border); cursor: pointer; }
+.note-body {
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.55; color: var(--ink);
+  margin-bottom: 1.25rem; font-weight: 400;
+}
 
-  .faq-q {
-    display: flex; justify-content: space-between;
-    align-items: center; gap: 1rem;
-    padding: 1.1rem 0;
-    font-size: 14px; font-weight: 500; color: var(--ink);
-  }
+.note-body em { font-style: italic; color: var(--muted); }
+.note-sig { font-size: 13px; color: var(--muted); font-weight: 300; }
 
-  .faq-q svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--muted); transition: transform .22s; }
-  .faq-item.open .faq-q svg { transform: rotate(45deg); }
+/* FAQ */
+.faq-list { margin-top: 2rem; }
+.faq-item { border-bottom: 0.5px solid var(--border); cursor: pointer; }
 
-  .faq-a {
-    font-size: 13px; color: var(--muted); line-height: 1.65;
-    max-height: 0; overflow: hidden;
-    transition: max-height .28s ease, padding .22s;
-  }
-  .faq-item.open .faq-a { max-height: 240px; padding-bottom: 1.1rem; }
+.faq-q {
+  display: flex; justify-content: space-between;
+  align-items: center; gap: 1rem;
+  padding: 1.1rem 0;
+  font-size: 14px; font-weight: 400; color: var(--ink);
+}
 
-  footer {
-    border-top: none;
-    background: #503b31;
+.faq-q svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--muted); transition: transform .22s; }
+.faq-item.open .faq-q svg { transform: rotate(45deg); }
+
+.faq-a {
+  font-size: 13px; color: var(--muted); line-height: 1.65; font-weight: 300;
+  max-height: 0; overflow: hidden;
+  transition: max-height .28s ease, padding .22s;
+}
+.faq-item.open .faq-a { max-height: 240px; padding-bottom: 1.1rem; }
+
+/* FOOTER */
+footer {
+  background: var(--ink);
+  padding: 2rem 1.5rem;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem;
+}
+
+.footer-logo { font-family: var(--serif); font-size: 16px; color: var(--cream); text-decoration: none; font-weight: 400; }
+.footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.footer-links a { font-size: 12px; color: rgba(249,246,241,0.45); text-decoration: none; transition: color .2s; font-weight: 300; }
+.footer-links a:hover { color: var(--cream); }
+.footer-copy { font-size: 11px; color: rgba(249,246,241,0.3); width: 100%; font-weight: 300; }
+
+/* FADE IN */
+.fade-in { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  #testimonios { min-height: auto !important; }
+  #testimonios-container {
+    height: auto !important;
+    display: flex; flex-direction: column; gap: 12px;
     padding: 2rem 1.5rem;
-    display: flex; justify-content: space-between; align-items: center;
-    flex-wrap: wrap; gap: 1rem;
-    max-width: 100%; margin: 0 auto;
   }
-
-  .footer-logo { font-family: var(--serif); font-size: 16px; color: #F9F6F1; text-decoration: none; }
-  .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
-  .footer-links a { font-size: 12px; color: rgba(249,246,241,0.5); text-decoration: none; transition: color .2s; }
-  .footer-links a:hover { color: #F9F6F1; }
-  .footer-copy { font-size: 11px; color: rgba(249,246,241,0.35); width: 100%; }
-
-  .fade-in { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
-  .fade-in.visible { opacity: 1; transform: translateY(0); }
-
-  /* TESTIMONIOS */
   .t-card {
-    position: absolute;
-    background: #fff;
-    border: 0.5px solid rgba(28,25,21,0.12);
-    border-radius: 12px;
-    padding: 14px 16px;
-    max-width: 190px;
-    will-change: transform;
+    position: relative !important;
+    left: auto !important; right: auto !important;
+    top: auto !important; bottom: auto !important;
+    max-width: 100%; transform: none !important;
   }
-
-  .t-body { font-size: 12px; line-height: 1.55; color: var(--ink); margin: 0 0 8px; }
-  .t-name { font-size: 11px; color: var(--muted); font-style: italic; margin: 0; }
-
-  @media (max-width: 600px) {
-    #testimonios { min-height: auto !important; }
-    #testimonios-container {
-      height: auto !important;
-      display: flex; flex-direction: column; gap: 12px;
-      padding: 2rem 1.5rem;
-    }
-    .t-card {
-      position: relative !important;
-      left: auto !important; right: auto !important;
-      top: auto !important; bottom: auto !important;
-      max-width: 100%; transform: none !important;
-    }
-    #testimonios-container > div:first-child {
-      position: relative !important;
-      top: auto !important; left: auto !important;
-      transform: none !important;
-      text-align: center; margin-bottom: 1rem; width: 100% !important;
-    }
+  #testimonios-container > div:first-child {
+    position: relative !important;
+    top: auto !important; left: auto !important;
+    transform: none !important;
+    text-align: center; margin-bottom: 1rem; width: 100% !important;
   }
+}
 
-  @media (max-width: 540px) {
-    .plans { grid-template-columns: 1fr; }
-    .nav-links { display: none; }
-    .feat-grid { grid-template-columns: 1fr; }
-  }
+@media (max-width: 540px) {
+  .plans { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+  .feat-grid { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
@@ -432,23 +465,28 @@
   <a href="https://thecontentedit.lemonsqueezy.com/checkout/buy/827cbae3-e9c5-4912-ad09-701097b4c3d6?logo=0&discount=0" class="nav-cta">Obtener el widget</a>
 </nav>
 
-<!-- HERO -->
+<!-- HERO BLOQUE 1 -->
 <section class="hero">
   <div class="container">
-    <span class="label" style="color:rgba(249,246,241,0.45);">Widget de Notion para creators</span>
+    <span class="label">Widget de Notion para creators y SMMs</span>
     <h1>Tu feed de Instagram,<br><em>dentro de Notion.</em></h1>
-    <p class="hero-sub">Conecta tu base de datos y ve exactamente cómo quedará tu feed antes de publicar. Sin salir de Notion, sin apps extra.</p>
+    <p class="hero-sub">Sin mockups manuales. Sin saltar entre apps. Tu grid en tiempo real, directo en tu workspace.</p>
     <div class="hero-btns">
-      <button class="btn-primary" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Obtener el widget →</button>
+      <a href="https://thecontentedit.lemonsqueezy.com/checkout/buy/d9856559-f472-491d-bc7f-12505193c4d3?logo=0&discount=0" class="btn-primary">Empezar gratis →</a>
       <button class="btn-ghost" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">Ver cómo funciona</button>
-    </div>
-    <div style="display:flex; justify-content:center;">
-      <div class="grid-demo fade-in" id="heroGrid">
-        <div class="grid-demo-inner" id="gridInner"></div>
-      </div>
     </div>
   </div>
 </section>
+
+<!-- HERO BLOQUE 2 — BURDEOS + IPAD -->
+<div class="hero-visual">
+  <div class="container">
+    <span class="hero-visual-label">Así se ve en Notion</span>
+    <h2>Tu base de datos + tu grid,<br><em>en el mismo lugar.</em></h2>
+    <p>Planeas en Notion. El widget lo visualiza al instante.</p>
+  </div>
+  <img src="/iPad___Apple_Pencil.png" alt="The Content Edit widget en iPad" class="hero-visual-img"/>
+</div>
 
 <!-- TICKER -->
 <div class="ticker-section">
@@ -460,57 +498,72 @@
   <div class="container fade-in">
     <span class="label">El problema</span>
     <p class="problem-text">Planeas en Notion. Diseñas en Canva. Y para ver tu feed tienes que <em>armar un mockup a mano cada vez.</em></p>
-    <p class="problem-body">Cambias una foto y el mockup ya no sirve. Cambias el orden y empiezas de cero. Es un ciclo que no debería existir. The Content Edit conecta tu base de datos de Notion con una vista de grid en tiempo real — actualizas tu base de datos en Notion y tu feed se refleja al instante.</p>
+    <p class="problem-body">Cambias una foto y el mockup ya no sirve. Cambias el orden y empiezas de cero. Es un ciclo que no debería existir. The Content Edit conecta tu base de datos de Notion con una vista de grid en tiempo real — actualizas y tu feed se refleja al instante.</p>
   </div>
 </section>
 
 <!-- FEATURES -->
-<section id="features">
+<section id="features" style="background:#F2EDE8;">
   <div class="container-wide">
     <div class="container fade-in" style="padding:0;">
-      <span class="label">Qué incluye</span>
-      <h2 style="font-family:var(--serif); font-size:clamp(24px,4vw,32px); letter-spacing:-0.02em; line-height:1.2;">Todo lo que necesitas para <em style="font-style:italic; font-family:'Cormorant Garamond', Georgia, serif; font-size:1.08em; color:var(--muted)">planear tu feed sin fricciones</em></h2>
+      <span class="label">Qué puedes hacer</span>
+      <h2 style="font-family:var(--serif); font-size:clamp(24px,4vw,32px); line-height:1.1; letter-spacing:-0.01em; font-weight:400;">Planea tu contenido <em style="font-style:italic;color:var(--accent)">con intención,</em> sin salir de Notion.</h2>
     </div>
-    <div class="feat-grid fade-in">
+    <div class="feat-grid fade-in" style="margin-top:2rem;">
       <div class="feat-card">
-        <div class="feat-icon">▦</div>
-        <div class="feat-title">Grid en tiempo real</div>
-        <div class="feat-desc">Actualiza tu base de datos y el widget refleja los cambios al instante. Sin exportar nada, sin recargas manuales.</div>
+        <span class="feat-icon">🎨</span>
+        <div class="feat-title">Canva Connect</div>
+        <div class="feat-desc">Pega tu link de Canva y el diseño aparece directo en tu grid. Actualiza en Canva y se actualiza aquí — sin exportar nada, nunca.</div>
       </div>
       <div class="feat-card">
-        <div class="feat-icon">◈</div>
-        <div class="feat-title">Canva + links externos</div>
-        <div class="feat-desc">Pega el link de tu diseño de Canva o cualquier URL de imagen y aparece directo en tu grid. Cero descargas.</div>
+        <span class="feat-icon">🔗</span>
+        <div class="feat-title">Links externos</div>
+        <div class="feat-desc">¿Tienes imágenes en Pinterest o en cualquier URL? Pégalas directo. Sin descargar, sin subir, sin pasos extra.</div>
       </div>
       <div class="feat-card">
-        <div class="feat-icon">⊕</div>
-        <div class="feat-title">Posts fijados</div>
-        <div class="feat-desc">Fija tu mejor contenido al tope del grid con un solo checkbox en Notion. El orden queda exactamente como lo planeas.</div>
+        <span class="feat-icon">👤</span>
+        <div class="feat-title">Profile Preview</div>
+        <div class="feat-desc">Visualiza tu bio de Instagram completa — foto, nombre, descripción y highlights — antes de tocar nada en tu cuenta.</div>
       </div>
       <div class="feat-card">
-        <div class="feat-icon">▷</div>
-        <div class="feat-title">Carruseles y reels</div>
-        <div class="feat-desc">Distingue cada formato visualmente con los íconos reales de Instagram. Sabes de un vistazo qué es qué.</div>
+        <span class="feat-icon">🗺️</span>
+        <div class="feat-title">Content Map</div>
+        <div class="feat-desc">Activa la vista de pilares y ve tu feed con colores por categoría. Sabes de un vistazo si tu estrategia está balanceada, no solo bonita.</div>
       </div>
       <div class="feat-card">
-        <div class="feat-icon">◎</div>
+        <span class="feat-icon">📅</span>
+        <div class="feat-title">Plan Grid</div>
+        <div class="feat-desc">Arrastra posts y cámbiales la fecha de publicación visualmente. El orden nuevo se guarda directo en tu base de datos de Notion.</div>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">👁️</span>
         <div class="feat-title">Hover con info</div>
-        <div class="feat-desc">Pasa el cursor sobre cada post y ve el título y la fecha de publicación al instante, sin saturar el grid.</div>
+        <div class="feat-desc">Pasa el cursor sobre cualquier post y ve el título y la fecha al instante — sin saturar el grid ni distraer la vista.</div>
       </div>
       <div class="feat-card">
-        <div class="feat-icon">∞</div>
-        <div class="feat-title">Widgets ilimitados</div>
-        <div class="feat-desc">Crea uno para cada cliente o cuenta. Un solo pago para siempre, sin suscripciones ni sorpresas.</div>
+        <span class="feat-icon">▶️</span>
+        <div class="feat-title">Carruseles y reels</div>
+        <div class="feat-desc">Navega tus carruseles y previsualiza reels dentro del widget. Exactamente como los verán tus seguidores — sin salir de Notion.</div>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">🌙</span>
+        <div class="feat-title">Dark mode</div>
+        <div class="feat-desc">Tu widget, tu aesthetic. Cambia entre modo claro y oscuro con un clic y guarda tu preferencia para siempre.</div>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">⊞</span>
+        <div class="feat-title">Vista 5 columnas</div>
+        <div class="feat-desc">Activa la vista de 5 columnas y ve tu feed exactamente como aparece en Instagram desde desktop. Sin adivinar.</div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- WHO -->
-<section style="background:#EDE8E0;">
+<section>
   <div class="container fade-in">
     <span class="label">Para quién es</span>
-    <h2 style="font-family:var(--serif); font-size:clamp(22px,3.5vw,30px); letter-spacing:-0.02em; line-height:1.25; margin-bottom:0;">Si creas contenido y vives en Notion, <em style="font-style:italic; font-family:'Cormorant Garamond', Georgia, serif; font-size:1.08em; color:var(--muted)">esto es para ti.</em></h2>
+    <h2 style="font-family:var(--serif); font-size:clamp(22px,3.5vw,30px); line-height:1.25; font-weight:400;">Si creas contenido y vives en Notion, <em style="font-style:italic;color:var(--accent)">esto es para ti.</em></h2>
     <div class="who-list" style="margin-top:1.5rem;">
       <div class="who-item">
         <div class="who-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
@@ -529,10 +582,10 @@
 </section>
 
 <!-- HOW IT WORKS -->
-<section id="how" style="background:#EDE8E0;">
+<section id="how" style="background:#F2EDE8;">
   <div class="container fade-in">
     <span class="label">Cómo funciona</span>
-    <h2 style="font-family:var(--serif); font-size:clamp(22px,3.5vw,30px); letter-spacing:-0.02em; line-height:1.25;">Setup de una sola vez. <em style="font-style:italic; font-family:'Cormorant Garamond', Georgia, serif; font-size:1.08em; color:var(--muted)">Después es automático.</em></h2>
+    <h2 style="font-family:var(--serif); font-size:clamp(22px,3.5vw,30px); line-height:1.25; font-weight:400;">Setup de una sola vez. <em style="font-style:italic;color:var(--accent)">Después es automático.</em></h2>
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
@@ -552,13 +605,13 @@
         <div class="step-num">3</div>
         <div>
           <div class="step-title">Pega tu widget en Notion</div>
-          <div class="step-desc">Recibes un link único. Lo pegas como bloque <code style="font-size:11px; background:rgba(28,25,21,.07); padding:1px 5px; border-radius:4px;">/embed</code> en cualquier página de Notion y tu grid aparece al instante.</div>
+          <div class="step-desc">Recibes un link único. Lo pegas como bloque <code style="font-size:11px;background:rgba(28,25,21,.07);padding:1px 5px;border-radius:4px;">/embed</code> en cualquier página de Notion y tu grid aparece al instante.</div>
         </div>
       </div>
       <div class="step">
         <div class="step-num">4</div>
         <div>
-          <div class="step-title">Actualiza tu base de datos en Notion, el grid se actualiza solo</div>
+          <div class="step-title">Actualiza en Notion, el grid se actualiza solo</div>
           <div class="step-desc">Cada vez que agregas un post, cambias una imagen o reordenas — solo refresca. Tu feed siempre está al día.</div>
         </div>
       </div>
@@ -567,55 +620,44 @@
 </section>
 
 <!-- TESTIMONIOS -->
-<section id="testimonios" style="padding: 0; overflow: hidden; position: relative; min-height: 920px; border-top: 0.5px solid var(--border);">
-
-  <!-- Texto central FIJO — fuera del contenedor de parallax -->
-  <div style="position: absolute; top: 40%; left: 50%; transform: translate(-50%,-50%); text-align: center; z-index: 2; pointer-events: none; width: 52%;">
-    <p style="font-family: var(--serif); font-size: clamp(22px, 3.5vw, 38px); line-height: 1.15; letter-spacing: -0.02em; color: var(--ink); margin: 0;">
+<section id="testimonios" style="padding:0;overflow:hidden;position:relative;min-height:920px;border-top:0.5px solid var(--border);">
+  <div style="position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:2;pointer-events:none;width:52%;">
+    <p style="font-family:var(--serif);font-size:clamp(22px,3.5vw,38px);line-height:1.15;letter-spacing:-0.01em;color:var(--ink);margin:0;font-weight:400;">
       Ve lo que otros<br>
-      creators <em style="font-style:italic; font-family:'Cormorant Garamond', Georgia, serif; font-size:1.08em; color:var(--muted);">están diciendo</em><br>
+      creators <em style="font-style:italic;color:var(--accent)">están diciendo</em><br>
       del widget ✦
     </p>
   </div>
 
-  <!-- Solo los testimonios se mueven -->
-  <div id="testimonios-container" style="position: relative; height: 920px; max-width: 960px; margin: 0 auto; padding: 0 1.5rem;">
-
-    <div class="t-card" data-speed="0.2" style="left: 2%; top: 3%;">
+  <div id="testimonios-container" style="position:relative;height:920px;max-width:960px;margin:0 auto;padding:0 1.5rem;">
+    <div class="t-card" data-speed="0.2" style="left:2%;top:3%;">
       <p class="t-body">Llevaba meses haciendo capturas de mi grid. Esto cambió todo — lo veo en tiempo real desde Notion sin salir.</p>
       <p class="t-name">— Camila R., creadora de contenido</p>
     </div>
-
-    <div class="t-card" data-speed="0.45" style="left: 62%; top: 8%;">
+    <div class="t-card" data-speed="0.45" style="left:62%;top:8%;">
       <p class="t-body">Administro 4 cuentas y este widget me ahorra horas cada semana. El setup fue superfácil y funciona perfecto.</p>
       <p class="t-name">— Sofía M., social media manager</p>
     </div>
-
-    <div class="t-card" data-speed="0.1" style="left: 1%; top: 38%;">
+    <div class="t-card" data-speed="0.1" style="left:1%;top:38%;">
       <p class="t-body">Lo probé gratis y en 10 minutos ya quería el Pro. Exactamente lo que necesitaba para planear mi feed.</p>
       <p class="t-name">— Valentina L., lifestyle creator</p>
     </div>
-
-    <div class="t-card" data-speed="0.55" style="left: 68%; top: 42%;">
+    <div class="t-card" data-speed="0.55" style="left:68%;top:42%;">
       <p class="t-body">Nunca pensé que planear mi feed pudiera ser tan visual. Mis posts ahora tienen mucha más intención.</p>
       <p class="t-name">— Mariana G., content creator</p>
     </div>
-
-    <div class="t-card" data-speed="0.35" style="left: 3%; top: 68%;">
+    <div class="t-card" data-speed="0.35" style="left:3%;top:68%;">
       <p class="t-body">Puedo fijar posts y ver exactamente cómo queda mi grid antes de publicar. Mis clientes también lo aman.</p>
       <p class="t-name">— Daniela P., estratega de contenido</p>
     </div>
-
-    <div class="t-card" data-speed="0.3" style="left: 34%; top: 82%;">
+    <div class="t-card" data-speed="0.3" style="left:34%;top:82%;">
       <p class="t-body">Cambió completamente cómo planeamos el contenido de nuestros clientes. No puedo imaginar trabajar sin esto.</p>
       <p class="t-name">— Paola S., agencia de contenido</p>
     </div>
-
-    <div class="t-card" data-speed="0.25" style="left: 65%; top: 72%;">
+    <div class="t-card" data-speed="0.25" style="left:65%;top:72%;">
       <p class="t-body">Pensé que iba a ser complicado y lo tuve listo en 5 minutos. Se ve increíble dentro de Notion.</p>
       <p class="t-name">— Andrea V., creadora y SMM</p>
     </div>
-
   </div>
 </section>
 
@@ -623,8 +665,8 @@
 <section id="pricing">
   <div class="container fade-in">
     <span class="label">Precio</span>
-    <h2 style="font-family:var(--serif); font-size:clamp(24px,4vw,32px); letter-spacing:-0.02em; line-height:1.2;">Un solo pago. <em style="font-style:italic; font-family:'Cormorant Garamond', Georgia, serif; font-size:1.08em; color:var(--muted)">Tuyo para siempre.</em></h2>
-    <p style="font-size:14px; color:var(--muted); margin-top:.5rem;">Sin suscripciones, sin renovaciones. Paga una vez y úsalo cuanto quieras.</p>
+    <h2 style="font-family:var(--serif);font-size:clamp(24px,4vw,32px);line-height:1.2;font-weight:400;">Un solo pago. <em style="font-style:italic;color:var(--accent)">Tuyo para siempre.</em></h2>
+    <p style="font-size:14px;color:var(--muted);margin-top:.5rem;font-weight:300;">Sin suscripciones, sin renovaciones. Paga una vez y úsalo cuanto quieras.</p>
     <div class="plans">
       <div class="plan">
         <div class="plan-name">Gratis</div>
@@ -637,8 +679,8 @@
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Hasta 9 imágenes</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Solo archivos adjuntos desde Notion</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Widgets ilimitados</li>
-          <li class="muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Sin Canva ni links externos</li>
-          <li class="muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Sin carrusel, reel ni posts fijados</li>
+          <li class="dim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Sin Canva ni links externos</li>
+          <li class="dim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Sin carrusel, reel ni posts fijados</li>
         </ul>
         <button class="plan-btn light" onclick="window.location.href='https://thecontentedit.lemonsqueezy.com/checkout/buy/d9856559-f472-491d-bc7f-12505193c4d3?logo=0&discount=0'">Empezar gratis</button>
       </div>
@@ -646,17 +688,18 @@
         <div class="plan-tag">Recomendado</div>
         <div class="plan-name">Pro</div>
         <div class="plan-desc">Para planear tu feed sin límites</div>
-        <div class="plan-price">$449 <span style="font-family:var(--sans); font-size:16px; font-weight:300;">MXN</span></div>
+        <div class="plan-price">$449 <span style="font-family:var(--sans);font-size:16px;font-weight:300;">MXN</span></div>
         <div class="plan-period">pago único · acceso de por vida</div>
         <div class="plan-divider"></div>
         <ul class="plan-feats">
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Todo lo del plan gratis</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Hasta 60 imágenes</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Canva + links externos</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Indicadores de carrusel y reel</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Posts fijados</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Hover con título y fecha</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Widgets ilimitados</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Carruseles, reels y posts fijados</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Plan Grid con drag & drop</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Content Map por pilares</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Profile Preview (bio mode)</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Dark mode + vista 5 columnas</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Actualizaciones incluidas para siempre</li>
         </ul>
         <button class="plan-btn dark" onclick="window.location.href='https://thecontentedit.lemonsqueezy.com/checkout/buy/827cbae3-e9c5-4912-ad09-701097b4c3d6?logo=0&discount=0'">Obtener Pro — $449 MXN →</button>
@@ -666,7 +709,7 @@
 </section>
 
 <!-- NOTE -->
-<section style="background:#EDE8E0;">
+<section style="background:#F2EDE8;">
   <div class="container fade-in">
     <div class="note-card">
       <span class="note-from">Una nota de quien lo construyó</span>
@@ -681,7 +724,7 @@
 <section id="faq">
   <div class="container fade-in">
     <span class="label">Preguntas frecuentes</span>
-    <h2 style="font-family:var(--serif); font-size:clamp(22px,3.5vw,30px); letter-spacing:-0.02em; margin-bottom:0;">FAQ</h2>
+    <h2 style="font-family:var(--serif);font-size:clamp(22px,3.5vw,30px);line-height:1.25;font-weight:400;margin-bottom:0;">FAQ</h2>
     <div class="faq-list" id="faqList"></div>
   </div>
 </section>
@@ -699,7 +742,7 @@
 </footer>
 
 <script>
-const tickerItems = ["Grid preview","·","Canva links","·","Carruseles","·","Reels","·","Posts fijados","·","Sin salir de Notion","·","Pago único","·","Widgets ilimitados","·"];
+const tickerItems = ["Grid en tiempo real","·","Canva Connect","·","Links externos","·","Plan Grid","·","Content Map","·","Profile Preview","·","Dark mode","·","Pago único","·","Widgets ilimitados","·"];
 const track = document.getElementById('ticker');
 const full = [...tickerItems, ...tickerItems].map(t => {
   const s = document.createElement('span');
@@ -709,48 +752,21 @@ const full = [...tickerItems, ...tickerItems].map(t => {
 });
 full.forEach(el => track.appendChild(el));
 
-const gridImgs = [
-  "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=220&q=75",
-  "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=220&q=75",
-  "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=220&q=75",
-  "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=220&q=75",
-  "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=220&q=75",
-  "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=220&q=75",
-  "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=220&q=75",
-  "https://images.unsplash.com/photo-1567958451986-2de427a4a0be?w=220&q=75",
-  "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=220&q=75",
-];
-const gi = document.getElementById('gridInner');
-gridImgs.forEach(src => {
-  const cell = document.createElement('div');
-  cell.className = 'grid-demo-cell';
-  const img = document.createElement('img');
-  img.src = src; img.loading = 'lazy'; img.alt = '';
-  cell.appendChild(img); gi.appendChild(cell);
-});
-
 const faqs = [
   { q: "¿Necesito saber programar?", a: "Para nada. Si sabes usar Notion, puedes usar este widget. Hay una configuración inicial de un solo paso y las instrucciones te guían en todo. Tarda menos de 5 minutos." },
   { q: "¿Funciona con mi base de datos de Notion actual?", a: "Sí, siempre que tenga las propiedades requeridas. Si usas nombres diferentes solo tendrás que renombrarlas. También hay una plantilla lista para duplicar." },
   { q: "¿Cuántos widgets puedo crear?", a: "Los que necesites. Tanto el plan gratis como el Pro te permiten crear widgets ilimitados. Cada uno se conecta a una base de datos de Notion diferente — perfecto para gestionar múltiples cuentas o clientes." },
   { q: "¿Qué tipos de contenido puedo mostrar?", a: "Gratis: imágenes adjuntadas directamente en Notion. Pro: imágenes desde links externos, diseños de Canva sin exportar, videos, carruseles con múltiples imágenes y posts fijados." },
-  { q: "¿Necesito cuenta de Notion de pago?", a: "No. El widget funciona perfectamente con el plan gratuito de Notion. Mientras puedas crear bases de datos, estás listo." },
+  { q: "¿Necesito cuenta de Notion de pago?", a: "No. El widget funciona perfectamente con el plan gratuito de Notion." },
   { q: "¿Cuál es la política de reembolso?", a: "Todas las ventas son finales al ser un producto digital. Por eso existe la versión gratuita — para que puedas probar la experiencia antes de comprometerte con Pro." },
-  { q: "¿El widget se actualiza automáticamente?", a: "Sí. Cada vez que editas tu base de datos de Notion — agregas un post, cambias una imagen, reordenas — solo necesitas refrescar la página donde tienes el widget y refleja los cambios al instante." },
+  { q: "¿El widget se actualiza automáticamente?", a: "Sí. Cada vez que editas tu base de datos de Notion solo necesitas refrescar el widget y refleja los cambios al instante." },
 ];
 
 const faqList = document.getElementById('faqList');
 faqs.forEach(item => {
   const el = document.createElement('div');
   el.className = 'faq-item';
-  el.innerHTML = `
-    <div class="faq-q">
-      <span>${item.q}</span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-      </svg>
-    </div>
-    <div class="faq-a">${item.a}</div>`;
+  el.innerHTML = `<div class="faq-q"><span>${item.q}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div><div class="faq-a">${item.a}</div>`;
   el.addEventListener('click', () => {
     const open = el.classList.contains('open');
     document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
@@ -764,11 +780,9 @@ const observer = new IntersectionObserver(entries => {
 }, { threshold: 0.1 });
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-// PARALLAX TESTIMONIOS
 (function() {
   var cards = document.querySelectorAll('.t-card');
   if (!cards.length) return;
-
   function update() {
     var container = document.getElementById('testimonios-container');
     if (!container) return;
@@ -781,7 +795,6 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
       card.style.transform = 'translateY(' + offset + 'px)';
     });
   }
-
   window.addEventListener('scroll', update, { passive: true });
   update();
 })();
