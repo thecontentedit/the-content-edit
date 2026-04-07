@@ -42,7 +42,7 @@ export default async function handler(req, res) {
 
     const order = payload.data.attributes;
     const email = order.user_email;
-    const customerName = order.user_name || 'Creator';
+    const customerName = order.user_name || '';
     const orderId = payload.data.id;
     const variantId = order.first_order_item?.variant_id?.toString();
 
@@ -102,10 +102,12 @@ export default async function handler(req, res) {
 
     const setupUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/setup.html?token=${setupToken}`;
 
+    const firstName = customerName ? customerName.split(' ')[0] : '';
+
     await resend.emails.send({
       from: 'The Content Edit <hola@thecontentedit.digital>',
       to: email,
-      subject: `Tu widget está listo, ${customerName.split(' ')[0]}`,
+      subject: firstName ? `Tu widget está listo, ${firstName}` : 'Tu widget está listo',
       html: getEmailHTML({ customerName, licenseKey, setupUrl, plan }),
     });
 
@@ -127,7 +129,8 @@ async function getRawBody(req) {
 }
 
 function getEmailHTML({ customerName, licenseKey, setupUrl, plan }) {
-  const firstName = customerName.split(' ')[0];
+  const firstName = customerName ? customerName.split(' ')[0] : '';
+  const greeting = firstName ? `Hola, ${firstName} 🤍` : 'Hola 🤍';
   return `<!DOCTYPE html>
 <html>
 <head>
@@ -142,7 +145,7 @@ function getEmailHTML({ customerName, licenseKey, setupUrl, plan }) {
     </div>
 
     <div style="padding:32px 32px 24px;">
-      <h1 style="margin:0 0 6px;font-size:22px;font-weight:500;color:#1C1915;">Hola, ${firstName} 🤍</h1>
+      <h1 style="margin:0 0 6px;font-size:22px;font-weight:500;color:#1C1915;">${greeting}</h1>
       <p style="margin:0 0 20px;font-size:13px;color:#5F5E5A;line-height:1.5;">Tu widget está listo. Guarda este email — aquí están tus credenciales únicas.</p>
 
       <div style="background:#ECEAE5;border-radius:8px;padding:14px 16px;margin-bottom:20px;">
@@ -159,7 +162,7 @@ function getEmailHTML({ customerName, licenseKey, setupUrl, plan }) {
     </div>
 
     <div style="padding:18px 32px 20px;border-top:0.5px solid #D3D1C7;">
-      <p style="margin:0;font-size:12px;color:#888780;line-height:1.6;">¿Dudas? Escríbeme a <a href="mailto:hola@thecontentedit.digital" style="color:#888780;text-decoration:underline;">hola@thecontentedit.digital</a><br/>© The Content Edit. Solo para uso personal — prohibida su redistribución o reventa.</p>
+      <p style="margin:0;font-size:12px;color:#888780;line-height:1.6;">¿Dudas? Escríbenos a <a href="mailto:hola@thecontentedit.digital" style="color:#888780;text-decoration:underline;">hola@thecontentedit.digital</a><br/>© The Content Edit. Solo para uso personal — prohibida su redistribución o reventa.</p>
     </div>
 
   </div>
@@ -168,6 +171,8 @@ function getEmailHTML({ customerName, licenseKey, setupUrl, plan }) {
 }
 
 function getUpgradeEmailHTML({ customerName, setupUrl }) {
+  const firstName = customerName ? customerName.split(' ')[0] : '';
+  const greeting = firstName ? `¡Ya eres Pro, ${firstName}! 🤍` : '¡Ya eres Pro! 🤍';
   return `<!DOCTYPE html>
 <html>
 <head>
@@ -182,18 +187,18 @@ function getUpgradeEmailHTML({ customerName, setupUrl }) {
     </div>
 
     <div style="padding:32px 32px 24px;">
-      <h1 style="margin:0 0 8px;font-size:22px;font-weight:500;color:#1C1915;">¡Ya eres Pro, ${customerName.split(' ')[0]}! 🤍</h1>
+      <h1 style="margin:0 0 8px;font-size:22px;font-weight:500;color:#1C1915;">${greeting}</h1>
       <p style="margin:0 0 24px;font-size:13px;color:#5F5E5A;line-height:1.6;">Tu widget se actualizó automáticamente. Solo refresca el widget en Notion y ya tendrás todas las funciones Pro activas.</p>
 
       <div style="background:#ECEAE5;border-radius:8px;padding:16px 20px;margin-bottom:24px;">
         <p style="margin:0;font-size:13px;color:#1C1915;line-height:1.8;">✓ Plan Grid<br/>✓ Imágenes desde Canva y links externos<br/>✓ Profile Preview (Bio mode)</p>
       </div>
 
-      <a href="${setupUrl}" style="display:block;background:#1C1915;color:#F9F6F1;text-align:center;padding:13px 20px;border-radius:999px;font-size:14px;font-weight:500;text-decoration:none;margin-bottom:0;">Ver mis links →</a>
+      <a href="${setupUrl}" style="display:block;background:#1C1915;color:#F9F6F1;text-align:center;padding:13px 20px;border-radius:999px;font-size:14px;font-weight:500;text-decoration:none;">Ver mis links →</a>
     </div>
 
     <div style="padding:18px 32px 20px;border-top:0.5px solid #D3D1C7;">
-      <p style="margin:0;font-size:12px;color:#888780;line-height:1.6;">¿Algo no funciona? Escríbeme a <a href="mailto:hola@thecontentedit.digital" style="color:#888780;text-decoration:underline;">hola@thecontentedit.digital</a><br/>© The Content Edit. Solo para uso personal — prohibida su redistribución o reventa.</p>
+      <p style="margin:0;font-size:12px;color:#888780;line-height:1.6;">¿Algo no funciona? Escríbenos a <a href="mailto:hola@thecontentedit.digital" style="color:#888780;text-decoration:underline;">hola@thecontentedit.digital</a><br/>© The Content Edit. Solo para uso personal — prohibida su redistribución o reventa.</p>
     </div>
 
   </div>
