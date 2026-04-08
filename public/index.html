@@ -450,6 +450,37 @@ footer {
   .nav-links { display: none; }
   .feat-grid { grid-template-columns: 1fr; }
 }
+
+@media (max-width: 768px) {
+  .container-wide { padding: 0 1.25rem; }
+
+  /* Content Map mobile */
+  #content-map-inner {
+    grid-template-columns: 1fr !important;
+  }
+  #content-map-inner > div:first-child {
+    margin-left: 0 !important;
+    order: -1;
+  }
+
+  /* Profile Preview mobile */
+  #profile-preview-inner {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Testimonios mobile */
+  #testimonios-inner {
+    grid-template-columns: 1fr !important;
+  }
+  #testimonios-cards {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Features grid mobile */
+  .feat-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -563,7 +594,7 @@ footer {
 <!-- PROFILE PREVIEW -->
 <section style="background:#FAFAF8;">
   <div class="container-wide fade-in">
-    <div style="display:grid;grid-template-columns:1fr 1.6fr;gap:48px;align-items:center;">
+    <div id="profile-preview-inner" style="display:grid;grid-template-columns:1fr 1.6fr;gap:48px;align-items:center;">
       <div>
         <span class="label">Profile Preview</span>
         <h2 style="font-family:var(--serif);font-size:clamp(26px,4vw,36px);line-height:1.05;letter-spacing:-0.01em;font-weight:400;margin-bottom:16px;">Todo tu perfil, <em style="font-style:italic;color:var(--accent)">en un solo lugar.</em></h2>
@@ -600,7 +631,7 @@ footer {
 
 <!-- CONTENT MAP -->
 <section style="background:#F2EDE8;overflow:hidden;">
-  <div style="display:grid;grid-template-columns:1fr 380px;align-items:center;max-width:1100px;margin:0 auto;">
+  <div id="content-map-inner" style="display:grid;grid-template-columns:1fr 380px;align-items:center;max-width:1100px;margin:0 auto;">
     <div style="margin-left:-80px;">
       <img src="/iPad_Content_Map.png" alt="Content Map en Notion" style="width:100%;display:block;"/>
     </div>
@@ -655,11 +686,11 @@ footer {
 <!-- TESTIMONIOS -->
 <section id="testimonios">
   <div class="container-wide fade-in">
-    <div style="display:grid;grid-template-columns:260px 1fr;gap:40px;align-items:center;">
+    <div id="testimonios-inner" style="display:grid;grid-template-columns:260px 1fr;gap:40px;align-items:center;">
       <div>
         <h2 style="font-family:var(--serif);font-size:clamp(22px,3vw,28px);color:var(--ink);font-weight:400;line-height:1.15;margin:0;">Lo que otros creators <em style="font-style:italic;color:var(--accent)">están diciendo</em></h2>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div id="testimonios-cards" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
         <div style="background:#fff;border:0.5px solid rgba(28,25,21,0.08);border-radius:10px;padding:16px;">
           <p style="font-size:12px;color:#3a3835;line-height:1.6;margin:0 0 10px;font-weight:300;">Llevaba meses haciendo capturas de mi grid. Esto cambió todo — lo veo en tiempo real desde Notion.</p>
           <span style="font-size:11px;color:#888780;font-style:italic;">— Camila R., creadora de contenido</span>
