@@ -70,6 +70,15 @@
   .cell-inner { width: 100%; height: 100%; overflow: hidden; position: relative; }
   .cell img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .22s ease; }
   .cell:hover .cell-inner img { transform: scale(1.04); }
+  /* VIDEO */
+  .cell-video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .cell-play-btn { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0); transition: background .2s; pointer-events: none; z-index: 2; }
+  .cell:hover .cell-play-btn { background: rgba(0,0,0,0.2); }
+  .cell-play-icon { width: 36px; height: 36px; background: rgba(255,255,255,0.88); border-radius: 50%; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .2s; }
+  .cell:hover .cell-play-icon { opacity: 1; }
+  .cell-play-icon svg { width: 14px; height: 14px; margin-left: 3px; }
+  .modal-video { max-width: 90vw; max-height: 85vh; border-radius: 4px; display: block; outline: none; }
+  /* END VIDEO */
   .cell-hover-info { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0) 100%); padding: 32px 8px 8px; opacity: 0; transition: opacity .2s; pointer-events: none; }
   .cell:hover .cell-hover-info { opacity: 1; }
   .hover-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
@@ -238,6 +247,13 @@ let modalImages = [];
 let modalIndex = 0;
 let modalPost = null;
 let modalIsCanva = false;
+
+function isVideoUrl(url) {
+  if (!url) return false;
+  const u = url.toLowerCase().split('?')[0];
+  return u.endsWith('.mp4') || u.endsWith('.mov') || u.endsWith('.webm');
+}
+
 const icons = {
   carousel: `<svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M2 8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8z"/><path d="M6 6V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1" fill="white" opacity="0.6"/></svg>`,
   reel: `<svg viewBox="0 0 24 24" fill="white"><path d="M10 15.5v-7l6 3.5-6 3.5zM21 3H3C1.9 3 1 3.9 1 5v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/></svg>`,
@@ -345,7 +361,20 @@ function renderGrid(posts, plan) {
       const wrapper = document.createElement('div'); wrapper.style.cssText = 'position:relative;width:100%;height:100%;overflow:hidden;';
       const iframe = document.createElement('iframe'); iframe.src = post.imageUrl; iframe.style.cssText = 'width:120%;height:140%;border:none;pointer-events:none;margin-left:-10%;margin-top:-5%;'; iframe.setAttribute('allowfullscreen', ''); wrapper.appendChild(iframe); inner.appendChild(wrapper);
     } else if (post.imageUrl && !post.imageUrl.startsWith('__')) {
-      const img = document.createElement('img'); img.src = post.imageUrl; img.alt = post.name || ''; img.loading = 'lazy'; img.onerror = () => { img.style.display = 'none'; inner.appendChild(makePlaceholder('imagen no disponible')); }; inner.appendChild(img);
+      if (isVideoUrl(post.imageUrl)) {
+        const video = document.createElement('video');
+        video.src = post.imageUrl; video.className = 'cell-video';
+        video.muted = true; video.loop = true; video.playsInline = true; video.preload = 'metadata';
+        inner.appendChild(video);
+        cell.addEventListener('mouseenter', () => video.play().catch(() => {}));
+        cell.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
+        const playBtn = document.createElement('div'); playBtn.className = 'cell-play-btn';
+        const playIcon = document.createElement('div'); playIcon.className = 'cell-play-icon';
+        playIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="#1C1915"><polygon points="5,3 19,12 5,21"/></svg>';
+        playBtn.appendChild(playIcon); cell.appendChild(playBtn);
+      } else {
+        const img = document.createElement('img'); img.src = post.imageUrl; img.alt = post.name || ''; img.loading = 'lazy'; img.onerror = () => { img.style.display = 'none'; inner.appendChild(makePlaceholder('imagen no disponible')); }; inner.appendChild(img);
+      }
     } else { inner.appendChild(makePlaceholder('Link')); }
     cell.appendChild(inner);
     if (planModeActive) {
@@ -376,7 +405,6 @@ function renderGrid(posts, plan) {
     grid.appendChild(cell);
   });
   applyWideGrid();
-  // Leyenda eliminada — cada celda ya muestra el nombre del pilar
 }
 function togglePlanMode() { if (!planModeActive) { enterPlanMode(); } }
 function enterPlanMode() {
@@ -419,13 +447,27 @@ function openModal(post) {
   modalPost = post; modalImages = post.images && post.images.length > 0 ? post.images : (post.imageUrl ? [post.imageUrl] : []); if (modalImages.length === 0) return;
   modalIndex = 0; modalIsCanva = post.imageSource === 'canva'; updateModal(); document.getElementById('modal').classList.add('open'); document.addEventListener('keydown', onModalKey);
 }
-function closeModal() { document.getElementById('modal').classList.remove('open'); document.removeEventListener('keydown', onModalKey); }
+function closeModal() {
+  const vid = document.getElementById('modal-img');
+  if (vid && vid.tagName === 'VIDEO') { vid.pause(); }
+  document.getElementById('modal').classList.remove('open');
+  document.removeEventListener('keydown', onModalKey);
+}
 function onModalKey(e) { if (e.key === 'Escape') closeModal(); if (e.key === 'ArrowRight') modalNav(1); if (e.key === 'ArrowLeft') modalNav(-1); }
 function modalNav(dir) { modalIndex = Math.max(0, Math.min(modalImages.length - 1, modalIndex + dir)); updateModal(); }
 function updateModal() {
-  const modalInner = document.querySelector('.modal-inner'); const existing = document.getElementById('modal-img'); if (existing) existing.remove(); const existingIframe = document.getElementById('modal-iframe'); if (existingIframe) existingIframe.remove();
-  if (modalIsCanva) { const iframe = document.createElement('iframe'); iframe.id = 'modal-iframe'; iframe.src = modalImages[modalIndex]; iframe.style.cssText = 'width:80vw;height:80vh;border:none;border-radius:4px;'; iframe.setAttribute('allowfullscreen', ''); const prev = document.querySelector('.modal-prev'); modalInner.insertBefore(iframe, prev); }
-  else { const img = document.createElement('img'); img.id = 'modal-img'; img.className = 'modal-img'; img.src = modalImages[modalIndex]; img.alt = ''; const prev = document.querySelector('.modal-prev'); modalInner.insertBefore(img, prev); }
+  const modalInner = document.querySelector('.modal-inner');
+  const existing = document.getElementById('modal-img'); if (existing) { if (existing.tagName === 'VIDEO') existing.pause(); existing.remove(); }
+  const existingIframe = document.getElementById('modal-iframe'); if (existingIframe) existingIframe.remove();
+  if (modalIsCanva) {
+    const iframe = document.createElement('iframe'); iframe.id = 'modal-iframe'; iframe.src = modalImages[modalIndex]; iframe.style.cssText = 'width:80vw;height:80vh;border:none;border-radius:4px;'; iframe.setAttribute('allowfullscreen', ''); const prev = document.querySelector('.modal-prev'); modalInner.insertBefore(iframe, prev);
+  } else if (isVideoUrl(modalImages[modalIndex])) {
+    const vid = document.createElement('video'); vid.id = 'modal-img'; vid.className = 'modal-video';
+    vid.src = modalImages[modalIndex]; vid.controls = true; vid.autoplay = true; vid.playsInline = true;
+    const prev = document.querySelector('.modal-prev'); modalInner.insertBefore(vid, prev);
+  } else {
+    const img = document.createElement('img'); img.id = 'modal-img'; img.className = 'modal-img'; img.src = modalImages[modalIndex]; img.alt = ''; const prev = document.querySelector('.modal-prev'); modalInner.insertBefore(img, prev);
+  }
   document.getElementById('modal-caption').textContent = modalPost?.name || ''; document.getElementById('modal-date').textContent = modalPost?.publishDate || '';
   const prev = document.querySelector('.modal-prev'); const next = document.querySelector('.modal-next');
   prev.classList.toggle('hidden', modalIndex === 0 || modalImages.length <= 1); next.classList.toggle('hidden', modalIndex === modalImages.length - 1 || modalImages.length <= 1);
