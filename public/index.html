@@ -452,6 +452,9 @@ footer {
 }
 
 @media (max-width: 768px) {
+  #content-map-inner {
+    padding: 0 1.25rem;
+  }
   .container-wide { padding: 0 1.25rem; }
 
   /* Content Map mobile */
@@ -481,6 +484,11 @@ footer {
     grid-template-columns: 1fr 1fr !important;
   }
 }
+
+  .feat-mobile-only { display: none; }
+  @media (max-width: 768px) {
+    .feat-mobile-only { display: block; }
+  }
 </style>
 </head>
 <body>
@@ -586,6 +594,11 @@ footer {
         <div class="feat-title">Vista 5 columnas</div>
         <div class="feat-desc">Activa la vista de 5 columnas y ve tu feed exactamente como aparece en Instagram desde desktop. Sin adivinar.</div>
       </div>
+      <div class="feat-card feat-mobile-only">
+        <span class="feat-icon">∞</span>
+        <div class="feat-title">Widgets ilimitados</div>
+        <div class="feat-desc">Crea uno para cada cliente o cuenta. Un solo pago para siempre, sin suscripciones ni sorpresas.</div>
+      </div>
     </div>
   </div>
 </section>
@@ -688,7 +701,7 @@ footer {
   <div class="container-wide fade-in">
     <div id="testimonios-inner" style="display:grid;grid-template-columns:260px 1fr;gap:40px;align-items:center;">
       <div>
-        <h2 style="font-family:var(--serif);font-size:clamp(22px,3vw,28px);color:var(--ink);font-weight:400;line-height:1.15;margin:0;">Lo que otros creators <em style="font-style:italic;color:var(--accent)">están diciendo</em></h2>
+        <h2 style="font-family:var(--serif);font-size:clamp(22px,3vw,28px);color:var(--ink);font-weight:400;line-height:1.15;margin:0;">Lo que dicen <em style="font-style:italic;color:var(--accent)">quienes ya lo usan</em></h2>
       </div>
       <div id="testimonios-cards" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
         <div style="background:#fff;border:0.5px solid rgba(28,25,21,0.08);border-radius:10px;padding:16px;">
