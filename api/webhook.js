@@ -115,7 +115,7 @@ async function getRawBody(req) {
   });
 }
 
-const CHECKOUT_PRO = 'https://thecontentedit.lemonsqueezy.com/checkout/buy/827cbae3-e9c5-4912-ad09-701097b4c3d6?logo=0&discount=0';
+const CHECKOUT_PRO = 'https://thecontentedit.lemonsqueezy.com/checkout/buy/cd1c69d1-0d45-48a1-90e4-8e489f2aac0c?logo=0';
 
 const FONT_LINK = '<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap" rel="stylesheet"/>';
 
