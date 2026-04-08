@@ -235,6 +235,13 @@ function formatPost(page, plan) {
   const imageUrl = images[0] || null;
   let mediaType = props[PROPS.mediaType]?.select?.name?.toLowerCase() || 'foto';
   if (images.length > 1 && mediaType === 'foto') mediaType = 'carrusel';
+  // Auto-detectar video por extensión de URL
+  if (mediaType === 'foto' && imageUrl) {
+    const url = imageUrl.toLowerCase().split('?')[0];
+    if (url.endsWith('.mp4') || url.endsWith('.mov') || url.endsWith('.webm')) {
+      mediaType = 'reel';
+    }
+  }
 
   // Pinned solo para Pro
   const pinned = plan === 'pro' ? (props[PROPS.pinned]?.checkbox || false) : false;
