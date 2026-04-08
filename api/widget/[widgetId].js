@@ -48,16 +48,11 @@ export default async function handler(req, res) {
     // ── POST: guardar orden del Plan Grid (Pro only) ──
     if (req.method === 'POST') {
       if (plan !== 'pro') return res.status(403).json({ error: 'Pro plan required' });
-
       const { orderedIds, dateMap } = req.body;
       if (!orderedIds || !Array.isArray(orderedIds)) {
         return res.status(400).json({ error: 'Invalid order' });
       }
-
-      // dateMap es un objeto { pageId: 'YYYY-MM-DD' } enviado por el frontend
-      // Solo actualiza los posts que realmente cambiaron de fecha
       if (dateMap && typeof dateMap === 'object') {
-        // Modo Plan Grid: cada pageId tiene su fecha ISO exacta
         await Promise.all(
           Object.entries(dateMap).map(async ([pageId, dateStr]) => {
             await fetch(`https://api.notion.com/v1/pages/${pageId}`, {
@@ -76,8 +71,6 @@ export default async function handler(req, res) {
           })
         );
       } else {
-        // Modo legacy (orden personalizado sin Plan Grid):
-        // genera fechas desde hoy hacia atrás según posición
         const baseDate = new Date();
         await Promise.all(orderedIds.map(async (pageId, idx) => {
           const d = new Date(baseDate);
@@ -98,24 +91,30 @@ export default async function handler(req, res) {
           });
         }));
       }
-
       return res.status(200).json({ success: true });
     }
 
     if (req.method !== 'GET') return res.status(405).end();
 
     const allPages = await fetchAllPages(notionToken, dbId, limit);
-    const profilePage = allPages.find(p => {
+
+    // Profile Preview solo para Pro
+    const profilePage = plan === 'pro' ? allPages.find(p => {
       const typeVal = p.properties[PROPS.type]?.select?.name?.toLowerCase();
       return typeVal === 'profile';
-    });
+    }) : null;
+
     const postPages = allPages.filter(p => {
       const typeVal = p.properties[PROPS.type]?.select?.name?.toLowerCase();
       if (typeVal === 'profile') return false;
-      const ocultar = p.properties[PROPS.ocultar]?.checkbox;
-      if (ocultar) return false;
+      // Ocultar solo funciona en Pro
+      if (plan === 'pro') {
+        const ocultar = p.properties[PROPS.ocultar]?.checkbox;
+        if (ocultar) return false;
+      }
       return true;
     });
+
     const profile = profilePage ? formatProfile(profilePage) : null;
     const posts = postPages.map(p => formatPost(p, plan));
     const pinned  = plan === 'pro' ? posts.filter(p => p.pinned) : [];
@@ -190,8 +189,6 @@ function formatPost(page, plan) {
   const name = props[PROPS.name]?.title?.[0]?.plain_text || '';
   const dateRaw = props[PROPS.publishDate]?.date?.start;
 
-  // Guardamos la fecha ISO (YYYY-MM-DD) además del string formateado
-  // El frontend la necesita para construir el dateMap al guardar Plan Grid
   let publishDate = null;
   let publishDateISO = null;
   if (dateRaw) {
@@ -206,31 +203,44 @@ function formatPost(page, plan) {
   const attachmentUrls = attachments.map(f =>
     f.type === 'file' ? f.file.url : f.external?.url
   ).filter(Boolean);
+
+  // Link y Canva solo para Pro
   const linkText = plan === 'pro' ? (props[PROPS.link]?.rich_text?.map(r => r.plain_text).join('') || '') : '';
   const linkUrls = linkText.split('\n').map(l => normalizeLink(l.trim())).filter(l => l && l.startsWith('http'));
   let canvaUrl = plan === 'pro' ? (props[PROPS.canvaLink]?.url || null) : null;
   if (canvaUrl && !canvaUrl.includes('?embed')) {
     canvaUrl = canvaUrl.split('?')[0] + '?embed';
   }
+
   let images = [];
   let imageSource = 'attachment';
-  if (tipoImagen === 'canva' && canvaUrl) {
-    imageSource = 'canva'; images = [canvaUrl];
-  } else if (tipoImagen === 'link' && linkUrls.length > 0) {
-    imageSource = 'link'; images = linkUrls;
-  } else if (tipoImagen === 'archivo' && attachmentUrls.length > 0) {
-    imageSource = 'attachment'; images = attachmentUrls;
+  if (plan === 'pro') {
+    if (tipoImagen === 'canva' && canvaUrl) {
+      imageSource = 'canva'; images = [canvaUrl];
+    } else if (tipoImagen === 'link' && linkUrls.length > 0) {
+      imageSource = 'link'; images = linkUrls;
+    } else if (tipoImagen === 'archivo' && attachmentUrls.length > 0) {
+      imageSource = 'attachment'; images = attachmentUrls;
+    } else {
+      if (attachmentUrls.length > 0) { imageSource = 'attachment'; images = attachmentUrls; }
+      else if (canvaUrl) { imageSource = 'canva'; images = [canvaUrl]; }
+      else if (linkUrls.length > 0) { imageSource = 'link'; images = linkUrls; }
+    }
   } else {
-    if (attachmentUrls.length > 0) { imageSource = 'attachment'; images = attachmentUrls; }
-    else if (canvaUrl) { imageSource = 'canva'; images = [canvaUrl]; }
-    else if (linkUrls.length > 0) { imageSource = 'link'; images = linkUrls; }
+    // Free: solo attachment
+    imageSource = 'attachment';
+    images = attachmentUrls;
   }
+
   const imageUrl = images[0] || null;
   let mediaType = props[PROPS.mediaType]?.select?.name?.toLowerCase() || 'foto';
   if (images.length > 1 && mediaType === 'foto') mediaType = 'carrusel';
-  const pinned = props[PROPS.pinned]?.checkbox || false;
 
-  const pilar = props[PROPS.pilar]?.select?.name || null;
+  // Pinned solo para Pro
+  const pinned = plan === 'pro' ? (props[PROPS.pinned]?.checkbox || false) : false;
+
+  // Pilar solo para Pro (Content Map)
+  const pilar = plan === 'pro' ? (props[PROPS.pilar]?.select?.name || null) : null;
 
   return { name, publishDate, publishDateISO, imageUrl, images, imageSource, mediaType, pinned, pilar, pageId: page.id };
 }
