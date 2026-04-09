@@ -56,7 +56,7 @@ async function init() {
 
       if (looksLikeUrl) {
         tokenHint.style.color = '#c0392b';
-        tokenHint.innerHTML = '⚠️ Eso parece una URL, no un token. Ve a Notion → My Integrations y copia el "Internal Integration Token".';
+        tokenHint.innerHTML = '⚠️ Eso parece una URL, no un token. Ve a <strong>notion.so/my-integrations</strong> (o "Mis integraciones" si tienes Notion en español) y copia el <strong>Internal Integration Token</strong> — empieza con <code>ntn_</code> o <code>secret_</code>.';
       } else if (val.length > 5 && !isValid) {
         tokenHint.style.color = '#c0392b';
         tokenHint.innerHTML = '⚠️ El token debe empezar con <code>ntn_</code> o <code>secret_</code>.';
