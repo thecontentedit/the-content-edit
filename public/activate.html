@@ -49,17 +49,20 @@ body { font-family: var(--sans); background: var(--cream); color: var(--ink); -w
 <div class="page">
   <div class="left">
     <div class="logo">The Content Edit</div>
-    <div class="emoji">🎞️</div>
-    <h1 class="title">Tu widget está listo</h1>
-    <p class="subtitle">Guarda este link — lo vas a necesitar cada vez que configures un widget nuevo. Trátalo como tu acceso personal.</p>
-    <div class="url-box">
+    <div class="emoji" id="emoji">🎞️</div>
+    <h1 class="title" id="title">Tu widget está listo</h1>
+    <p class="subtitle" id="subtitle">Guarda este link — lo vas a necesitar cada vez que configures un widget nuevo. Trátalo como tu acceso personal.</p>
+
+    <div class="url-box" id="urlBox">
       <div class="url-label">Tu link de setup</div>
       <div class="url-text" id="setupUrl"></div>
       <button class="copy-btn" id="copyBtn" onclick="copyUrl()">copiar</button>
     </div>
+
     <a id="setupLink" href="#" class="btn-primary">Ir al setup →</a>
-    <button class="btn-ghost" onclick="copyUrl()">Copiar link</button>
-    <p class="note">¿Perdiste este link? Búscalo en tu email de confirmación de compra o escríbenos por Instagram.</p>
+    <button class="btn-ghost" id="copyGhost" onclick="copyUrl()">Copiar link</button>
+
+    <p class="note" id="note">¿Perdiste este link? Búscalo en tu email de confirmación de compra o escríbenos por Instagram.</p>
     <p class="footer">© 2025 The Content Edit</p>
   </div>
   <div class="right">
@@ -67,12 +70,23 @@ body { font-family: var(--sans); background: var(--cream); color: var(--ink); -w
   </div>
 </div>
 <script>
-const params = new URLSearchParams(location.search);
-const token = params.get('token');
-const BASE_URL = location.origin;
+var params = new URLSearchParams(location.search);
+var token = params.get('token');
+var isUpgrade = params.get('upgrade') === 'true';
+var BASE_URL = location.origin;
 
-if (token) {
-  const setupUrl = BASE_URL + '/setup.html?token=' + token;
+if (isUpgrade) {
+  // Pantalla de upgrade — no mostrar setup
+  document.getElementById('emoji').textContent = '✨';
+  document.getElementById('title').textContent = '¡Ya eres Pro!';
+  document.getElementById('subtitle').textContent = 'Tu widget se actualizó automáticamente. Abre Notion, dale Refresh al widget y listo — todas las features ya están activas.';
+  document.getElementById('urlBox').style.display = 'none';
+  document.getElementById('setupLink').style.display = 'none';
+  document.getElementById('copyGhost').style.display = 'none';
+  document.getElementById('note').textContent = '¿Tienes dudas? Escríbenos por Instagram o a hola@thecontentedit.digital';
+} else if (token) {
+  // Pantalla normal — nueva usuaria
+  var setupUrl = BASE_URL + '/setup.html?token=' + token;
   document.getElementById('setupUrl').textContent = setupUrl;
   document.getElementById('setupLink').href = setupUrl;
 } else {
@@ -81,7 +95,7 @@ if (token) {
 }
 
 function copyUrl() {
-  const url = document.getElementById('setupUrl').textContent;
+  var url = document.getElementById('setupUrl').textContent;
   if (!url || url.includes('no válido')) return;
   navigator.clipboard.writeText(url).then(function() {
     var btn = document.getElementById('copyBtn');
