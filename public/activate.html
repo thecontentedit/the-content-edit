@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Content Edit — Tu widget está listo</title>
+<link rel="icon" type="image/png" href="/TCE.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #FAFAF8; --ink: #1C1915; --muted: #7A7570;
+  --border: rgba(28,25,21,0.1); --border-strong: rgba(28,25,21,0.18);
+  --accent: #7A3B4A;
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans: 'Inter', system-ui, sans-serif;
+}
+html, body { height: 100%; }
+body { font-family: var(--sans); background: var(--cream); color: var(--ink); -webkit-font-smoothing: antialiased; }
+.page { display: flex; min-height: 100vh; }
+.left { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 2.5rem; min-height: 100vh; }
+.right { width: 46%; position: fixed; right: 0; top: 0; height: 100vh; overflow: hidden; }
+.right img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.logo { font-family: var(--serif); font-size: 16px; color: var(--muted); margin-bottom: 2.5rem; letter-spacing: .01em; }
+.emoji { font-size: 56px; margin-bottom: 1.5rem; line-height: 1; }
+.title { font-family: var(--serif); font-size: 26px; color: var(--ink); font-weight: 400; margin-bottom: 10px; letter-spacing: -0.01em; text-align: center; line-height: 1.2; }
+.subtitle { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 2rem; text-align: center; font-weight: 300; max-width: 300px; }
+.url-box { background: #fff; border: 0.5px solid var(--border-strong); border-radius: 10px; padding: 12px 14px; margin-bottom: 1.25rem; width: 100%; max-width: 340px; position: relative; }
+.url-label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; font-weight: 400; }
+.url-text { font-family: monospace; font-size: 12px; color: var(--ink); word-break: break-all; line-height: 1.5; padding-right: 56px; }
+.copy-btn { position: absolute; top: 50%; right: 10px; transform: translateY(-50%); font-size: 11px; padding: 5px 10px; background: #F2EDE8; border: none; border-radius: 6px; cursor: pointer; color: var(--muted); font-family: var(--sans); transition: background .15s; }
+.copy-btn:hover { background: #E8E2DA; }
+.copy-btn.copied { color: #2D6A4F; background: #EAF4EE; }
+.btn-primary { display: block; width: 100%; max-width: 340px; padding: 12px; background: var(--ink); color: var(--cream); border: none; border-radius: 999px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: var(--sans); margin-bottom: 10px; text-align: center; text-decoration: none; transition: opacity .2s; }
+.btn-primary:hover { opacity: .78; }
+.btn-ghost { display: block; width: 100%; max-width: 340px; padding: 12px; background: transparent; color: var(--muted); border: 0.5px solid var(--border-strong); border-radius: 999px; font-size: 13px; cursor: pointer; font-family: var(--sans); text-align: center; transition: background .15s; }
+.btn-ghost:hover { background: rgba(28,25,21,.04); }
+.note { font-size: 11px; color: #B0A89E; margin-top: 1.5rem; line-height: 1.6; text-align: center; max-width: 280px; font-weight: 300; }
+.footer { font-size: 11px; color: #C8C0B8; margin-top: 2.5rem; font-weight: 300; }
+
+@media (max-width: 700px) {
+  .right { display: none; }
+  .left { padding: 2.5rem 1.5rem; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="left">
+    <div class="logo">The Content Edit</div>
+    <div class="emoji">🎞️</div>
+    <h1 class="title">Tu widget está listo</h1>
+    <p class="subtitle">Guarda este link — lo vas a necesitar cada vez que configures un widget nuevo. Trátalo como tu acceso personal.</p>
+    <div class="url-box">
+      <div class="url-label">Tu link de setup</div>
+      <div class="url-text" id="setupUrl"></div>
+      <button class="copy-btn" id="copyBtn" onclick="copyUrl()">copiar</button>
+    </div>
+    <a id="setupLink" href="#" class="btn-primary">Ir al setup →</a>
+    <button class="btn-ghost" onclick="copyUrl()">Copiar link</button>
+    <p class="note">¿Perdiste este link? Búscalo en tu email de confirmación de compra o escríbenos a hola@thecontentedit.digital</p>
+    <p class="footer">© 2025 The Content Edit</p>
+  </div>
+  <div class="right">
+    <img src="/activate-photo.jpg" alt="The Content Edit widget en Notion"/>
+  </div>
+</div>
+<script>
+const params = new URLSearchParams(location.search);
+const token = params.get('token');
+const BASE_URL = location.origin;
+
+if (token) {
+  const setupUrl = `${BASE_URL}/setup.html?token=${token}`;
+  document.getElementById('setupUrl').textContent = setupUrl;
+  document.getElementById('setupLink').href = setupUrl;
+} else {
+  document.getElementById('setupUrl').textContent = 'Link no válido — revisa tu email de compra.';
+  document.getElementById('setupLink').style.display = 'none';
+}
+
+function copyUrl() {
+  const url = document.getElementById('setupUrl').textContent;
+  if (!url || url.includes('no válido')) return;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✓ copiado';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'copiar'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>
