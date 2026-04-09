@@ -528,26 +528,23 @@ function togglePostPreview() {
   postPreviewOpen = !postPreviewOpen;
   const preview = document.getElementById('post-preview');
   const btn = document.getElementById('modal-preview-btn');
-  const modalInner = document.querySelector('.modal-inner');
   if (postPreviewOpen) {
     preview.classList.add('open');
     btn.textContent = 'Ver imagen';
-    // Ocultar imagen normal y nav
     const existing = document.getElementById('modal-img'); if (existing) existing.style.display = 'none';
     const existingIframe = document.getElementById('modal-iframe'); if (existingIframe) existingIframe.style.display = 'none';
-    document.querySelector('.modal-prev').classList.add('hidden');
-    document.querySelector('.modal-next').classList.add('hidden');
-    document.getElementById('modal-dots').style.display = 'none';
-    document.getElementById('modal-info').style.display = 'none';
-    // Rellenar post preview
+    const mprev = document.querySelector('.modal-prev'); if (mprev) mprev.classList.add('hidden');
+    const mnext = document.querySelector('.modal-next'); if (mnext) mnext.classList.add('hidden');
+    const mdots = document.getElementById('modal-dots'); if (mdots) mdots.style.display = 'none';
+    const minfo = document.getElementById('modal-info'); if (minfo) minfo.style.display = 'none';
     renderPostPreview();
   } else {
     preview.classList.remove('open');
     btn.textContent = 'Ver como post';
     const existing = document.getElementById('modal-img'); if (existing) existing.style.display = '';
     const existingIframe = document.getElementById('modal-iframe'); if (existingIframe) existingIframe.style.display = '';
-    document.getElementById('modal-dots').style.display = '';
-    document.getElementById('modal-info').style.display = '';
+    const mdots = document.getElementById('modal-dots'); if (mdots) mdots.style.display = '';
+    const minfo = document.getElementById('modal-info'); if (minfo) minfo.style.display = '';
     updateModalNav();
   }
 }
@@ -572,16 +569,23 @@ function renderPostPreview() {
   const songText = document.getElementById('pp-song-text');
   if (modalPost.song) { songText.textContent = modalPost.song; songRow.style.display = 'flex'; }
   else { songRow.style.display = 'none'; }
-  // Imagen
+  // Imagen — clonar la que ya está cargada en el modal para evitar CORS
   const imgArea = document.getElementById('pp-image');
   imgArea.innerHTML = '';
-  const imgUrl = modalPost.imageUrl || modalImages[0];
-  if (imgUrl && !isVideoUrl(imgUrl) && modalPost.imageSource !== 'canva') {
-    const img = document.createElement('img'); img.src = imgUrl; img.alt = ''; imgArea.appendChild(img);
-  } else if (imgUrl && isVideoUrl(imgUrl)) {
+  const existingModalImg = document.getElementById('modal-img');
+  if (existingModalImg && existingModalImg.tagName === 'IMG' && existingModalImg.src) {
+    const cloned = existingModalImg.cloneNode(true);
+    cloned.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+    imgArea.appendChild(cloned);
+  } else if (existingModalImg && existingModalImg.tagName === 'VIDEO') {
     const placeholder = document.createElement('div'); placeholder.className = 'pp-image-placeholder'; placeholder.textContent = 'video — ver imagen completa'; imgArea.appendChild(placeholder);
   } else {
-    const placeholder = document.createElement('div'); placeholder.className = 'pp-image-placeholder'; placeholder.textContent = 'sin imagen'; imgArea.appendChild(placeholder);
+    const imgUrl = modalPost.imageUrl || modalImages[0];
+    if (imgUrl && !isVideoUrl(imgUrl) && modalPost.imageSource !== 'canva') {
+      const img = document.createElement('img'); img.src = imgUrl; img.alt = ''; img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;'; imgArea.appendChild(img);
+    } else {
+      const ph = document.createElement('div'); ph.className = 'pp-image-placeholder'; ph.textContent = 'sin imagen'; imgArea.appendChild(ph);
+    }
   }
   // Likes
   const likesEl = document.getElementById('pp-likes');
