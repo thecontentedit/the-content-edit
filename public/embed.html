@@ -153,12 +153,8 @@
   .modal-info { position: absolute; bottom: -44px; left: 0; right: 0; text-align: center; }
   .modal-caption { font-size: 12px; color: rgba(255,255,255,0.8); }
   .modal-date { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 2px; }
-
-  /* POST PREVIEW TOGGLE BTN */
   .modal-preview-btn { position: fixed; top: 16px; left: 16px; background: rgba(255,255,255,0.15); border: 0.5px solid rgba(255,255,255,0.3); color: #fff; border-radius: 999px; padding: 7px 18px; font-size: 11px; font-weight: 500; cursor: pointer; font-family: inherit; transition: background .2s; white-space: nowrap; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
   .modal-preview-btn:hover { background: rgba(255,255,255,0.25); }
-
-  /* POST PREVIEW CARD */
   #post-preview { display: none; background: #fff; border-radius: 12px; overflow: hidden; width: min(400px, 92vw); }
   #post-preview.open { display: block; }
   .pp-header { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 0.5px solid rgba(28,25,21,0.1); }
@@ -172,6 +168,7 @@
   .pp-dots { font-size: 18px; color: #1C1915; letter-spacing: 2px; line-height: 1; flex-shrink: 0; }
   .pp-image { width: 100%; aspect-ratio: 1/1; background: #EDEAE4; overflow: hidden; }
   .pp-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pp-image video { width: 100%; height: 100%; object-fit: cover; display: block; }
   .pp-image-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #aaa; }
   .pp-actions { display: flex; align-items: center; padding: 10px 12px 6px; gap: 14px; }
   .pp-actions svg { width: 22px; height: 22px; }
@@ -569,7 +566,7 @@ function renderPostPreview() {
   const songText = document.getElementById('pp-song-text');
   if (modalPost.song) { songText.textContent = modalPost.song; songRow.style.display = 'flex'; }
   else { songRow.style.display = 'none'; }
-  // Imagen — clonar la que ya está cargada en el modal para evitar CORS
+  // Imagen / Video
   const imgArea = document.getElementById('pp-image');
   imgArea.innerHTML = '';
   const currentPlan = cachedData?.plan;
@@ -582,11 +579,29 @@ function renderPostPreview() {
       cloned.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
       imgArea.appendChild(cloned);
     } else if (existingModalImg && existingModalImg.tagName === 'VIDEO') {
-      const placeholder = document.createElement('div'); placeholder.className = 'pp-image-placeholder'; placeholder.textContent = 'video — ver imagen completa'; imgArea.appendChild(placeholder);
+      // ✅ Mostrar video en Post Preview en lugar de placeholder
+      const vid = document.createElement('video');
+      vid.src = existingModalImg.src;
+      vid.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+      vid.autoplay = true;
+      vid.muted = true;
+      vid.loop = true;
+      vid.playsInline = true;
+      imgArea.appendChild(vid);
     } else {
       const imgUrl = modalPost.imageUrl || modalImages[0];
       if (imgUrl && !isVideoUrl(imgUrl) && modalPost.imageSource !== 'canva') {
         const img = document.createElement('img'); img.src = imgUrl; img.alt = ''; img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;'; imgArea.appendChild(img);
+      } else if (imgUrl && isVideoUrl(imgUrl)) {
+        // ✅ También manejar video cuando no hay modal-img todavía
+        const vid = document.createElement('video');
+        vid.src = imgUrl;
+        vid.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+        vid.autoplay = true;
+        vid.muted = true;
+        vid.loop = true;
+        vid.playsInline = true;
+        imgArea.appendChild(vid);
       } else {
         const ph = document.createElement('div'); ph.className = 'pp-image-placeholder'; ph.textContent = 'sin imagen'; imgArea.appendChild(ph);
       }
