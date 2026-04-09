@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import { Redis } from '@upstash/redis';
 const redis = Redis.fromEnv();
+
 function encryptToken(plaintext) {
   const key = Buffer.from(process.env.ENCRYPTION_KEY, 'hex');
   const iv = crypto.randomBytes(12);
@@ -9,6 +10,7 @@ function encryptToken(plaintext) {
   const authTag = cipher.getAuthTag();
   return `${iv.toString('hex')}:${authTag.toString('hex')}:${encrypted.toString('hex')}`;
 }
+
 export function decryptToken(ciphertext) {
   const [ivHex, authTagHex, encryptedHex] = ciphertext.split(':');
   const key = Buffer.from(process.env.ENCRYPTION_KEY, 'hex');
@@ -19,6 +21,7 @@ export function decryptToken(ciphertext) {
   decipher.setAuthTag(authTag);
   return decipher.update(encrypted) + decipher.final('utf8');
 }
+
 export default async function handler(req, res) {
   if (req.method === 'GET') {
     const { token } = req.query;
@@ -35,6 +38,7 @@ export default async function handler(req, res) {
         : null,
     });
   }
+
   if (req.method === 'POST') {
     const { setupToken, notionToken, notionDbId } = req.body;
     if (!setupToken || !notionToken || !notionDbId) {
@@ -51,10 +55,10 @@ export default async function handler(req, res) {
       if (valid.ok || valid.status !== 'network_error') break;
       await new Promise(r => setTimeout(r, 800));
     }
-
     if (!valid.ok) {
       return res.status(422).json({ error: valid.message });
     }
+
     const widgetId = crypto.randomBytes(16).toString('base64url');
     const updated = {
       ...data,
@@ -64,13 +68,19 @@ export default async function handler(req, res) {
       activated: true,
       activatedAt: new Date().toISOString(),
     };
+
     await redis.set(`setup:${setupToken}`, JSON.stringify(updated));
     await redis.set(`widget:${widgetId}`, setupToken);
+
     const embedUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/embed/${widgetId}`;
-    return res.status(200).json({ embedUrl, widgetId });
+
+    // ✅ plan incluido en la respuesta para que el frontend muestre los links correctos
+    return res.status(200).json({ embedUrl, widgetId, plan: updated.plan });
   }
+
   return res.status(405).json({ error: 'Method not allowed' });
 }
+
 async function validateNotion(token, dbId) {
   try {
     const cleanDbId = dbId.replace(/-/g, '').trim();
