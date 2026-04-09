@@ -214,6 +214,7 @@ function formatPost(page, plan) {
 
   let images = [];
   let imageSource = 'attachment';
+
   if (plan === 'pro') {
     if (tipoImagen === 'canva' && canvaUrl) {
       imageSource = 'canva'; images = [canvaUrl];
@@ -230,6 +231,19 @@ function formatPost(page, plan) {
     // Free: solo attachment
     imageSource = 'attachment';
     images = attachmentUrls;
+
+    // Detectar si tiene contenido Pro para mostrar aviso en el widget
+    const hasLink = !!(props[PROPS.link]?.rich_text?.map(r => r.plain_text).join('').trim());
+    const hasCanva = !!(props[PROPS.canvaLink]?.url);
+    if ((hasLink || hasCanva) && images.length === 0) {
+      return {
+        name, publishDate, publishDateISO,
+        imageUrl: null, images: [], imageSource: 'attachment',
+        mediaType: props[PROPS.mediaType]?.select?.name?.toLowerCase() || 'foto',
+        pinned: false, pilar: null, pageId: page.id,
+        proBlocked: true,
+      };
+    }
   }
 
   const imageUrl = images[0] || null;
