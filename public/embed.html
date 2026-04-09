@@ -70,7 +70,6 @@
   .cell-inner { width: 100%; height: 100%; overflow: hidden; position: relative; }
   .cell img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .22s ease; }
   .cell:hover .cell-inner img { transform: scale(1.04); }
-  /* VIDEO */
   .cell-video { width: 100%; height: 100%; object-fit: cover; display: block; }
   .cell-play-btn { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0); transition: background .2s; pointer-events: none; z-index: 2; }
   .cell:hover .cell-play-btn { background: rgba(0,0,0,0.2); }
@@ -78,7 +77,6 @@
   .cell:hover .cell-play-icon { opacity: 1; }
   .cell-play-icon svg { width: 14px; height: 14px; margin-left: 3px; }
   .modal-video { max-width: 90vw; max-height: 85vh; border-radius: 4px; display: block; outline: none; }
-  /* END VIDEO */
   .cell-hover-info { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0) 100%); padding: 32px 8px 8px; opacity: 0; transition: opacity .2s; pointer-events: none; }
   .cell:hover .cell-hover-info { opacity: 1; }
   .hover-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
@@ -155,6 +153,32 @@
   .modal-info { position: absolute; bottom: -44px; left: 0; right: 0; text-align: center; }
   .modal-caption { font-size: 12px; color: rgba(255,255,255,0.8); }
   .modal-date { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+  /* POST PREVIEW TOGGLE BTN */
+  .modal-preview-btn { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.15); border: 0.5px solid rgba(255,255,255,0.3); color: #fff; border-radius: 999px; padding: 7px 18px; font-size: 11px; font-weight: 500; cursor: pointer; font-family: inherit; transition: background .2s; white-space: nowrap; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+  .modal-preview-btn:hover { background: rgba(255,255,255,0.25); }
+
+  /* POST PREVIEW CARD */
+  #post-preview { display: none; background: #fff; border-radius: 12px; overflow: hidden; width: min(400px, 92vw); }
+  #post-preview.open { display: block; }
+  .pp-header { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 0.5px solid rgba(28,25,21,0.1); }
+  .pp-avatar { width: 34px; height: 34px; border-radius: 50%; background: #E8E4DD; overflow: hidden; flex-shrink: 0; border: 1px solid rgba(28,25,21,0.1); }
+  .pp-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .pp-avatar-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: #fff; background: #C8B89A; }
+  .pp-user-wrap { flex: 1; min-width: 0; }
+  .pp-username { font-size: 12px; font-weight: 700; color: #1C1915; line-height: 1.2; }
+  .pp-song { font-size: 10px; color: #7A7570; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 4px; margin-top: 1px; }
+  .pp-song svg { width: 10px; height: 10px; flex-shrink: 0; }
+  .pp-dots { font-size: 18px; color: #1C1915; letter-spacing: 2px; line-height: 1; flex-shrink: 0; }
+  .pp-image { width: 100%; aspect-ratio: 1/1; background: #EDEAE4; overflow: hidden; }
+  .pp-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pp-image-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #aaa; }
+  .pp-actions { display: flex; align-items: center; padding: 10px 12px 6px; gap: 14px; }
+  .pp-actions svg { width: 22px; height: 22px; }
+  .pp-bookmark { margin-left: auto; }
+  .pp-likes { font-size: 12px; font-weight: 700; color: #1C1915; padding: 0 12px 5px; }
+  .pp-caption { font-size: 12px; color: #1C1915; padding: 0 12px 10px; line-height: 1.45; }
+  .pp-caption strong { font-weight: 700; }
 </style>
 </head>
 <body>
@@ -166,9 +190,33 @@
   <div class="modal-inner">
     <button class="modal-nav modal-prev hidden" onclick="modalNav(-1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
     <button class="modal-nav modal-next hidden" onclick="modalNav(1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+    <div id="post-preview">
+      <div class="pp-header">
+        <div class="pp-avatar" id="pp-avatar"><div class="pp-avatar-placeholder" id="pp-avatar-placeholder">?</div></div>
+        <div class="pp-user-wrap">
+          <div class="pp-username" id="pp-username">@usuario</div>
+          <div class="pp-song" id="pp-song-row" style="display:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            <span id="pp-song-text"></span>
+          </div>
+        </div>
+        <div class="pp-dots">···</div>
+      </div>
+      <div class="pp-image" id="pp-image"><div class="pp-image-placeholder">sin imagen</div></div>
+      <div class="pp-actions">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1C1915" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1C1915" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1C1915" stroke-width="1.8"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1C1915" stroke-width="1.8"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        <svg class="pp-bookmark" viewBox="0 0 24 24" fill="none" stroke="#1C1915" stroke-width="1.8"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div class="pp-likes" id="pp-likes" style="display:none;"></div>
+      <div class="pp-caption" id="pp-caption" style="display:none;"></div>
+    </div>
     <div class="modal-dots" id="modal-dots"></div>
     <div class="modal-info"><div class="modal-caption" id="modal-caption"></div><div class="modal-date" id="modal-date"></div></div>
   </div>
+  <button class="modal-preview-btn" id="modal-preview-btn" onclick="togglePostPreview()">Ver como post</button>
 </div>
 <div id="widget">
   <div class="widget-wrapper">
@@ -250,6 +298,7 @@ let modalImages = [];
 let modalIndex = 0;
 let modalPost = null;
 let modalIsCanva = false;
+let postPreviewOpen = false;
 
 function isVideoUrl(url) {
   if (!url) return false;
@@ -274,6 +323,7 @@ function getPilarColor(pilar) {
   return pilarColorMap[pilar];
 }
 function resetPilarColors() { Object.keys(pilarColorMap).forEach(k => delete pilarColorMap[k]); pilarColorIndex = 0; }
+
 async function loadWidget() {
   if (planModeActive) { if (!confirm('¿Descartar cambios del Plan Grid y recargar?')) return; exitPlanMode(false); }
   document.getElementById('grid').innerHTML = '';
@@ -455,17 +505,103 @@ function onPlanDrop(e) {
   planOrder = newOrder; currentOrder = planOrder.map(function(p) { return p.pageId; }); renderGrid(cachedData.posts, cachedData.plan);
 }
 function openModal(post) {
-  modalPost = post; modalImages = post.images && post.images.length > 0 ? post.images : (post.imageUrl ? [post.imageUrl] : []); if (modalImages.length === 0) return;
-  modalIndex = 0; modalIsCanva = post.imageSource === 'canva'; updateModal(); document.getElementById('modal').classList.add('open'); document.addEventListener('keydown', onModalKey);
+  modalPost = post;
+  modalImages = post.images && post.images.length > 0 ? post.images : (post.imageUrl ? [post.imageUrl] : []);
+  if (modalImages.length === 0) return;
+  modalIndex = 0; modalIsCanva = post.imageSource === 'canva';
+  postPreviewOpen = false;
+  document.getElementById('post-preview').classList.remove('open');
+  document.getElementById('modal-preview-btn').textContent = 'Ver como post';
+  updateModal();
+  document.getElementById('modal').classList.add('open');
+  document.addEventListener('keydown', onModalKey);
 }
 function closeModal() {
   const vid = document.getElementById('modal-img');
   if (vid && vid.tagName === 'VIDEO') { vid.pause(); }
   document.getElementById('modal').classList.remove('open');
+  postPreviewOpen = false;
+  document.getElementById('post-preview').classList.remove('open');
   document.removeEventListener('keydown', onModalKey);
 }
-function onModalKey(e) { if (e.key === 'Escape') closeModal(); if (e.key === 'ArrowRight') modalNav(1); if (e.key === 'ArrowLeft') modalNav(-1); }
+function togglePostPreview() {
+  postPreviewOpen = !postPreviewOpen;
+  const preview = document.getElementById('post-preview');
+  const btn = document.getElementById('modal-preview-btn');
+  const modalInner = document.querySelector('.modal-inner');
+  if (postPreviewOpen) {
+    preview.classList.add('open');
+    btn.textContent = 'Ver imagen';
+    // Ocultar imagen normal y nav
+    const existing = document.getElementById('modal-img'); if (existing) existing.style.display = 'none';
+    const existingIframe = document.getElementById('modal-iframe'); if (existingIframe) existingIframe.style.display = 'none';
+    document.querySelector('.modal-prev').classList.add('hidden');
+    document.querySelector('.modal-next').classList.add('hidden');
+    document.getElementById('modal-dots').style.display = 'none';
+    document.getElementById('modal-info').style.display = 'none';
+    // Rellenar post preview
+    renderPostPreview();
+  } else {
+    preview.classList.remove('open');
+    btn.textContent = 'Ver como post';
+    const existing = document.getElementById('modal-img'); if (existing) existing.style.display = '';
+    const existingIframe = document.getElementById('modal-iframe'); if (existingIframe) existingIframe.style.display = '';
+    document.getElementById('modal-dots').style.display = '';
+    document.getElementById('modal-info').style.display = '';
+    updateModalNav();
+  }
+}
+function renderPostPreview() {
+  if (!modalPost) return;
+  const profile = cachedData?.profile;
+  // Avatar
+  const avatarEl = document.getElementById('pp-avatar');
+  const placeholder = document.getElementById('pp-avatar-placeholder');
+  if (profile?.avatarUrl) {
+    const img = document.createElement('img'); img.src = profile.avatarUrl; img.alt = '';
+    avatarEl.innerHTML = ''; avatarEl.appendChild(img);
+  } else {
+    const initials = (profile?.displayName || profile?.username || '?').charAt(0).toUpperCase();
+    placeholder.textContent = initials; avatarEl.innerHTML = ''; avatarEl.appendChild(placeholder);
+  }
+  // Username
+  const username = profile?.username ? `@${profile.username.replace(/^@/, '')}` : '@usuario';
+  document.getElementById('pp-username').textContent = username;
+  // Canción
+  const songRow = document.getElementById('pp-song-row');
+  const songText = document.getElementById('pp-song-text');
+  if (modalPost.song) { songText.textContent = modalPost.song; songRow.style.display = 'flex'; }
+  else { songRow.style.display = 'none'; }
+  // Imagen
+  const imgArea = document.getElementById('pp-image');
+  imgArea.innerHTML = '';
+  const imgUrl = modalImages[0];
+  if (imgUrl && !isVideoUrl(imgUrl) && modalPost.imageSource !== 'canva') {
+    const img = document.createElement('img'); img.src = imgUrl; img.alt = ''; imgArea.appendChild(img);
+  } else {
+    const placeholder = document.createElement('div'); placeholder.className = 'pp-image-placeholder'; placeholder.textContent = 'sin imagen'; imgArea.appendChild(placeholder);
+  }
+  // Likes
+  const likesEl = document.getElementById('pp-likes');
+  if (modalPost.likes !== null && modalPost.likes !== undefined) {
+    likesEl.textContent = `${modalPost.likes.toLocaleString('es-MX')} me gusta`;
+    likesEl.style.display = 'block';
+  } else { likesEl.style.display = 'none'; }
+  // Caption
+  const captionEl = document.getElementById('pp-caption');
+  const captionText = modalPost.caption || modalPost.name;
+  if (captionText) {
+    captionEl.innerHTML = `<strong>${username}</strong> ${captionText}`;
+    captionEl.style.display = 'block';
+  } else { captionEl.style.display = 'none'; }
+}
+function onModalKey(e) { if (e.key === 'Escape') closeModal(); if (!postPreviewOpen && e.key === 'ArrowRight') modalNav(1); if (!postPreviewOpen && e.key === 'ArrowLeft') modalNav(-1); }
 function modalNav(dir) { modalIndex = Math.max(0, Math.min(modalImages.length - 1, modalIndex + dir)); updateModal(); }
+function updateModalNav() {
+  const prev = document.querySelector('.modal-prev'); const next = document.querySelector('.modal-next');
+  prev.classList.toggle('hidden', modalIndex === 0 || modalImages.length <= 1);
+  next.classList.toggle('hidden', modalIndex === modalImages.length - 1 || modalImages.length <= 1);
+}
 function updateModal() {
   const modalInner = document.querySelector('.modal-inner');
   const existing = document.getElementById('modal-img'); if (existing) { if (existing.tagName === 'VIDEO') existing.pause(); existing.remove(); }
@@ -480,8 +616,7 @@ function updateModal() {
     const img = document.createElement('img'); img.id = 'modal-img'; img.className = 'modal-img'; img.src = modalImages[modalIndex]; img.alt = ''; const prev = document.querySelector('.modal-prev'); modalInner.insertBefore(img, prev);
   }
   document.getElementById('modal-caption').textContent = modalPost?.name || ''; document.getElementById('modal-date').textContent = modalPost?.publishDate || '';
-  const prev = document.querySelector('.modal-prev'); const next = document.querySelector('.modal-next');
-  prev.classList.toggle('hidden', modalIndex === 0 || modalImages.length <= 1); next.classList.toggle('hidden', modalIndex === modalImages.length - 1 || modalImages.length <= 1);
+  updateModalNav();
   const dots = document.getElementById('modal-dots'); dots.innerHTML = '';
   if (modalImages.length > 1) { modalImages.forEach((_, i) => { const dot = document.createElement('div'); dot.className = 'modal-dot' + (i === modalIndex ? ' active' : ''); dots.appendChild(dot); }); }
 }
