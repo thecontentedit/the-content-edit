@@ -26,6 +26,9 @@ const PROPS = {
   h3label:      'Highlight 3 Nombre',
   h4photo:      'Highlight 4 Foto',
   h4label:      'Highlight 4 Nombre',
+  caption:      'Caption',
+  likes:        'Likes',
+  song:         'Canción',
 };
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -45,7 +48,6 @@ export default async function handler(req, res) {
     const plan = data.plan;
     const limit = plan === 'pro' ? 60 : 9;
 
-    // ── POST: guardar orden del Plan Grid (Pro only) ──
     if (req.method === 'POST') {
       if (plan !== 'pro') return res.status(403).json({ error: 'Pro plan required' });
       const { orderedIds, dateMap } = req.body;
@@ -98,7 +100,6 @@ export default async function handler(req, res) {
 
     const allPages = await fetchAllPages(notionToken, dbId, limit);
 
-    // Profile Preview solo para Pro
     const profilePage = plan === 'pro' ? allPages.find(p => {
       const typeVal = p.properties[PROPS.type]?.select?.name?.toLowerCase();
       return typeVal === 'profile';
@@ -107,7 +108,6 @@ export default async function handler(req, res) {
     const postPages = allPages.filter(p => {
       const typeVal = p.properties[PROPS.type]?.select?.name?.toLowerCase();
       if (typeVal === 'profile') return false;
-      // Ocultar solo funciona en Pro
       if (plan === 'pro') {
         const ocultar = p.properties[PROPS.ocultar]?.checkbox;
         if (ocultar) return false;
@@ -204,7 +204,6 @@ function formatPost(page, plan) {
     f.type === 'file' ? f.file.url : f.external?.url
   ).filter(Boolean);
 
-  // Link y Canva solo para Pro
   const linkText = plan === 'pro' ? (props[PROPS.link]?.rich_text?.map(r => r.plain_text).join('') || '') : '';
   const linkUrls = linkText.split('\n').map(l => normalizeLink(l.trim())).filter(l => l && l.startsWith('http'));
   let canvaUrl = plan === 'pro' ? (props[PROPS.canvaLink]?.url || null) : null;
@@ -228,11 +227,9 @@ function formatPost(page, plan) {
       else if (linkUrls.length > 0) { imageSource = 'link'; images = linkUrls; }
     }
   } else {
-    // Free: solo attachment
     imageSource = 'attachment';
     images = attachmentUrls;
 
-    // Detectar si tiene contenido Pro para mostrar aviso en el widget
     const hasLink = !!(props[PROPS.link]?.rich_text?.map(r => r.plain_text).join('').trim());
     const hasCanva = !!(props[PROPS.canvaLink]?.url);
     if ((hasLink || hasCanva) && images.length === 0) {
@@ -249,7 +246,6 @@ function formatPost(page, plan) {
   const imageUrl = images[0] || null;
   let mediaType = props[PROPS.mediaType]?.select?.name?.toLowerCase() || 'foto';
   if (images.length > 1 && mediaType === 'foto') mediaType = 'carrusel';
-  // Auto-detectar video por extensión de URL
   if (mediaType === 'foto' && imageUrl) {
     const url = imageUrl.toLowerCase().split('?')[0];
     if (url.endsWith('.mp4') || url.endsWith('.mov') || url.endsWith('.webm')) {
@@ -257,11 +253,13 @@ function formatPost(page, plan) {
     }
   }
 
-  // Pinned solo para Pro
   const pinned = plan === 'pro' ? (props[PROPS.pinned]?.checkbox || false) : false;
-
-  // Pilar solo para Pro (Content Map)
   const pilar = plan === 'pro' ? (props[PROPS.pilar]?.select?.name || null) : null;
 
-  return { name, publishDate, publishDateISO, imageUrl, images, imageSource, mediaType, pinned, pilar, pageId: page.id };
+  // Post Preview fields — disponibles para todos los planes
+  const caption = props[PROPS.caption]?.rich_text?.map(r => r.plain_text).join('') || null;
+  const likes = props[PROPS.likes]?.number ?? null;
+  const song = props[PROPS.song]?.rich_text?.map(r => r.plain_text).join('') || null;
+
+  return { name, publishDate, publishDateISO, imageUrl, images, imageSource, mediaType, pinned, pilar, pageId: page.id, caption, likes, song };
 }
