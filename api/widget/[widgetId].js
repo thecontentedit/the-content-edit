@@ -29,7 +29,8 @@ const PROPS = {
   caption:      'Caption',
   likes:        'Likes',
   song:         'Canción',
-  portada:      'Portada Reel', // ✅ nueva propiedad para thumbnail de video
+  portada:      'Portada Reel',     // ✅ thumbnail de video — archivo
+  portadaUrl:   'Portada Reel URL', // ✅ thumbnail de video — URL externa (preferida)
 };
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -212,11 +213,13 @@ function formatPost(page, plan) {
     canvaUrl = canvaUrl.split('?')[0] + '?embed';
   }
 
-  // ✅ Leer portada (thumbnail para videos) — disponible para todos los planes
+  // ✅ Leer portada (thumbnail para videos) — URL externa tiene prioridad sobre archivo
+  const portadaUrlDirecta = normalizeLink(props[PROPS.portadaUrl]?.url || null);
   const portadaFiles = props[PROPS.portada]?.files || [];
-  const portadaUrl = portadaFiles.length > 0
+  const portadaArchivo = portadaFiles.length > 0
     ? (portadaFiles[0].type === 'file' ? portadaFiles[0].file.url : portadaFiles[0].external?.url)
     : null;
+  const portadaUrl = portadaUrlDirecta || portadaArchivo || null;
 
   let images = [];
   let imageSource = 'attachment';
