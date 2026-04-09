@@ -29,6 +29,7 @@ const PROPS = {
   caption:      'Caption',
   likes:        'Likes',
   song:         'Canción',
+  portada:      'Portada', // ✅ nueva propiedad para thumbnail de video
 };
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -211,6 +212,12 @@ function formatPost(page, plan) {
     canvaUrl = canvaUrl.split('?')[0] + '?embed';
   }
 
+  // ✅ Leer portada (thumbnail para videos) — disponible para todos los planes
+  const portadaFiles = props[PROPS.portada]?.files || [];
+  const portadaUrl = portadaFiles.length > 0
+    ? (portadaFiles[0].type === 'file' ? portadaFiles[0].file.url : portadaFiles[0].external?.url)
+    : null;
+
   let images = [];
   let imageSource = 'attachment';
 
@@ -239,6 +246,7 @@ function formatPost(page, plan) {
         mediaType: props[PROPS.mediaType]?.select?.name?.toLowerCase() || 'foto',
         pinned: false, pilar: null, pageId: page.id,
         proBlocked: true,
+        portadaUrl: null,
       };
     }
   }
@@ -256,10 +264,9 @@ function formatPost(page, plan) {
   const pinned = plan === 'pro' ? (props[PROPS.pinned]?.checkbox || false) : false;
   const pilar = plan === 'pro' ? (props[PROPS.pilar]?.select?.name || null) : null;
 
-  // Post Preview fields — disponibles para todos los planes
   const caption = props[PROPS.caption]?.rich_text?.map(r => r.plain_text).join('') || null;
   const likes = props[PROPS.likes]?.number ?? null;
   const song = props[PROPS.song]?.rich_text?.map(r => r.plain_text).join('') || null;
 
-  return { name, publishDate, publishDateISO, imageUrl, images, imageSource, mediaType, pinned, pilar, pageId: page.id, caption, likes, song };
+  return { name, publishDate, publishDateISO, imageUrl, images, imageSource, mediaType, pinned, pilar, pageId: page.id, caption, likes, song, portadaUrl };
 }
