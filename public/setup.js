@@ -12,7 +12,9 @@ async function init() {
       sessionStorage.removeItem('tce_notion_token');
     }
   } catch(e) {}
+
   if (!setupToken) { showScreen('screenInvalid'); return; }
+
   try {
     const res = await fetch(`${BASE_URL}/api/setup?token=${setupToken}`);
     if (!res.ok) { showScreen('screenInvalid'); return; }
@@ -33,6 +35,50 @@ async function init() {
     }
     showScreen('screenStep1');
   } catch { showScreen('screenInvalid'); }
+
+  // Validación en tiempo real del token de Notion
+  const tokenInput = document.getElementById('notionToken');
+  const tokenHint = document.getElementById('tokenHint');
+
+  if (tokenInput && tokenHint) {
+    const validateToken = () => {
+      const val = tokenInput.value.trim();
+
+      if (val.length === 0) {
+        tokenHint.style.color = '';
+        tokenHint.innerHTML = 'El token empieza con <code>ntn_</code> o <code>secret_</code> y tiene ~50 caracteres.';
+        checkStep2();
+        return;
+      }
+
+      const isValid = (val.startsWith('ntn_') || val.startsWith('secret_')) && val.length > 20;
+      const looksLikeUrl = val.startsWith('http') || val.includes('setup.html') || val.includes('token=');
+
+      if (looksLikeUrl) {
+        tokenHint.style.color = '#c0392b';
+        tokenHint.innerHTML = '⚠️ Eso parece una URL, no un token. Ve a Notion → My Integrations y copia el "Internal Integration Token".';
+      } else if (val.length > 5 && !isValid) {
+        tokenHint.style.color = '#c0392b';
+        tokenHint.innerHTML = '⚠️ El token debe empezar con <code>ntn_</code> o <code>secret_</code>.';
+      } else if (isValid) {
+        tokenHint.style.color = '#2e7d32';
+        tokenHint.innerHTML = '✓ Token válido.';
+        // Guardar inmediatamente en memoria y sessionStorage
+        savedNotionToken = val;
+        try { sessionStorage.setItem('tce_notion_token', val); } catch(e) {}
+      } else {
+        tokenHint.style.color = '';
+        tokenHint.innerHTML = 'El token empieza con <code>ntn_</code> o <code>secret_</code> y tiene ~50 caracteres.';
+      }
+
+      checkStep2();
+    };
+
+    tokenInput.addEventListener('input', validateToken);
+    tokenInput.addEventListener('change', validateToken);
+    // paste necesita timeout para que el valor ya esté en el input cuando validamos
+    tokenInput.addEventListener('paste', () => setTimeout(validateToken, 50));
+  }
 }
 
 function showScreen(id) {
@@ -42,12 +88,13 @@ function showScreen(id) {
 }
 
 function goStep(n) {
-  // Guardar el token antes de avanzar del paso 2
+  // Guardar el token antes de avanzar del paso 2 (respaldo adicional)
   if (n === 3) {
-    const tokenInput = document.getElementById('notionToken').value.trim();
-    if (tokenInput.length > 10) {
-      savedNotionToken = tokenInput;
-      try { sessionStorage.setItem('tce_notion_token', tokenInput); } catch(e) {}
+    const tokenInput = document.getElementById('notionToken');
+    const tokenFromInput = tokenInput ? tokenInput.value.trim() : '';
+    if (tokenFromInput.length > 10) {
+      savedNotionToken = tokenFromInput;
+      try { sessionStorage.setItem('tce_notion_token', tokenFromInput); } catch(e) {}
     }
   }
   showScreen('screenStep' + n);
@@ -63,7 +110,8 @@ function toggleConfirm(n) {
 
 function checkStep2() {
   const token = document.getElementById('notionToken').value.trim();
-  document.getElementById('btn2').disabled = !(toggleStates[2] && token.length > 10);
+  const isValidToken = (token.startsWith('ntn_') || token.startsWith('secret_')) && token.length > 20;
+  document.getElementById('btn2').disabled = !(toggleStates[2] && isValidToken);
 }
 
 function checkStep3() {
@@ -78,10 +126,14 @@ function extractDbId(input) {
 }
 
 async function connectNotion() {
-  // Leer directamente del input — el DOM persiste aunque la pantalla esté oculta
-  const tokenFromInput = document.getElementById('notionToken').value.trim();
-  const token = tokenFromInput || savedNotionToken 
+  const tokenInput = document.getElementById('notionToken');
+  const tokenFromInput = tokenInput ? tokenInput.value.trim() : '';
+
+  // Fallback chain: DOM → variable en memoria → sessionStorage
+  const token = (tokenFromInput.length > 10 ? tokenFromInput : null)
+    || (savedNotionToken.length > 10 ? savedNotionToken : null)
     || (function(){ try { return sessionStorage.getItem('tce_notion_token') || ''; } catch(e) { return ''; } })();
+
   const dbUrl = document.getElementById('notionDbUrl').value.trim();
   const dbId = extractDbId(dbUrl);
   const status = document.getElementById('connectStatus');
