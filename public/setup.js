@@ -1,11 +1,10 @@
 const params = new URLSearchParams(location.search);
 const setupToken = params.get('token');
 const BASE_URL = location.origin;
-const toggleStates = { 1: false, 2: false, 3: false };
+const toggleStates = { 1: false, 2: false, 3: false, 4: false };
 let savedNotionToken = '';
 
 async function init() {
-  // Limpiar sessionStorage de sesiones anteriores
   try {
     const stored = sessionStorage.getItem('tce_notion_token');
     if (stored && stored.startsWith('http')) {
@@ -21,7 +20,6 @@ async function init() {
     const data = await res.json();
     if (data.activated && data.widgetUrl) {
       document.getElementById('alreadyEmbedUrl').textContent = data.widgetUrl;
-
       if (data.plan === 'pro') {
         document.getElementById('alreadyBioUrl').textContent = data.widgetUrl + '?mode=bio';
         document.getElementById('already-bio-block').style.display = 'block';
@@ -30,13 +28,12 @@ async function init() {
         document.getElementById('already-bio-block').style.display = 'none';
         document.getElementById('upgrade-card').style.display = 'block';
       }
-
       showScreen('screenAlreadyDone'); return;
     }
     showScreen('screenStep1');
   } catch { showScreen('screenInvalid'); }
 
-  // Validación en tiempo real del token de Notion
+  // Validación en tiempo real del token
   const tokenInput = document.getElementById('notionToken');
   const tokenHint = document.getElementById('tokenHint');
 
@@ -63,7 +60,6 @@ async function init() {
       } else if (isValid) {
         tokenHint.style.color = '#2e7d32';
         tokenHint.innerHTML = '✓ Token válido.';
-        // Guardar inmediatamente en memoria y sessionStorage
         savedNotionToken = val;
         try { sessionStorage.setItem('tce_notion_token', val); } catch(e) {}
       } else {
@@ -76,7 +72,6 @@ async function init() {
 
     tokenInput.addEventListener('input', validateToken);
     tokenInput.addEventListener('change', validateToken);
-    // paste necesita timeout para que el valor ya esté en el input cuando validamos
     tokenInput.addEventListener('paste', () => setTimeout(validateToken, 50));
   }
 }
@@ -88,7 +83,7 @@ function showScreen(id) {
 }
 
 function goStep(n) {
-  // Guardar el token antes de avanzar del paso 2 (respaldo adicional)
+  // Guardar token al salir del paso 2
   if (n === 3) {
     const tokenInput = document.getElementById('notionToken');
     const tokenFromInput = tokenInput ? tokenInput.value.trim() : '';
@@ -105,7 +100,8 @@ function toggleConfirm(n) {
   document.getElementById('toggle' + n).classList.toggle('confirmed', toggleStates[n]);
   if (n === 1) document.getElementById('btn1').disabled = !toggleStates[1];
   if (n === 2) checkStep2();
-  if (n === 3) checkStep3();
+  if (n === 3) document.getElementById('btn3').disabled = !toggleStates[3];
+  if (n === 4) checkStep4();
 }
 
 function checkStep2() {
@@ -114,9 +110,9 @@ function checkStep2() {
   document.getElementById('btn2').disabled = !(toggleStates[2] && isValidToken);
 }
 
-function checkStep3() {
+function checkStep4() {
   const url = document.getElementById('notionDbUrl').value.trim();
-  document.getElementById('btn3').disabled = !(toggleStates[3] && url.length > 20);
+  document.getElementById('btn4').disabled = !(toggleStates[4] && url.length > 20);
 }
 
 function extractDbId(input) {
@@ -129,7 +125,6 @@ async function connectNotion() {
   const tokenInput = document.getElementById('notionToken');
   const tokenFromInput = tokenInput ? tokenInput.value.trim() : '';
 
-  // Fallback chain: DOM → variable en memoria → sessionStorage
   const token = (tokenFromInput.length > 10 ? tokenFromInput : null)
     || (savedNotionToken.length > 10 ? savedNotionToken : null)
     || (function(){ try { return sessionStorage.getItem('tce_notion_token') || ''; } catch(e) { return ''; } })();
@@ -137,11 +132,11 @@ async function connectNotion() {
   const dbUrl = document.getElementById('notionDbUrl').value.trim();
   const dbId = extractDbId(dbUrl);
   const status = document.getElementById('connectStatus');
-  const btn = document.getElementById('btn3');
+  const btn = document.getElementById('btn4');
 
   if (!token || token.length < 10) {
     status.className = 'status error';
-    status.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg> Token inválido. Regresa al paso anterior y vuelve a pegarlo.`;
+    status.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg> Token inválido. Regresa al paso 2 y vuelve a pegarlo.`;
     return;
   }
 
@@ -176,18 +171,18 @@ async function connectNotion() {
 
     document.getElementById('embedUrl').textContent = data.embedUrl;
 
-    const bioBlock = document.getElementById('step4-bio-block');
-    const upgradeCardStep4 = document.getElementById('upgrade-card-step4');
+    const bioBlock = document.getElementById('step5-bio-block');
+    const upgradeCardStep5 = document.getElementById('upgrade-card-step5');
     if (data.plan === 'pro') {
       document.getElementById('embedBioUrl').textContent = data.embedUrl + '?mode=bio';
       if (bioBlock) bioBlock.style.display = 'block';
-      if (upgradeCardStep4) upgradeCardStep4.style.display = 'none';
+      if (upgradeCardStep5) upgradeCardStep5.style.display = 'none';
     } else {
       if (bioBlock) bioBlock.style.display = 'none';
-      if (upgradeCardStep4) upgradeCardStep4.style.display = 'block';
+      if (upgradeCardStep5) upgradeCardStep5.style.display = 'block';
     }
 
-    setTimeout(() => goStep(4), 900);
+    setTimeout(() => goStep(5), 900);
 
   } catch {
     status.className = 'status error';
