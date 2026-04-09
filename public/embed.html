@@ -98,6 +98,8 @@
   .cell-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #EDEAE4; gap: 6px; }
   .cell-placeholder svg { width: 20px; height: 20px; opacity: .4; }
   .cell-placeholder span { font-size: 10px; color: var(--muted); letter-spacing: .04em; }
+  .cell-pro-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #EDEAE4; }
+  .cell-pro-placeholder span { font-size: 11px; color: var(--muted); letter-spacing: .04em; }
   .empty-cell { aspect-ratio: 4/5; background: #F4F1EC; border: 1.5px dashed rgba(28,25,21,.12); display: flex; align-items: center; justify-content: center; }
   .empty-cell span { font-size: 11px; color: var(--muted); }
   .watermark { text-align: center; margin-top: 8px; font-size: 10px; color: rgba(28,25,21,.25); letter-spacing: .06em; text-transform: uppercase; }
@@ -125,6 +127,7 @@
   body.dark .cell { background: #2A2520; }
   body.dark .empty-cell { background: #232018; border-color: rgba(240,237,232,0.1); }
   body.dark .cell-placeholder { background: #2A2520; }
+  body.dark .cell-pro-placeholder { background: #2A2520; }
   body.dark #modal { background: rgba(0,0,0,0.92); }
   body.dark .btn-refresh { background: #F0EDE8; color: #1C1915; }
   body.dark .btn-plan { background: #2A2520; color: #F0EDE8; }
@@ -357,7 +360,9 @@ function renderGrid(posts, plan) {
     const cell = document.createElement('div'); cell.className = 'cell'; cell.dataset.index = i; cell.dataset.pageId = post.pageId;
     if (planModeActive) cell.classList.add('plan-mode');
     const inner = document.createElement('div'); inner.className = 'cell-inner';
-    if (post.imageSource === 'canva' && post.imageUrl) {
+    if (post.proBlocked) {
+      inner.appendChild(makeProPlaceholder());
+    } else if (post.imageSource === 'canva' && post.imageUrl) {
       const wrapper = document.createElement('div'); wrapper.style.cssText = 'position:relative;width:100%;height:100%;overflow:hidden;';
       const iframe = document.createElement('iframe'); iframe.src = post.imageUrl; iframe.style.cssText = 'width:120%;height:140%;border:none;pointer-events:none;margin-left:-10%;margin-top:-5%;'; iframe.setAttribute('allowfullscreen', ''); wrapper.appendChild(iframe); inner.appendChild(wrapper);
     } else if (post.imageUrl && !post.imageUrl.startsWith('__')) {
@@ -375,13 +380,13 @@ function renderGrid(posts, plan) {
       } else {
         const img = document.createElement('img'); img.src = post.imageUrl; img.alt = post.name || ''; img.loading = 'lazy'; img.onerror = () => { img.style.display = 'none'; inner.appendChild(makePlaceholder('imagen no disponible')); }; inner.appendChild(img);
       }
-    } else { inner.appendChild(makePlaceholder('Link')); }
+    } else { inner.appendChild(makePlaceholder('')); }
     cell.appendChild(inner);
     if (planModeActive) {
       const planEntry = planOrder.find(p => p.pageId === post.pageId); const isMoved = planEntry && planEntry.moved; const dateToShow = planEntry ? planEntry.tentativeDate : post.publishDate;
       if (dateToShow) { const chip = document.createElement('div'); chip.className = 'date-chip' + (isMoved ? ' tentative' : ''); chip.textContent = dateToShow; cell.appendChild(chip); }
     }
-    if (!planModeActive) {
+    if (!planModeActive && !post.proBlocked) {
       const hoverInfo = document.createElement('div'); hoverInfo.className = 'cell-hover-info';
       const topRow = document.createElement('div'); topRow.className = 'hover-top-row';
       const iconDiv = document.createElement('div'); iconDiv.className = 'hover-icon'; const isCanva = post.imageSource === 'canva'; const isExternal = post.imageSource === 'link';
@@ -391,13 +396,13 @@ function renderGrid(posts, plan) {
       if (post.name) { const cap = document.createElement('div'); cap.className = 'hover-caption'; cap.textContent = post.name; hoverInfo.appendChild(cap); }
       cell.appendChild(hoverInfo);
     }
-    if (!planModeActive) cell.addEventListener('click', () => openModal(post));
+    if (!planModeActive && !post.proBlocked) cell.addEventListener('click', () => openModal(post));
     const isCarrusel = post.mediaType === 'carrusel' || (post.images && post.images.length > 1);
     if (plan === 'pro' && !planModeActive && (isCarrusel || post.mediaType === 'reel')) { const b = document.createElement('div'); b.className = 'badge-tr'; b.innerHTML = post.mediaType === 'reel' ? icons.reel : icons.carousel; cell.appendChild(b); }
     if (plan === 'pro' && !planModeActive && post.pinned) { const p = document.createElement('div'); p.className = 'badge-tl'; p.innerHTML = icons.pinned; cell.appendChild(p); }
     const isDragEnabled = planModeActive || (plan === 'pro' && settings.sortMode === 'custom');
     if (isDragEnabled) { cell.draggable = true; cell.addEventListener('dragstart', onDragStart); cell.addEventListener('dragover', onDragOver); cell.addEventListener('dragleave', onDragLeave); cell.addEventListener('drop', planModeActive ? onPlanDrop : onDrop); cell.addEventListener('dragend', onDragEnd); }
-    if (settings.showContentMap && post) {
+    if (settings.showContentMap && post && !post.proBlocked) {
       const overlay = document.createElement('div'); overlay.className = 'cell-map-overlay';
       const color = getPilarColor(post.pilar); overlay.style.background = post.pilar ? color + 'CC' : 'rgba(80,80,80,0.7)';
       const lbl = document.createElement('div'); lbl.className = 'cell-map-label'; lbl.textContent = post.pilar || '—'; overlay.appendChild(lbl); cell.appendChild(overlay);
@@ -509,6 +514,7 @@ function applyDarkMode() {
 }
 function applyWideGrid() { const grid = document.getElementById('grid'); if (grid) grid.classList.toggle('wide', settings.wideGrid); }
 function makePlaceholder(label) { const div = document.createElement('div'); div.className = 'cell-placeholder'; div.innerHTML = `${icons.canva}<span>${label}</span>`; return div; }
+function makeProPlaceholder() { const div = document.createElement('div'); div.className = 'cell-pro-placeholder'; div.innerHTML = `<span>Pro feature</span>`; return div; }
 loadWidget();
 </script>
 </body>
