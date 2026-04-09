@@ -58,7 +58,8 @@ export default async function handler(req, res) {
           const existingData = typeof raw === 'string' ? JSON.parse(raw) : raw;
           const updated = { ...existingData, plan: 'pro', upgradedAt: new Date().toISOString() };
           await redis.set(`setup:${existingSetupToken}`, JSON.stringify(updated));
-          const setupUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/activate.html?token=${existingSetupToken}`;
+          // ✅ upgrade=true agregado para que activate.html muestre pantalla de upgrade
+          const setupUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/activate.html?token=${existingSetupToken}&upgrade=true`;
           await resend.emails.send({
             from: 'The Content Edit <hola@thecontentedit.digital>',
             to: email,
