@@ -155,7 +155,7 @@
   .modal-date { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 2px; }
 
   /* POST PREVIEW TOGGLE BTN */
-  .modal-preview-btn { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.15); border: 0.5px solid rgba(255,255,255,0.3); color: #fff; border-radius: 999px; padding: 7px 18px; font-size: 11px; font-weight: 500; cursor: pointer; font-family: inherit; transition: background .2s; white-space: nowrap; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+  .modal-preview-btn { position: fixed; top: 16px; left: 16px; background: rgba(255,255,255,0.15); border: 0.5px solid rgba(255,255,255,0.3); color: #fff; border-radius: 999px; padding: 7px 18px; font-size: 11px; font-weight: 500; cursor: pointer; font-family: inherit; transition: background .2s; white-space: nowrap; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
   .modal-preview-btn:hover { background: rgba(255,255,255,0.25); }
 
   /* POST PREVIEW CARD */
@@ -575,9 +575,11 @@ function renderPostPreview() {
   // Imagen
   const imgArea = document.getElementById('pp-image');
   imgArea.innerHTML = '';
-  const imgUrl = modalImages[0];
+  const imgUrl = modalPost.imageUrl || modalImages[0];
   if (imgUrl && !isVideoUrl(imgUrl) && modalPost.imageSource !== 'canva') {
     const img = document.createElement('img'); img.src = imgUrl; img.alt = ''; imgArea.appendChild(img);
+  } else if (imgUrl && isVideoUrl(imgUrl)) {
+    const placeholder = document.createElement('div'); placeholder.className = 'pp-image-placeholder'; placeholder.textContent = 'video — ver imagen completa'; imgArea.appendChild(placeholder);
   } else {
     const placeholder = document.createElement('div'); placeholder.className = 'pp-image-placeholder'; placeholder.textContent = 'sin imagen'; imgArea.appendChild(placeholder);
   }
