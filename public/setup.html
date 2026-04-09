@@ -26,13 +26,13 @@
   .nav-step { font-size: 12px; color: var(--muted); }
   .page { max-width: 560px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
   .steps { display: flex; align-items: center; margin-bottom: 2rem; }
-  .step-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+  .step-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--muted); }
   .step-item.active { color: var(--ink); }
   .step-item.done { color: var(--success); }
   .step-circle { width: 22px; height: 22px; border-radius: 50%; border: 0.5px solid var(--border-strong); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; flex-shrink: 0; color: var(--muted); }
   .step-item.active .step-circle { background: var(--ink); color: var(--cream); border-color: var(--ink); }
   .step-item.done .step-circle { background: var(--success-bg); border-color: var(--success); color: var(--success); }
-  .step-line { flex: 1; height: 0.5px; background: var(--border); margin: 0 8px; }
+  .step-line { flex: 1; height: 0.5px; background: var(--border); margin: 0 5px; }
   .card { background: #fff; border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem; }
   .card-title { font-family: var(--serif); font-size: 18px; margin-bottom: 6px; letter-spacing: -0.01em; }
   .card-sub { font-size: 13px; color: var(--muted); line-height: 1.55; margin-bottom: 1.25rem; }
@@ -92,8 +92,6 @@
   .howto-toggle.open { color: var(--ink); }
   .howto-collapsible { overflow: hidden; max-height: 0; transition: max-height .3s ease, opacity .3s ease; opacity: 0; }
   .howto-collapsible.open { max-height: 600px; opacity: 1; }
-
-  /* UPGRADE CARD */
   .upgrade-card { border-radius: var(--radius); padding: 1.25rem 1.5rem; margin-bottom: 1rem; background: var(--ink); color: var(--cream); }
   .upgrade-card-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; color: var(--cream); }
   .upgrade-card-sub { font-size: 12px; color: rgba(249,246,241,0.6); margin-bottom: 14px; line-height: 1.55; }
@@ -113,6 +111,7 @@
 </nav>
 <div class="page">
 
+  <!-- LOADING -->
   <div class="screen active" id="screenLoading">
     <div style="text-align:center; padding:3rem 0; color:var(--muted); font-size:14px;">
       <div class="spinner" style="margin:0 auto 1rem;"></div>
@@ -120,6 +119,7 @@
     </div>
   </div>
 
+  <!-- INVÁLIDO -->
   <div class="screen" id="screenInvalid">
     <div class="center-msg">
       <h2>Link inválido o expirado</h2>
@@ -127,6 +127,7 @@
     </div>
   </div>
 
+  <!-- YA COMPLETADO -->
   <div class="screen" id="screenAlreadyDone">
     <div class="success-card" style="margin-bottom:1.5rem;">
       <div class="success-card-title">
@@ -171,16 +172,18 @@
     </div>
   </div>
 
-  <!-- PASO 1 -->
+  <!-- PASO 1: Plantilla -->
   <div class="screen" id="screenStep1">
     <div class="steps">
       <div class="step-item active"><div class="step-circle">1</div><span>Plantilla</span></div>
       <div class="step-line"></div>
-      <div class="step-item"><div class="step-circle">2</div><span>Integration</span></div>
+      <div class="step-item"><div class="step-circle">2</div><span>Token</span></div>
       <div class="step-line"></div>
-      <div class="step-item"><div class="step-circle">3</div><span>Database</span></div>
+      <div class="step-item"><div class="step-circle">3</div><span>Conectar</span></div>
       <div class="step-line"></div>
-      <div class="step-item"><div class="step-circle">4</div><span>Tu widget</span></div>
+      <div class="step-item"><div class="step-circle">4</div><span>URL</span></div>
+      <div class="step-line"></div>
+      <div class="step-item"><div class="step-circle">5</div><span>Widget</span></div>
     </div>
     <div class="card">
       <div class="card-title">Duplica la plantilla de Notion</div>
@@ -196,27 +199,29 @@
     </div>
   </div>
 
-  <!-- PASO 2 -->
+  <!-- PASO 2: Token -->
   <div class="screen" id="screenStep2">
     <div class="steps">
       <div class="step-item done"><div class="step-circle">✓</div><span>Plantilla</span></div>
       <div class="step-line"></div>
-      <div class="step-item active"><div class="step-circle">2</div><span>Integration</span></div>
+      <div class="step-item active"><div class="step-circle">2</div><span>Token</span></div>
       <div class="step-line"></div>
-      <div class="step-item"><div class="step-circle">3</div><span>Database</span></div>
+      <div class="step-item"><div class="step-circle">3</div><span>Conectar</span></div>
       <div class="step-line"></div>
-      <div class="step-item"><div class="step-circle">4</div><span>Tu widget</span></div>
+      <div class="step-item"><div class="step-circle">4</div><span>URL</span></div>
+      <div class="step-line"></div>
+      <div class="step-item"><div class="step-circle">5</div><span>Widget</span></div>
     </div>
     <div class="card">
       <div class="card-title">Crea una integración en Notion</div>
       <div class="card-sub">Necesitas una integración gratuita para que el widget pueda leer tu base de datos.</div>
       <button class="howto-toggle open" onclick="toggleHowto(this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-        Ocultar instrucciones
+        <span>Ocultar instrucciones</span>
       </button>
       <div class="howto-collapsible open">
         <div class="howto" style="margin-bottom:14px;">
-          <div class="howto-step"><div class="howto-n">1</div><span>Ve a <a href="https://www.notion.so/my-integrations" target="_blank" style="color:var(--ink);">notion.so/my-integrations</a></span></div>
+          <div class="howto-step"><div class="howto-n">1</div><span>Ve a <a href="https://www.notion.so/my-integrations" target="_blank" style="color:var(--ink);">notion.so/my-integrations</a> (o "Mis integraciones")</span></div>
           <div class="howto-step"><div class="howto-n">2</div><span>Click en <strong>"New integration"</strong></span></div>
           <div class="howto-step"><div class="howto-n">3</div><span>Dale un nombre (ej: "The Content Edit") y guarda</span></div>
           <div class="howto-step"><div class="howto-n">4</div><span>Copia el <strong>"Internal Integration Token"</strong> — empieza con <code>ntn_</code> o <code>secret_</code></span></div>
@@ -238,73 +243,105 @@
     </div>
   </div>
 
-  <!-- PASO 3 -->
+  <!-- PASO 3: Conectar integración -->
   <div class="screen" id="screenStep3">
     <div class="steps">
       <div class="step-item done"><div class="step-circle">✓</div><span>Plantilla</span></div>
       <div class="step-line"></div>
-      <div class="step-item done"><div class="step-circle">✓</div><span>Integration</span></div>
+      <div class="step-item done"><div class="step-circle">✓</div><span>Token</span></div>
       <div class="step-line"></div>
-      <div class="step-item active"><div class="step-circle">3</div><span>Database</span></div>
+      <div class="step-item active"><div class="step-circle">3</div><span>Conectar</span></div>
       <div class="step-line"></div>
-      <div class="step-item"><div class="step-circle">4</div><span>Tu widget</span></div>
+      <div class="step-item"><div class="step-circle">4</div><span>URL</span></div>
+      <div class="step-line"></div>
+      <div class="step-item"><div class="step-circle">5</div><span>Widget</span></div>
     </div>
     <div class="card">
-      <div class="card-title">Conecta tu base de datos</div>
-      <div class="card-sub">Primero conecta la integración a tu base de datos en Notion, luego pega la URL aquí.</div>
+      <div class="card-title">Conecta la integración a tu base de datos</div>
+      <div class="card-sub">Ahora tienes que darle acceso a la integración para que pueda leer tu base de datos en Notion.</div>
       <button class="howto-toggle open" onclick="toggleHowto(this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-        Ocultar instrucciones
+        <span>Ocultar instrucciones</span>
+      </button>
+      <div class="howto-collapsible open">
+        <div class="howto">
+          <div class="howto-step"><div class="howto-n">1</div><span>Abre tu base de datos en Notion en <strong>otra pestaña</strong></span></div>
+          <div class="howto-step"><div class="howto-n">2</div><span>Click en <code>···</code> arriba a la derecha</span></div>
+          <div class="howto-step"><div class="howto-n">3</div><span>Click en <strong>"Connections"</strong> (o "Conexiones") → busca tu integración → selecciónala</span></div>
+          <div class="howto-step"><div class="howto-n">4</div><span>Confirma el acceso — debería aparecer un check verde</span></div>
+        </div>
+      </div>
+    </div>
+    <div id="toggle3" class="toggle-confirm" onclick="toggleConfirm(3)">
+      <div class="toggle-switch"></div>
+      <span>Ya conecté la integración a mi base de datos</span>
+    </div>
+    <div class="btn-row">
+      <button class="btn-ghost" onclick="goStep(2)">← Atrás</button>
+      <button class="btn-primary" id="btn3" disabled onclick="goStep(4)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- PASO 4: URL de la base de datos -->
+  <div class="screen" id="screenStep4">
+    <div class="steps">
+      <div class="step-item done"><div class="step-circle">✓</div><span>Plantilla</span></div>
+      <div class="step-line"></div>
+      <div class="step-item done"><div class="step-circle">✓</div><span>Token</span></div>
+      <div class="step-line"></div>
+      <div class="step-item done"><div class="step-circle">✓</div><span>Conectar</span></div>
+      <div class="step-line"></div>
+      <div class="step-item active"><div class="step-circle">4</div><span>URL</span></div>
+      <div class="step-line"></div>
+      <div class="step-item"><div class="step-circle">5</div><span>Widget</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Copia la URL de tu base de datos</div>
+      <div class="card-sub">En la misma pestaña donde tienes tu base de datos en Notion, copia su URL y pégala aquí.</div>
+      <button class="howto-toggle open" onclick="toggleHowto(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        <span>Ocultar instrucciones</span>
       </button>
       <div class="howto-collapsible open">
         <div class="howto" style="margin-bottom:14px;">
-          <div class="howto-step"><div class="howto-n">1</div><span>Abre tu base de datos en Notion</span></div>
-          <div class="howto-step"><div class="howto-n">2</div><span>Click en <code>···</code> arriba a la derecha</span></div>
-          <div class="howto-step"><div class="howto-n">3</div><span>Click en <strong>"Connections"</strong> → busca tu integración → selecciónala</span></div>
-          <div class="howto-step"><div class="howto-n">4</div><span>Confirma el acceso</span></div>
+          <div class="howto-step"><div class="howto-n">1</div><span>En la pestaña de Notion, asegúrate de que la base de datos esté en <strong>página completa</strong></span></div>
+          <div class="howto-step"><div class="howto-n">2</div><span>Haz click en <code>···</code> arriba a la derecha</span></div>
+          <div class="howto-step"><div class="howto-n">3</div><span>Click en <strong>"Copiar enlace"</strong> y pégalo aquí abajo</span></div>
+          <div class="howto-step"><div class="howto-n">4</div><span><strong>Importante:</strong> hazlo desde el navegador web — en la app de Notion no aparece la URL</span></div>
         </div>
-      </div>
-      <div id="toggle3" class="toggle-confirm" onclick="toggleConfirm(3)" style="margin-bottom:14px;">
-        <div class="toggle-switch"></div>
-        <span>Ya conecté la integración a mi base de datos</span>
       </div>
       <div class="field">
         <label>URL de tu base de datos</label>
-        <input type="text" id="notionDbUrl" placeholder="https://www.notion.so/workspace/..." oninput="checkStep3()"/>
-        <div class="field-hint">Pega la URL de tu base de datos. <strong>Hazlo desde el navegador web</strong> — en la app de Notion no es posible copiar la URL.</div>
-        <button class="howto-toggle open" onclick="toggleHowto(this)" style="margin-top:10px;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-          <span>Ocultar instrucciones</span>
-        </button>
-        <div class="howto-collapsible open">
-          <div class="howto" style="margin-top:4px;">
-            <div class="howto-step"><div class="howto-n">1</div><span>Abre tu base de datos en Notion en <strong>página completa</strong></span></div>
-            <div class="howto-step"><div class="howto-n">2</div><span>Haz click en <code>···</code> arriba a la derecha</span></div>
-            <div class="howto-step"><div class="howto-n">3</div><span>Click en <strong>"Copiar enlace"</strong> y pégalo aquí</span></div>
-          </div>
-        </div>
+        <input type="text" id="notionDbUrl" placeholder="https://www.notion.so/workspace/..." oninput="checkStep4()"/>
+        <div class="field-hint">Debe ser la URL de tu base de datos, no de una página.</div>
       </div>
       <div id="connectStatus" class="status idle">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         Ingresa la URL para continuar
       </div>
     </div>
+    <div id="toggle4" class="toggle-confirm" onclick="toggleConfirm(4)">
+      <div class="toggle-switch"></div>
+      <span>Ya pegué la URL de mi base de datos</span>
+    </div>
     <div class="btn-row">
-      <button class="btn-ghost" onclick="goStep(2)">← Atrás</button>
-      <button class="btn-primary" id="btn3" disabled onclick="connectNotion()">Crear mi widget →</button>
+      <button class="btn-ghost" onclick="goStep(3)">← Atrás</button>
+      <button class="btn-primary" id="btn4" disabled onclick="connectNotion()">Crear mi widget →</button>
     </div>
   </div>
 
-  <!-- PASO 4 -->
-  <div class="screen" id="screenStep4">
+  <!-- PASO 5: Widget listo -->
+  <div class="screen" id="screenStep5">
     <div class="steps">
       <div class="step-item done"><div class="step-circle">✓</div><span>Plantilla</span></div>
       <div class="step-line"></div>
-      <div class="step-item done"><div class="step-circle">✓</div><span>Integration</span></div>
+      <div class="step-item done"><div class="step-circle">✓</div><span>Token</span></div>
       <div class="step-line"></div>
-      <div class="step-item done"><div class="step-circle">✓</div><span>Database</span></div>
+      <div class="step-item done"><div class="step-circle">✓</div><span>Conectar</span></div>
       <div class="step-line"></div>
-      <div class="step-item active"><div class="step-circle">4</div><span>Tu widget</span></div>
+      <div class="step-item done"><div class="step-circle">✓</div><span>URL</span></div>
+      <div class="step-line"></div>
+      <div class="step-item active"><div class="step-circle">5</div><span>Widget</span></div>
     </div>
     <div class="success-card">
       <div class="success-card-title">
@@ -323,7 +360,7 @@
           <button class="copy-btn" id="copyBtnGrid" onclick="copyEmbed('embedUrl', this)">copiar</button>
         </div>
       </div>
-      <div class="url-block" id="step4-bio-block">
+      <div class="url-block" id="step5-bio-block">
         <div class="url-label"><span>Solo bio & highlights</span><span class="url-tag bio">BIO</span></div>
         <div class="embed-wrap">
           <div class="embed-url" id="embedBioUrl"></div>
@@ -332,18 +369,18 @@
       </div>
       <button class="howto-toggle open" onclick="toggleHowto(this)" style="margin-top:14px;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-        Cómo embeber en Notion
+        <span>Cómo embeber en Notion</span>
       </button>
       <div class="howto-collapsible open">
         <div class="howto">
           <div class="howto-step"><div class="howto-n">1</div><span>En Notion escribe <code>/embed</code></span></div>
           <div class="howto-step"><div class="howto-n">2</div><span>Pega el link que necesites y presiona <strong>Embed link</strong></span></div>
           <div class="howto-step"><div class="howto-n">3</div><span>Ajusta el tamaño del bloque</span></div>
-          <div class="howto-step"><div class="howto-n">4</div><span>Cada vez que actualices tu base de datos, solo refresca el widget</span></div>
+          <div class="howto-step"><div class="howto-n">4</div><span>Cada vez que actualices tu base de datos, presiona el botón de Refresh en el widget</span></div>
         </div>
       </div>
       <div class="note" style="margin-top:12px; margin-bottom:16px;"><strong>¿Quieres otro widget?</strong> Puedes repetir el setup con una base de datos diferente.</div>
-      <div id="upgrade-card-step4" style="display:none;" class="upgrade-card">
+      <div id="upgrade-card-step5" style="display:none;" class="upgrade-card">
         <div class="upgrade-card-title">Ya tienes el Free — pero te estás perdiendo lo mejor.</div>
         <div class="upgrade-card-sub">Haz upgrade a Pro una sola vez y desbloquea todo para siempre.</div>
         <ul class="upgrade-features">
