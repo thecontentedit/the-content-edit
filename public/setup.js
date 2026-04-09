@@ -78,10 +78,10 @@ function extractDbId(input) {
 }
 
 async function connectNotion() {
-  // Usar el token guardado, con fallback a sessionStorage y luego al input
-  const token = savedNotionToken 
-    || (function(){ try { return sessionStorage.getItem('tce_notion_token') || ''; } catch(e) { return ''; } })()
-    || document.getElementById('notionToken').value.trim();
+  // Leer directamente del input — el DOM persiste aunque la pantalla esté oculta
+  const tokenFromInput = document.getElementById('notionToken').value.trim();
+  const token = tokenFromInput || savedNotionToken 
+    || (function(){ try { return sessionStorage.getItem('tce_notion_token') || ''; } catch(e) { return ''; } })();
   const dbUrl = document.getElementById('notionDbUrl').value.trim();
   const dbId = extractDbId(dbUrl);
   const status = document.getElementById('connectStatus');
