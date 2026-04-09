@@ -58,7 +58,7 @@ export default async function handler(req, res) {
           const existingData = typeof raw === 'string' ? JSON.parse(raw) : raw;
           const updated = { ...existingData, plan: 'pro', upgradedAt: new Date().toISOString() };
           await redis.set(`setup:${existingSetupToken}`, JSON.stringify(updated));
-          const setupUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/setup.html?token=${existingSetupToken}`;
+          const setupUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/activate.html?token=${existingSetupToken}`;
           await resend.emails.send({
             from: 'The Content Edit <hola@thecontentedit.digital>',
             to: email,
@@ -84,7 +84,7 @@ export default async function handler(req, res) {
     await redis.set(`license:${licenseKey}`, setupToken);
     await redis.set(`email:${email}`, setupToken);
 
-    const setupUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/setup.html?token=${setupToken}`;
+    const setupUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/activate.html?token=${setupToken}`;
     const firstName = customerName ? customerName.split(' ')[0] : '';
 
     await resend.emails.send({
