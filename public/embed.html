@@ -572,19 +572,24 @@ function renderPostPreview() {
   // Imagen — clonar la que ya está cargada en el modal para evitar CORS
   const imgArea = document.getElementById('pp-image');
   imgArea.innerHTML = '';
-  const existingModalImg = document.getElementById('modal-img');
-  if (existingModalImg && existingModalImg.tagName === 'IMG' && existingModalImg.src) {
-    const cloned = existingModalImg.cloneNode(true);
-    cloned.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
-    imgArea.appendChild(cloned);
-  } else if (existingModalImg && existingModalImg.tagName === 'VIDEO') {
-    const placeholder = document.createElement('div'); placeholder.className = 'pp-image-placeholder'; placeholder.textContent = 'video — ver imagen completa'; imgArea.appendChild(placeholder);
+  const currentPlan = cachedData?.plan;
+  if (currentPlan !== 'pro') {
+    const ph = document.createElement('div'); ph.className = 'pp-image-placeholder'; ph.textContent = 'Función Pro'; imgArea.appendChild(ph);
   } else {
-    const imgUrl = modalPost.imageUrl || modalImages[0];
-    if (imgUrl && !isVideoUrl(imgUrl) && modalPost.imageSource !== 'canva') {
-      const img = document.createElement('img'); img.src = imgUrl; img.alt = ''; img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;'; imgArea.appendChild(img);
+    const existingModalImg = document.getElementById('modal-img');
+    if (existingModalImg && existingModalImg.tagName === 'IMG' && existingModalImg.src) {
+      const cloned = existingModalImg.cloneNode(true);
+      cloned.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+      imgArea.appendChild(cloned);
+    } else if (existingModalImg && existingModalImg.tagName === 'VIDEO') {
+      const placeholder = document.createElement('div'); placeholder.className = 'pp-image-placeholder'; placeholder.textContent = 'video — ver imagen completa'; imgArea.appendChild(placeholder);
     } else {
-      const ph = document.createElement('div'); ph.className = 'pp-image-placeholder'; ph.textContent = 'sin imagen'; imgArea.appendChild(ph);
+      const imgUrl = modalPost.imageUrl || modalImages[0];
+      if (imgUrl && !isVideoUrl(imgUrl) && modalPost.imageSource !== 'canva') {
+        const img = document.createElement('img'); img.src = imgUrl; img.alt = ''; img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;'; imgArea.appendChild(img);
+      } else {
+        const ph = document.createElement('div'); ph.className = 'pp-image-placeholder'; ph.textContent = 'sin imagen'; imgArea.appendChild(ph);
+      }
     }
   }
   // Likes
