@@ -5,6 +5,13 @@ const toggleStates = { 1: false, 2: false, 3: false };
 let savedNotionToken = '';
 
 async function init() {
+  // Limpiar sessionStorage de sesiones anteriores
+  try {
+    const stored = sessionStorage.getItem('tce_notion_token');
+    if (stored && stored.startsWith('http')) {
+      sessionStorage.removeItem('tce_notion_token');
+    }
+  } catch(e) {}
   if (!setupToken) { showScreen('screenInvalid'); return; }
   try {
     const res = await fetch(`${BASE_URL}/api/setup?token=${setupToken}`);
