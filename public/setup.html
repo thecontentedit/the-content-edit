@@ -14,6 +14,7 @@
     --border: rgba(28,25,21,0.1); --border-strong: rgba(28,25,21,0.22);
     --success: #2D6A4F; --success-bg: #EAF4EE;
     --error: #A32D2D; --error-bg: #FCEBEB;
+    --accent: #7A3B4A;
     --serif: 'DM Serif Display', Georgia, serif;
     --sans: 'DM Sans', system-ui, sans-serif;
     --radius: 12px; --radius-sm: 8px;
@@ -42,7 +43,6 @@
   .field-hint { font-size: 11px; color: var(--muted); margin-top: 5px; line-height: 1.5; }
   .field-hint a { color: var(--ink); }
   .howto { background: var(--cream); border-radius: var(--radius-sm); padding: 12px 14px; margin-top: 8px; }
-  .howto-title { font-size: 11px; font-weight: 500; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em; }
   .howto-step { display: flex; gap: 8px; align-items: flex-start; font-size: 12px; color: var(--muted); margin-bottom: 6px; line-height: 1.5; }
   .howto-step:last-child { margin-bottom: 0; }
   .howto-n { width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 0.5px solid var(--border-strong); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 500; flex-shrink: 0; color: var(--muted); }
@@ -85,8 +85,6 @@
   .center-msg p { font-size: 14px; color: var(--muted); line-height: 1.6; }
   .note { font-size: 12px; color: var(--muted); line-height: 1.6; padding: 10px 12px; background: rgba(28,25,21,.04); border-radius: var(--radius-sm); margin-top: 8px; }
   .note strong { color: var(--ink); font-weight: 500; }
-
-  /* SHOW/HIDE INSTRUCTIONS */
   .howto-toggle { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 500; color: var(--muted); cursor: pointer; margin-bottom: 8px; padding: 4px 0; border: none; background: none; font-family: var(--sans); letter-spacing: .04em; text-transform: uppercase; transition: color .15s; user-select: none; }
   .howto-toggle:hover { color: var(--ink); }
   .howto-toggle svg { width: 12px; height: 12px; transition: transform .2s; flex-shrink: 0; }
@@ -94,6 +92,18 @@
   .howto-toggle.open { color: var(--ink); }
   .howto-collapsible { overflow: hidden; max-height: 0; transition: max-height .3s ease, opacity .3s ease; opacity: 0; }
   .howto-collapsible.open { max-height: 600px; opacity: 1; }
+
+  /* UPGRADE CARD */
+  .upgrade-card { border-radius: var(--radius); padding: 1.25rem 1.5rem; margin-bottom: 1rem; background: var(--ink); color: var(--cream); }
+  .upgrade-card-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; color: var(--cream); }
+  .upgrade-card-sub { font-size: 12px; color: rgba(249,246,241,0.6); margin-bottom: 14px; line-height: 1.55; }
+  .upgrade-features { list-style: none; margin-bottom: 16px; display: flex; flex-direction: column; gap: 6px; }
+  .upgrade-features li { font-size: 12px; color: rgba(249,246,241,0.85); display: flex; align-items: center; gap: 8px; }
+  .upgrade-features li span.feat-icon { font-size: 13px; width: 18px; text-align: center; flex-shrink: 0; }
+  .upgrade-features li span.feat-new { font-size: 9px; background: var(--accent); color: #fff; padding: 1px 5px; border-radius: 999px; margin-left: 4px; letter-spacing: .04em; }
+  .btn-upgrade { display: block; background: #fff; color: var(--ink); text-align: center; padding: 11px; border-radius: 999px; font-size: 13px; font-weight: 500; text-decoration: none; transition: opacity .2s; }
+  .btn-upgrade:hover { opacity: .85; }
+  .upgrade-note { font-size: 11px; color: rgba(249,246,241,0.45); margin-top: 10px; text-align: center; }
 </style>
 </head>
 <body>
@@ -143,10 +153,21 @@
         </div>
       </div>
     </div>
-    <div id="upgrade-card" style="display:none; background:#F9F6F1; border:0.5px solid rgba(28,25,21,0.12); border-radius:var(--radius); padding:1.25rem 1.5rem; margin-bottom:1rem;">
-      <p style="font-size:13px; color:var(--muted); margin:0 0 10px; line-height:1.6;">Estás en el <strong style="color:var(--ink);">Plan Free.</strong> Haz upgrade a Pro para desbloquear Plan Grid, Content Map, Dark mode, vista 5 columnas y Profile Preview.</p>
-      <p style="font-size:11px; color:var(--muted); margin:0 0 14px;">Usa este mismo email al comprar para que tu widget se actualice automáticamente.</p>
-      <a href="https://thecontentedit.lemonsqueezy.com/checkout/buy/827cbae3-e9c5-4912-ad09-701097b4c3d6?logo=0&discount=0" target="_blank" style="display:block; background:var(--ink); color:#F9F6F1; text-align:center; padding:11px; border-radius:999px; font-size:13px; font-weight:500; text-decoration:none;">Upgrade a Pro →</a>
+    <div id="upgrade-card" style="display:none;" class="upgrade-card">
+      <div class="upgrade-card-title">Ya tienes el Free — pero te estás perdiendo lo mejor.</div>
+      <div class="upgrade-card-sub">Haz upgrade a Pro una sola vez y desbloquea todo para siempre.</div>
+      <ul class="upgrade-features">
+        <li><span class="feat-icon">🎨</span> Canva Connect — pega tu link y aparece directo</li>
+        <li><span class="feat-icon">🔗</span> Links externos — Pinterest, URLs, lo que sea</li>
+        <li><span class="feat-icon">🗺️</span> Content Map — ve tu feed por pilares</li>
+        <li><span class="feat-icon">📅</span> Plan Grid — drag & drop para cambiar fechas</li>
+        <li><span class="feat-icon">👤</span> Profile Preview — visualiza tu bio completa</li>
+        <li><span class="feat-icon">🌙</span> Dark mode — tu widget, tu aesthetic</li>
+        <li><span class="feat-icon">⊞</span> Vista 5 columnas — como en Instagram desktop</li>
+        <li><span class="feat-icon">✦</span> Post Preview — ve cómo se verá tu post publicado <span class="feat-new">PRÓXIMO</span></li>
+      </ul>
+      <a href="https://thecontentedit.lemonsqueezy.com/checkout/buy/cd1c69d1-0d45-48a1-90e4-8e489f2aac0c?logo=0" class="btn-upgrade">Upgrade a Pro — $449 MXN →</a>
+      <p class="upgrade-note">Usa este mismo email al comprar — tu widget se actualiza automáticamente.</p>
     </div>
   </div>
 
@@ -309,10 +330,21 @@
           <button class="copy-btn" id="copyBtnBio" onclick="copyEmbed('embedBioUrl', this)">copiar</button>
         </div>
       </div>
-      <div id="upgrade-card-step4" style="display:none; background:#F9F6F1; border:0.5px solid rgba(28,25,21,0.12); border-radius:var(--radius-sm); padding:1rem 1.25rem; margin-bottom:12px;">
-        <p style="font-size:13px; color:var(--muted); margin:0 0 8px; line-height:1.6;">Estás en el <strong style="color:var(--ink);">Plan Free.</strong> Haz upgrade a Pro para desbloquear Plan Grid, Content Map, Dark mode y Profile Preview.</p>
-        <p style="font-size:11px; color:var(--muted); margin:0 0 12px;">Usa este mismo email al comprar para que tu widget se actualice automáticamente.</p>
-        <a href="https://thecontentedit.lemonsqueezy.com/checkout/buy/827cbae3-e9c5-4912-ad09-701097b4c3d6?logo=0&discount=0" target="_blank" style="display:block; background:var(--ink); color:#F9F6F1; text-align:center; padding:10px; border-radius:999px; font-size:13px; font-weight:500; text-decoration:none;">Upgrade a Pro →</a>
+      <div id="upgrade-card-step4" style="display:none;" class="upgrade-card">
+        <div class="upgrade-card-title">Ya tienes el Free — pero te estás perdiendo lo mejor.</div>
+        <div class="upgrade-card-sub">Haz upgrade a Pro una sola vez y desbloquea todo para siempre.</div>
+        <ul class="upgrade-features">
+          <li><span class="feat-icon">🎨</span> Canva Connect — pega tu link y aparece directo</li>
+          <li><span class="feat-icon">🔗</span> Links externos — Pinterest, URLs, lo que sea</li>
+          <li><span class="feat-icon">🗺️</span> Content Map — ve tu feed por pilares</li>
+          <li><span class="feat-icon">📅</span> Plan Grid — drag & drop para cambiar fechas</li>
+          <li><span class="feat-icon">👤</span> Profile Preview — visualiza tu bio completa</li>
+          <li><span class="feat-icon">🌙</span> Dark mode — tu widget, tu aesthetic</li>
+          <li><span class="feat-icon">⊞</span> Vista 5 columnas — como en Instagram desktop</li>
+          <li><span class="feat-icon">✦</span> Post Preview — ve cómo se verá tu post publicado <span class="feat-new">PRÓXIMO</span></li>
+        </ul>
+        <a href="https://thecontentedit.lemonsqueezy.com/checkout/buy/cd1c69d1-0d45-48a1-90e4-8e489f2aac0c?logo=0" class="btn-upgrade">Upgrade a Pro — $449 MXN →</a>
+        <p class="upgrade-note">Usa este mismo email al comprar — tu widget se actualiza automáticamente.</p>
       </div>
       <button class="howto-toggle open" onclick="toggleHowto(this)" style="margin-top:14px;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
@@ -328,7 +360,6 @@
       </div>
       <div class="note" style="margin-top:12px;"><strong>¿Quieres otro widget?</strong> Puedes repetir el setup con una DB diferente.</div>
     </div>
-
   </div>
 
 </div>
