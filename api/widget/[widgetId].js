@@ -29,7 +29,7 @@ const PROPS = {
   caption:      'Caption',
   likes:        'Likes',
   song:         'Canción',
-  portada:      'Portada', // ✅ nueva propiedad para thumbnail de video
+  portada:      'Portada Reel', // ✅ nueva propiedad para thumbnail de video
 };
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
