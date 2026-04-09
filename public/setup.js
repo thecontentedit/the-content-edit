@@ -40,6 +40,7 @@ function goStep(n) {
     const tokenInput = document.getElementById('notionToken').value.trim();
     if (tokenInput.length > 10) {
       savedNotionToken = tokenInput;
+      try { sessionStorage.setItem('tce_notion_token', tokenInput); } catch(e) {}
     }
   }
   showScreen('screenStep' + n);
@@ -70,8 +71,10 @@ function extractDbId(input) {
 }
 
 async function connectNotion() {
-  // Usar el token guardado, con fallback al input en caso de que regresó al paso 2
-  const token = savedNotionToken || document.getElementById('notionToken').value.trim();
+  // Usar el token guardado, con fallback a sessionStorage y luego al input
+  const token = savedNotionToken 
+    || (function(){ try { return sessionStorage.getItem('tce_notion_token') || ''; } catch(e) { return ''; } })()
+    || document.getElementById('notionToken').value.trim();
   const dbUrl = document.getElementById('notionDbUrl').value.trim();
   const dbId = extractDbId(dbUrl);
   const status = document.getElementById('connectStatus');
@@ -110,6 +113,7 @@ async function connectNotion() {
 
     status.className = 'status success';
     status.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> ¡Conexión exitosa!`;
+    try { sessionStorage.removeItem('tce_notion_token'); } catch(e) {}
 
     document.getElementById('embedUrl').textContent = data.embedUrl;
 
