@@ -39,10 +39,9 @@ body { font-family: var(--sans); background: var(--cream); color: var(--ink); -w
 .btn-ghost:hover { background: rgba(28,25,21,.04); }
 .note { font-size: 11px; color: #B0A89E; margin-top: 1.5rem; line-height: 1.6; text-align: center; max-width: 280px; font-weight: 300; }
 .footer { font-size: 11px; color: #C8C0B8; margin-top: 2.5rem; font-weight: 300; }
-
 @media (max-width: 700px) {
   .right { display: none; }
-  .left { padding: 2.5rem 1.5rem; }
+  .left { width: 100%; padding: 2.5rem 1.5rem; }
 }
 </style>
 </head>
@@ -60,20 +59,20 @@ body { font-family: var(--sans); background: var(--cream); color: var(--ink); -w
     </div>
     <a id="setupLink" href="#" class="btn-primary">Ir al setup →</a>
     <button class="btn-ghost" onclick="copyUrl()">Copiar link</button>
-    <p class="note">¿Perdiste este link? Búscalo en tu email de confirmación de compra o escríbenos a <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4f2720232e0f3b272a2c20213b2a213b2a2b263b612b2628263b2e23">[email&#160;protected]</a></p>
+    <p class="note">¿Perdiste este link? Búscalo en tu email de confirmación de compra o escríbenos por Instagram.</p>
     <p class="footer">© 2025 The Content Edit</p>
   </div>
   <div class="right">
     <img src="/activate-photo.png" alt="The Content Edit widget en Notion"/>
   </div>
 </div>
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 const params = new URLSearchParams(location.search);
 const token = params.get('token');
 const BASE_URL = location.origin;
 
 if (token) {
-  const setupUrl = `${BASE_URL}/setup.html?token=${token}`;
+  const setupUrl = BASE_URL + '/setup.html?token=' + token;
   document.getElementById('setupUrl').textContent = setupUrl;
   document.getElementById('setupLink').href = setupUrl;
 } else {
@@ -84,5 +83,13 @@ if (token) {
 function copyUrl() {
   const url = document.getElementById('setupUrl').textContent;
   if (!url || url.includes('no válido')) return;
-  navigator.clipboard.writeText(url).then(() => {
-    const b
+  navigator.clipboard.writeText(url).then(function() {
+    var btn = document.getElementById('copyBtn');
+    btn.textContent = '✓ copiado';
+    btn.classList.add('copied');
+    setTimeout(function() { btn.textContent = 'copiar'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>
