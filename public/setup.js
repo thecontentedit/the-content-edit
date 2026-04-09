@@ -2,6 +2,7 @@ const params = new URLSearchParams(location.search);
 const setupToken = params.get('token');
 const BASE_URL = location.origin;
 const toggleStates = { 1: false, 2: false, 3: false };
+let savedNotionToken = '';
 
 async function init() {
   if (!setupToken) { showScreen('screenInvalid'); return; }
@@ -13,12 +14,10 @@ async function init() {
       document.getElementById('alreadyEmbedUrl').textContent = data.widgetUrl;
 
       if (data.plan === 'pro') {
-        // Pro: mostrar URL de bio, ocultar botón upgrade
         document.getElementById('alreadyBioUrl').textContent = data.widgetUrl + '?mode=bio';
         document.getElementById('already-bio-block').style.display = 'block';
         document.getElementById('upgrade-card').style.display = 'none';
       } else {
-        // Free: ocultar URL de bio, mostrar botón upgrade
         document.getElementById('already-bio-block').style.display = 'none';
         document.getElementById('upgrade-card').style.display = 'block';
       }
@@ -35,7 +34,16 @@ function showScreen(id) {
   window.scrollTo(0, 0);
 }
 
-function goStep(n) { showScreen('screenStep' + n); }
+function goStep(n) {
+  // Guardar el token antes de avanzar del paso 2
+  if (n === 3) {
+    const tokenInput = document.getElementById('notionToken').value.trim();
+    if (tokenInput.length > 10) {
+      savedNotionToken = tokenInput;
+    }
+  }
+  showScreen('screenStep' + n);
+}
 
 function toggleConfirm(n) {
   toggleStates[n] = !toggleStates[n];
@@ -62,11 +70,18 @@ function extractDbId(input) {
 }
 
 async function connectNotion() {
-  const token = document.getElementById('notionToken').value.trim();
+  // Usar el token guardado, con fallback al input en caso de que regresó al paso 2
+  const token = savedNotionToken || document.getElementById('notionToken').value.trim();
   const dbUrl = document.getElementById('notionDbUrl').value.trim();
   const dbId = extractDbId(dbUrl);
   const status = document.getElementById('connectStatus');
   const btn = document.getElementById('btn3');
+
+  if (!token || token.length < 10) {
+    status.className = 'status error';
+    status.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg> Token inválido. Regresa al paso anterior y vuelve a pegarlo.`;
+    return;
+  }
 
   if (!dbId) {
     status.className = 'status error';
@@ -98,7 +113,6 @@ async function connectNotion() {
 
     document.getElementById('embedUrl').textContent = data.embedUrl;
 
-    // Solo mostrar Bio URL si es Pro
     const bioBlock = document.getElementById('step4-bio-block');
     const upgradeCardStep4 = document.getElementById('upgrade-card-step4');
     if (data.plan === 'pro') {
