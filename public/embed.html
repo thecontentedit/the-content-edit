@@ -501,6 +501,9 @@ function exitPlanMode(save) {
   if (!save) renderGrid(cachedData.posts, cachedData.plan);
 }
 async function savePlanMode() {
+  // ✅ Widget demo — no guardar cambios
+  const DEMO_WIDGET_ID = 'wDm0yR8-oaJUvRiPtKHDog';
+  if (widgetId === DEMO_WIDGET_ID) { exitPlanMode(false); return; }
   const changes = planOrder.filter(p => p.moved); if (changes.length === 0) { exitPlanMode(false); return; }
   const btn = document.getElementById('btn-save'); btn.disabled = true; btn.textContent = 'Guardando…';
   const indicator = document.getElementById('saving-indicator'); indicator.textContent = 'Guardando orden…'; indicator.style.display = 'block';
