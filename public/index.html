@@ -160,8 +160,32 @@ nav {
   font-weight: 300; margin-bottom: 40px;
 }
 
-.hero-visual-img {
-  max-width: 700px; margin: 0 auto; display: block; width: 100%;
+/* IPAD MOCKUP CON VIDEO */
+.ipad-mockup-wrapper {
+  position: relative;
+  max-width: 700px;
+  margin: 0 auto;
+  display: block;
+}
+
+.ipad-frame-img {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: block;
+  filter: drop-shadow(0 24px 48px rgba(0,0,0,0.25));
+}
+
+.ipad-screen-video {
+  position: absolute;
+  top: 19.9%;
+  left: 18.9%;
+  width: 64.4%;
+  height: 62.6%;
+  object-fit: cover;
+  border-radius: 4px;
+  z-index: 1;
+  mix-blend-mode: multiply;
 }
 
 /* TICKER */
@@ -449,6 +473,12 @@ footer {
   .plans { grid-template-columns: 1fr; }
   .nav-links { display: none; }
   .feat-grid { grid-template-columns: 1fr; }
+  .ipad-screen-video {
+    top: 19.5%;
+    left: 18.5%;
+    width: 65%;
+    height: 63%;
+  }
 }
 
 @media (max-width: 768px) {
@@ -457,7 +487,6 @@ footer {
   }
   .container-wide { padding: 0 1.25rem; }
 
-  /* Content Map mobile */
   #content-map-inner {
     grid-template-columns: 1fr !important;
   }
@@ -466,12 +495,10 @@ footer {
     order: -1;
   }
 
-  /* Profile Preview mobile */
   #profile-preview-inner {
     grid-template-columns: 1fr !important;
   }
 
-  /* Testimonios mobile */
   #testimonios-inner {
     grid-template-columns: 1fr !important;
   }
@@ -479,7 +506,6 @@ footer {
     grid-template-columns: 1fr !important;
   }
 
-  /* Features grid mobile */
   .feat-grid {
     grid-template-columns: 1fr 1fr !important;
   }
@@ -517,14 +543,30 @@ footer {
   </div>
 </section>
 
-<!-- HERO BLOQUE 2 — BURDEOS + IPAD -->
+<!-- HERO BLOQUE 2 — BURDEOS + IPAD CON VIDEO -->
 <div class="hero-visual">
   <div class="container">
     <span class="hero-visual-label">Así se ve en Notion</span>
     <h2>Tu base de datos + tu grid,<br><em>en el mismo lugar.</em></h2>
     <p>Planeas en Notion. El widget lo visualiza al instante.</p>
   </div>
-  <img src="/iPad___Apple_Pencil.png" alt="The Content Edit widget en iPad" class="hero-visual-img" style="filter: drop-shadow(0 24px 48px rgba(0,0,0,0.25));"/>
+  <div class="ipad-mockup-wrapper">
+    <video
+      class="ipad-screen-video"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto"
+    >
+      <source src="/demo.mp4" type="video/mp4">
+    </video>
+    <img
+      src="/iPad___Apple_Pencil.png"
+      alt="The Content Edit widget en iPad"
+      class="ipad-frame-img"
+    />
+  </div>
 </div>
 
 <!-- TICKER -->
@@ -602,7 +644,6 @@ footer {
     </div>
   </div>
 </section>
-
 
 <!-- PROFILE PREVIEW -->
 <section style="background:#FAFAF8;">
@@ -693,8 +734,6 @@ footer {
     </div>
   </div>
 </section>
-
-
 
 <!-- TESTIMONIOS -->
 <section id="testimonios">
@@ -799,7 +838,7 @@ footer {
     <a href="#">Política de privacidad</a>
   </div>
   <p class="footer-copy">© 2025 The Content Edit. Todos los derechos reservados.</p>
-<p class="footer-copy" style="margin-top:4px;">Las imágenes de referencia son únicamente con fines ilustrativos. Todos los derechos pertenecen a sus respectivos dueños.</p>
+  <p class="footer-copy" style="margin-top:4px;">Las imágenes de referencia son únicamente con fines ilustrativos. Todos los derechos pertenecen a sus respectivos dueños.</p>
 </footer>
 
 <script>
@@ -840,25 +879,6 @@ const observer = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.1 });
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-(function() {
-  var cards = document.querySelectorAll('.t-card');
-  if (!cards.length) return;
-  function update() {
-    var container = document.getElementById('testimonios-container');
-    if (!container) return;
-    var rect = container.getBoundingClientRect();
-    var progress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
-    progress = Math.max(0, Math.min(1, progress));
-    cards.forEach(function(card) {
-      var speed = parseFloat(card.dataset.speed) || 0.3;
-      var offset = (progress - 0.5) * speed * 160;
-      card.style.transform = 'translateY(' + offset + 'px)';
-    });
-  }
-  window.addEventListener('scroll', update, { passive: true });
-  update();
-})();
 </script>
 </body>
 </html>
