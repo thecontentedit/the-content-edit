@@ -163,7 +163,7 @@ nav {
 /* IPAD MOCKUP CON VIDEO */
 .ipad-mockup-wrapper {
   position: relative;
-  max-width: 700px;
+  max-width: 900px;
   margin: 0 auto;
   display: block;
 }
@@ -878,6 +878,12 @@ const observer = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.1 });
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// Force autoplay on Safari
+document.querySelectorAll('video').forEach(v => {
+  v.muted = true;
+  v.play().catch(() => {});
+});
 </script>
 </body>
 </html>
