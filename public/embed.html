@@ -418,27 +418,18 @@ function renderGrid(posts, plan) {
         video.src = post.imageUrl; video.className = 'cell-video';
         video.muted = true; video.loop = true; video.playsInline = true; video.preload = 'metadata';
         inner.appendChild(video);
-
-        // ✅ Si hay portada, mostrarla encima del video y ocultarla en hover
         if (post.portadaUrl) {
           const portadaImg = document.createElement('img');
           portadaImg.src = post.portadaUrl;
           portadaImg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;transition:opacity .2s;';
           inner.style.position = 'relative';
           inner.appendChild(portadaImg);
-          cell.addEventListener('mouseenter', () => {
-            portadaImg.style.opacity = '0';
-            video.play().catch(() => {});
-          });
-          cell.addEventListener('mouseleave', () => {
-            portadaImg.style.opacity = '1';
-            video.pause(); video.currentTime = 0;
-          });
+          cell.addEventListener('mouseenter', () => { portadaImg.style.opacity = '0'; video.play().catch(() => {}); });
+          cell.addEventListener('mouseleave', () => { portadaImg.style.opacity = '1'; video.pause(); video.currentTime = 0; });
         } else {
           cell.addEventListener('mouseenter', () => video.play().catch(() => {}));
           cell.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
         }
-
         const playBtn = document.createElement('div'); playBtn.className = 'cell-play-btn';
         const playIcon = document.createElement('div'); playIcon.className = 'cell-play-icon';
         playIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="#1C1915"><polygon points="5,3 19,12 5,21"/></svg>';
@@ -501,7 +492,6 @@ function exitPlanMode(save) {
   if (!save) renderGrid(cachedData.posts, cachedData.plan);
 }
 async function savePlanMode() {
-  // ✅ Widget demo — no guardar cambios
   const DEMO_WIDGET_ID = 'wDm0yR8-oaJUvRiPtKHDog';
   if (widgetId === DEMO_WIDGET_ID) { exitPlanMode(false); return; }
   const changes = planOrder.filter(p => p.moved); if (changes.length === 0) { exitPlanMode(false); return; }
@@ -570,7 +560,6 @@ function togglePostPreview() {
 function renderPostPreview() {
   if (!modalPost) return;
   const profile = cachedData?.profile;
-  // Avatar
   const avatarEl = document.getElementById('pp-avatar');
   const placeholder = document.getElementById('pp-avatar-placeholder');
   if (profile?.avatarUrl) {
@@ -580,62 +569,58 @@ function renderPostPreview() {
     const initials = (profile?.displayName || profile?.username || '?').charAt(0).toUpperCase();
     placeholder.textContent = initials; avatarEl.innerHTML = ''; avatarEl.appendChild(placeholder);
   }
-  // Username
   const username = profile?.username ? `@${profile.username.replace(/^@/, '')}` : '@usuario';
   document.getElementById('pp-username').textContent = username;
-  // Canción
   const songRow = document.getElementById('pp-song-row');
   const songText = document.getElementById('pp-song-text');
   if (modalPost.song) { songText.textContent = modalPost.song; songRow.style.display = 'flex'; }
   else { songRow.style.display = 'none'; }
-  // Imagen / Video
   const imgArea = document.getElementById('pp-image');
   imgArea.innerHTML = '';
   const currentPlan = cachedData?.plan;
   if (currentPlan !== 'pro') {
     const ph = document.createElement('div'); ph.className = 'pp-image-placeholder'; ph.textContent = 'Función Pro'; imgArea.appendChild(ph);
   } else {
+    const existingModalIframe = document.getElementById('modal-iframe');
     const existingModalImg = document.getElementById('modal-img');
-    if (existingModalImg && existingModalImg.tagName === 'IMG' && existingModalImg.src) {
+    if (existingModalIframe) {
+      const wrapper = document.createElement('div');
+      wrapper.style.cssText = 'width:100%;height:100%;overflow:hidden;position:relative;';
+      const iframe = document.createElement('iframe');
+      iframe.src = existingModalIframe.src;
+      iframe.style.cssText = 'width:120%;height:140%;border:none;pointer-events:none;margin-left:-10%;margin-top:-5%;';
+      iframe.setAttribute('allowfullscreen', '');
+      wrapper.appendChild(iframe);
+      imgArea.appendChild(wrapper);
+    } else if (existingModalImg && existingModalImg.tagName === 'IMG' && existingModalImg.src) {
       const cloned = existingModalImg.cloneNode(true);
       cloned.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
       imgArea.appendChild(cloned);
     } else if (existingModalImg && existingModalImg.tagName === 'VIDEO') {
-      // ✅ Post Preview siempre muestra el video (portada es solo para el grid)
       const vid = document.createElement('video');
       vid.src = existingModalImg.src;
       vid.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
-      vid.autoplay = true;
-      vid.muted = true;
-      vid.loop = true;
-      vid.playsInline = true;
+      vid.autoplay = true; vid.muted = true; vid.loop = true; vid.playsInline = true;
       imgArea.appendChild(vid);
     } else {
       const imgUrl = modalPost.imageUrl || modalImages[0];
       if (imgUrl && !isVideoUrl(imgUrl) && modalPost.imageSource !== 'canva') {
         const img = document.createElement('img'); img.src = imgUrl; img.alt = ''; img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;'; imgArea.appendChild(img);
       } else if (imgUrl && isVideoUrl(imgUrl)) {
-        // ✅ También manejar video cuando no hay modal-img todavía
         const vid = document.createElement('video');
-        vid.src = imgUrl;
-        vid.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
-        vid.autoplay = true;
-        vid.muted = true;
-        vid.loop = true;
-        vid.playsInline = true;
+        vid.src = imgUrl; vid.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+        vid.autoplay = true; vid.muted = true; vid.loop = true; vid.playsInline = true;
         imgArea.appendChild(vid);
       } else {
         const ph = document.createElement('div'); ph.className = 'pp-image-placeholder'; ph.textContent = 'sin imagen'; imgArea.appendChild(ph);
       }
     }
   }
-  // Likes
   const likesEl = document.getElementById('pp-likes');
   if (modalPost.likes !== null && modalPost.likes !== undefined) {
     likesEl.textContent = `${modalPost.likes.toLocaleString('es-MX')} me gusta`;
     likesEl.style.display = 'block';
   } else { likesEl.style.display = 'none'; }
-  // Caption
   const captionEl = document.getElementById('pp-caption');
   const captionText = modalPost.caption || modalPost.name;
   if (captionText) {
