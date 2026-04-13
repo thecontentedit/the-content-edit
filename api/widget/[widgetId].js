@@ -29,8 +29,9 @@ const PROPS = {
   caption:      'Caption',
   likes:        'Likes',
   song:         'Canción',
-  portada:      'Portada Reel',     // ✅ thumbnail de video — archivo
-  portadaUrl:   'Portada Reel URL', // ✅ thumbnail de video — URL externa (preferida)
+  hashtags:     'Hashtags',
+  portada:      'Portada Reel',
+  portadaUrl:   'Portada Reel URL',
 };
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -213,7 +214,6 @@ function formatPost(page, plan) {
     canvaUrl = canvaUrl.split('?')[0] + '?embed';
   }
 
-  // ✅ Leer portada (thumbnail para videos) — URL externa tiene prioridad sobre archivo
   const portadaUrlDirecta = normalizeLink(props[PROPS.portadaUrl]?.url || null);
   const portadaFiles = props[PROPS.portada]?.files || [];
   const portadaArchivo = portadaFiles.length > 0
@@ -266,10 +266,10 @@ function formatPost(page, plan) {
 
   const pinned = plan === 'pro' ? (props[PROPS.pinned]?.checkbox || false) : false;
   const pilar = plan === 'pro' ? (props[PROPS.pilar]?.select?.name || null) : null;
-
   const caption = props[PROPS.caption]?.rich_text?.map(r => r.plain_text).join('') || null;
   const likes = props[PROPS.likes]?.number ?? null;
   const song = props[PROPS.song]?.rich_text?.map(r => r.plain_text).join('') || null;
+  const hashtags = props[PROPS.hashtags]?.rich_text?.map(r => r.plain_text).join('') || null;
 
-  return { name, publishDate, publishDateISO, imageUrl, images, imageSource, mediaType, pinned, pilar, pageId: page.id, caption, likes, song, portadaUrl };
+  return { name, publishDate, publishDateISO, imageUrl, images, imageSource, mediaType, pinned, pilar, pageId: page.id, caption, likes, song, hashtags, portadaUrl };
 }
