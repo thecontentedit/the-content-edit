@@ -624,7 +624,9 @@ function renderPostPreview() {
   const captionEl = document.getElementById('pp-caption');
   const captionText = modalPost.caption || modalPost.name;
   if (captionText) {
-    const hashtagsText = modalPost.hashtags ? `<span style="color:#7A3B4A;"> ${modalPost.hashtags}</span>` : ''; const fechaText = modalPost.publishDate ? `<div style="font-size:10px;color:#7A7570;margin-top:4px;">${modalPost.publishDate}</div>` : ''; captionEl.innerHTML = `<strong>${username}</strong> ${captionText}${hashtagsText}${fechaText}`;
+    const hashtagsText = modalPost.hashtags ? `<span style="color:#7A3B4A;"> ${modalPost.hashtags}</span>` : '';
+    const fechaText = modalPost.publishDate ? `<div style="font-size:10px;color:#7A7570;margin-top:4px;">${modalPost.publishDate}</div>` : '';
+    captionEl.innerHTML = `<strong>${username}</strong> ${captionText}${hashtagsText}${fechaText}`;
     captionEl.style.display = 'block';
   } else { captionEl.style.display = 'none'; }
 }
