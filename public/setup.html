@@ -85,6 +85,8 @@
   .center-msg p { font-size: 14px; color: var(--muted); line-height: 1.6; }
   .note { font-size: 12px; color: var(--muted); line-height: 1.6; padding: 10px 12px; background: rgba(28,25,21,.04); border-radius: var(--radius-sm); margin-top: 8px; }
   .note strong { color: var(--ink); font-weight: 500; }
+  .note-tip { font-size: 12px; color: var(--muted); line-height: 1.6; padding: 10px 12px; background: rgba(122,59,74,.06); border-radius: var(--radius-sm); margin-top: 12px; border: 0.5px solid rgba(122,59,74,.15); }
+  .note-tip strong { color: var(--accent); font-weight: 500; }
   .howto-toggle { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 500; color: var(--muted); cursor: pointer; margin-bottom: 8px; padding: 4px 0; border: none; background: none; font-family: var(--sans); letter-spacing: .04em; text-transform: uppercase; transition: color .15s; user-select: none; }
   .howto-toggle:hover { color: var(--ink); }
   .howto-toggle svg { width: 12px; height: 12px; transition: transform .2s; flex-shrink: 0; }
@@ -155,10 +157,7 @@
           <button class="copy-btn" onclick="copyEmbed('alreadyBioUrl', this)">copiar</button>
         </div>
       </div>
-
-      <!-- ✅ Botón reconectar Notion -->
       <button class="reconnect-btn" onclick="goStep(2)">Reconectar Notion →</button>
-
     </div>
     <div id="upgrade-card" style="display:none;" class="upgrade-card">
       <div class="upgrade-card-title">Ya tienes el Free — pero te estás perdiendo lo mejor.</div>
@@ -385,6 +384,7 @@
           <div class="howto-step"><div class="howto-n">4</div><span>Cada vez que actualices tu base de datos, presiona el botón de Refresh en el widget</span></div>
         </div>
       </div>
+      <div class="note-tip">💡 Si usas iPhone o iPad, abre tu página de Notion en Safari o Chrome para ver el widget. En la app de escritorio y en el navegador funciona perfecto. En la app móvil de Notion aún no es compatible.</div>
       <div class="note" style="margin-top:12px; margin-bottom:16px;"><strong>¿Quieres otro widget?</strong> Puedes repetir el setup con una base de datos diferente.</div>
       <div id="upgrade-card-step5" style="display:none;" class="upgrade-card">
         <div class="upgrade-card-title">Ya tienes el Free — pero te estás perdiendo lo mejor.</div>
