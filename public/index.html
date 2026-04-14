@@ -95,22 +95,6 @@ section + section { border-top: 0.5px solid var(--border); }
 .step-title { font-weight: 500; font-size: 14px; margin-bottom: 3px; }
 .step-desc { font-size: 13px; color: var(--muted); line-height: 1.55; font-weight: 300; }
 
-/* IPHONE */
-.iphone-outer { display: flex; justify-content: center; }
-.iphone { width: 210px; background: #1C1915; border-radius: 36px; padding: 10px; }
-.iphone-screen { background: #fff; border-radius: 28px; overflow: hidden; }
-.ig-header { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 0.5px solid #eee; }
-.ig-avatar { width: 26px; height: 26px; border-radius: 50%; background: #E8D5C4; flex-shrink: 0; }
-.ig-user { font-size: 11px; font-weight: 600; color: #1C1915; }
-.ig-music { font-size: 9px; color: #7A7570; }
-.ig-img { width: 100%; aspect-ratio: 1; background: #C9A96E; display: flex; align-items: center; justify-content: center; font-size: 48px; }
-.ig-actions { display: flex; gap: 10px; padding: 8px 12px 4px; }
-.ig-action { width: 16px; height: 16px; border-radius: 2px; background: #eee; }
-.ig-likes { font-size: 10px; font-weight: 600; color: #1C1915; padding: 2px 12px; }
-.ig-caption { font-size: 10px; color: #1C1915; padding: 2px 12px 6px; line-height: 1.5; }
-.ig-caption strong { font-weight: 600; }
-.ig-tags { font-size: 10px; color: #3B82F6; padding: 0 12px 10px; line-height: 1.6; }
-
 .plans { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 2rem; }
 .plan { background: var(--cream); border: 0.5px solid var(--border-strong); border-radius: var(--radius); padding: 1.5rem; }
 .plan.featured { border: 1.5px solid var(--accent); background: var(--accent); color: var(--cream); }
@@ -299,7 +283,7 @@ footer { background: var(--ink); padding: 2rem 1.5rem; display: flex; justify-co
         <p style="font-size:14px;color:var(--muted);line-height:1.7;font-weight:300;">Configura tu foto, nombre, descripción y highlights directo desde Notion. Ve exactamente cómo se verá tu bio.</p>
       </div>
       <div>
-        <img src="/iPad_Mockup_Dark-2.png" alt="Profile Preview en Notion" style="width:100%;display:block;border-radius:8px;filter: drop-shadow(0 20px 40px rgba(28,25,21,0.15));"/>
+        <img src="/iPad_Mockup_Dark-2.png" alt="Profile Preview en Notion" style="width:100%;display:block;border-radius:8px;filter:drop-shadow(0 20px 40px rgba(28,25,21,0.15));"/>
       </div>
     </div>
   </div>
@@ -342,33 +326,14 @@ footer { background: var(--ink); padding: 2rem 1.5rem; display: flex; justify-co
 <!-- POST PREVIEW -->
 <section style="background:#FAFAF8;">
   <div class="container-wide fade-in">
-    <div id="post-preview-inner" style="display:grid;grid-template-columns:1fr 1.2fr;gap:48px;align-items:center;">
+    <div id="post-preview-inner" style="display:grid;grid-template-columns:1fr 1.6fr;gap:48px;align-items:center;">
       <div>
         <span class="label">Post Preview</span>
         <h2 style="font-family:var(--serif);font-size:clamp(26px,4vw,36px);line-height:1.05;letter-spacing:-0.01em;font-weight:400;margin-bottom:16px;">Ve tu post <em style="font-style:italic;color:var(--accent)">antes de publicarlo.</em></h2>
         <p style="font-size:14px;color:var(--muted);line-height:1.7;font-weight:300;">Activa el Post Preview y ve exactamente cómo se verá tu publicación en Instagram — con caption, hashtags, música y likes. Sin salir de Notion.</p>
       </div>
-      <<div class="iphone-outer">   <img src="/iphone-post-preview.png" alt="Post Preview en Instagram" style="width:100%;max-width:320px;display:block;filter:drop-shadow(0 20px 40px rgba(28,25,21,0.15));"/> </div>
-        <div class="iphone">
-          <div class="iphone-screen">
-            <div class="ig-header">
-              <div class="ig-avatar"></div>
-              <div>
-                <div class="ig-user">@thejeweler</div>
-                <div class="ig-music">♫ You Make Me Feel — Cobra Starship</div>
-              </div>
-            </div>
-            <div class="ig-img">💍</div>
-            <div class="ig-actions">
-              <div class="ig-action"></div>
-              <div class="ig-action"></div>
-              <div class="ig-action"></div>
-            </div>
-            <div class="ig-likes">100 me gusta</div>
-            <div class="ig-caption"><strong>@thejeweler</strong> ¿Plata u oro? Los dos. Mezclar metales es la regla que ya nadie sigue.</div>
-            <div class="ig-tags">#platayoro #mixedmetals #jewelrystyle</div>
-          </div>
-        </div>
+      <div style="display:flex;justify-content:center;">
+        <img src="/iphone-post-preview.png" alt="Post Preview en Instagram" style="width:100%;max-width:340px;display:block;filter:drop-shadow(0 20px 40px rgba(28,25,21,0.15));"/>
       </div>
     </div>
   </div>
