@@ -11,24 +11,16 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --cream: #FAFAF8;
-  --ink: #1C1915;
-  --muted: #7A7570;
-  --border: rgba(28,25,21,0.08);
-  --border-strong: rgba(28,25,21,0.18);
-  --accent: #7A3B4A;
-  --accent-bg: rgba(122,59,74,0.06);
+  --cream: #FAFAF8; --ink: #1C1915; --muted: #7A7570;
+  --border: rgba(28,25,21,0.08); --border-strong: rgba(28,25,21,0.18);
+  --accent: #7A3B4A; --accent-bg: rgba(122,59,74,0.06);
   --serif: 'DM Serif Display', Georgia, serif;
   --sans: 'Inter', system-ui, sans-serif;
-  --radius: 12px;
-  --radius-sm: 8px;
+  --radius: 12px; --radius-sm: 8px;
 }
-
 html { scroll-behavior: smooth; }
 body { font-family: var(--sans); background: var(--cream); color: var(--ink); font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
-
 nav { position: sticky; top: 0; z-index: 100; background: var(--cream); border-bottom: 0.5px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 56px; }
 .nav-logo { font-family: var(--serif); font-size: 17px; color: var(--ink); text-decoration: none; }
 .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
@@ -36,11 +28,9 @@ nav { position: sticky; top: 0; z-index: 100; background: var(--cream); border-b
 .nav-links a:hover { color: var(--ink); }
 .nav-cta { background: var(--ink); color: var(--cream); border: none; border-radius: 999px; padding: 8px 20px; font-size: 13px; font-weight: 500; cursor: pointer; transition: opacity .2s; font-family: var(--sans); text-decoration: none; }
 .nav-cta:hover { opacity: .75; }
-
 .container { max-width: 680px; margin: 0 auto; padding: 0 1.5rem; }
 .container-wide { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; }
 .label { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: .75rem; font-weight: 400; }
-
 .hero { padding: 72px 0 64px; text-align: center; background: var(--cream); }
 .hero h1 { font-family: var(--serif); font-size: clamp(42px, 7vw, 64px); line-height: 0.92; letter-spacing: -0.02em; margin-bottom: 1.25rem; color: var(--ink); }
 .hero h1 em { font-style: italic; color: var(--accent); }
@@ -50,30 +40,24 @@ nav { position: sticky; top: 0; z-index: 100; background: var(--cream); border-b
 .btn-primary:hover { opacity: .75; }
 .btn-ghost { background: transparent; color: var(--muted); border: 0.5px solid var(--border-strong); border-radius: 999px; padding: 12px 28px; font-size: 14px; font-weight: 300; cursor: pointer; transition: background .2s; font-family: var(--sans); }
 .btn-ghost:hover { background: rgba(28,25,21,.04); }
-
 .hero-visual { background: var(--accent); padding: 40px 0 0; text-align: center; overflow: hidden; }
 .hero-visual-label { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,0.4); display: block; margin-bottom: 12px; font-weight: 400; }
 .hero-visual h2 { font-family: var(--serif); font-size: clamp(22px, 3.5vw, 30px); color: #fff; font-weight: 400; line-height: 1.2; margin-bottom: 4px; }
 .hero-visual h2 em { font-style: italic; color: rgba(255,255,255,0.55); }
 .hero-visual p { font-size: 13px; color: rgba(255,255,255,0.5); font-weight: 300; margin-bottom: 8px; }
-
 .ipad-mockup-wrapper { position: relative; max-width: 1100px; margin: 0 auto; display: block; line-height: 0; }
 .ipad-frame-img { position: relative; z-index: 2; width: 100%; display: block; filter: drop-shadow(0 24px 48px rgba(0,0,0,0.25)); }
 .ipad-screen-gif { position: absolute; top: 19.987%; left: 18.750%; width: 62.915%; height: 62.760%; object-fit: contain; object-position: top center; background: #ffffff; border-radius: 2px; z-index: 1; }
-
 .ticker-section { padding: 0; border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); overflow: hidden; background: var(--cream); }
 .ticker-track { display: flex; width: max-content; animation: ticker 28s linear infinite; padding: 10px 0; }
 .ticker-track span { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); white-space: nowrap; padding: 0 1.5rem; font-weight: 300; }
 .ticker-track span.dot { padding: 0; color: var(--accent); }
 @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
 section { padding: 5rem 0; }
 section + section { border-top: 0.5px solid var(--border); }
-
 .problem-text { font-family: var(--serif); font-size: clamp(20px, 3.5vw, 28px); line-height: 1.35; color: var(--ink); margin-bottom: 1.25rem; }
 .problem-text em { font-style: italic; color: var(--muted); }
 .problem-body { font-size: 15px; color: var(--muted); line-height: 1.7; font-weight: 300; max-width: 520px; }
-
 .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 0.5px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-top: 2rem; }
 .feat-card { background: var(--cream); padding: 22px 20px; transition: background .2s; }
 .feat-card:hover { background: #F0EAE2; }
@@ -81,20 +65,17 @@ section + section { border-top: 0.5px solid var(--border); }
 .feat-title { font-family: var(--serif); font-size: 16px; margin-bottom: 6px; color: var(--ink); font-weight: 400; }
 .feat-desc { font-size: 12px; color: var(--muted); line-height: 1.6; font-weight: 300; }
 .feat-new { font-size: 9px; background: var(--accent); color: #fff; padding: 1px 6px; border-radius: 999px; margin-left: 6px; letter-spacing: .04em; vertical-align: middle; }
-
 .who-list { display: flex; flex-direction: column; gap: 1px; margin-top: 2rem; }
 .who-item { display: flex; align-items: center; gap: 1rem; padding: 1.1rem 1.25rem; background: var(--cream); border: 0.5px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; color: var(--ink); font-weight: 300; transition: background .2s; }
 .who-item:hover { background: #F0EAE2; }
 .who-icon { width: 28px; height: 28px; border-radius: 50%; background: rgba(28,25,21,.06); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .who-icon svg { width: 13px; height: 13px; }
-
 .steps { display: flex; flex-direction: column; gap: 0; margin-top: 2rem; }
 .step { display: flex; gap: 1.25rem; padding: 1.25rem 0; border-bottom: 0.5px solid var(--border); align-items: flex-start; }
 .step:last-child { border-bottom: none; }
 .step-num { width: 28px; height: 28px; border-radius: 50%; border: 0.5px solid var(--border-strong); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 400; color: var(--muted); flex-shrink: 0; margin-top: 2px; }
 .step-title { font-weight: 500; font-size: 14px; margin-bottom: 3px; }
 .step-desc { font-size: 13px; color: var(--muted); line-height: 1.55; font-weight: 300; }
-
 .plans { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 2rem; }
 .plan { background: var(--cream); border: 0.5px solid var(--border-strong); border-radius: var(--radius); padding: 1.5rem; }
 .plan.featured { border: 1.5px solid var(--accent); background: var(--accent); color: var(--cream); }
@@ -121,7 +102,6 @@ section + section { border-top: 0.5px solid var(--border); }
 .plan-btn.light:hover { background: rgba(28,25,21,.05); }
 .plan-btn.dark { background: var(--cream); color: var(--ink); border: none; }
 .plan-btn.dark:hover { opacity: .85; }
-
 .faq-list { margin-top: 2rem; }
 .faq-item { border-bottom: 0.5px solid var(--border); cursor: pointer; }
 .faq-q { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.1rem 0; font-size: 14px; font-weight: 400; color: var(--ink); }
@@ -129,26 +109,19 @@ section + section { border-top: 0.5px solid var(--border); }
 .faq-item.open .faq-q svg { transform: rotate(45deg); }
 .faq-a { font-size: 13px; color: var(--muted); line-height: 1.65; font-weight: 300; max-height: 0; overflow: hidden; transition: max-height .28s ease, padding .22s; }
 .faq-item.open .faq-a { max-height: 240px; padding-bottom: 1.1rem; }
-
 footer { background: var(--ink); padding: 2rem 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
 .footer-logo { font-family: var(--serif); font-size: 16px; color: var(--cream); text-decoration: none; font-weight: 400; }
 .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
 .footer-links a { font-size: 12px; color: rgba(249,246,241,0.45); text-decoration: none; transition: color .2s; font-weight: 300; }
 .footer-links a:hover { color: var(--cream); }
 .footer-copy { font-size: 11px; color: rgba(249,246,241,0.3); width: 100%; font-weight: 300; }
-
 .fade-in { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
 .fade-in.visible { opacity: 1; transform: translateY(0); }
-
 @media (max-width: 600px) {
   #testimonios-container { height: auto !important; display: flex; flex-direction: column; gap: 12px; padding: 2rem 1.5rem; }
   .t-card { position: relative !important; left: auto !important; right: auto !important; top: auto !important; bottom: auto !important; max-width: 100%; transform: none !important; }
 }
-@media (max-width: 540px) {
-  .plans { grid-template-columns: 1fr; }
-  .nav-links { display: none; }
-  .feat-grid { grid-template-columns: 1fr; }
-}
+@media (max-width: 540px) { .plans { grid-template-columns: 1fr; } .nav-links { display: none; } .feat-grid { grid-template-columns: 1fr; } }
 @media (max-width: 768px) {
   #content-map-inner { padding: 0 1.25rem; grid-template-columns: 1fr !important; }
   #content-map-inner > div:first-child { margin-left: 0 !important; order: -1; }
@@ -220,56 +193,16 @@ footer { background: var(--ink); padding: 2rem 1.5rem; display: flex; justify-co
       <h2 style="font-family:var(--serif); font-size:clamp(24px,4vw,32px); line-height:1.1; letter-spacing:-0.01em; font-weight:400;">Planea tu contenido <em style="font-style:italic;color:var(--accent)">con intención,</em> sin salir de Notion.</h2>
     </div>
     <div class="feat-grid fade-in" style="margin-top:2rem;">
-      <div class="feat-card">
-        <span class="feat-icon">🎨</span>
-        <div class="feat-title">Canva Connect</div>
-        <div class="feat-desc">Pega tu link de Canva y el diseño aparece directo en tu grid. Actualiza en Canva y se actualiza aquí — sin exportar nada, nunca.</div>
-      </div>
-      <div class="feat-card">
-        <span class="feat-icon">🔗</span>
-        <div class="feat-title">Links externos</div>
-        <div class="feat-desc">¿Tienes imágenes en Pinterest o en cualquier URL? Pégalas directo. Sin descargar, sin subir, sin pasos extra.</div>
-      </div>
-      <div class="feat-card">
-        <span class="feat-icon">🖼️</span>
-        <div class="feat-title">Post Preview <span class="feat-new">NUEVO</span></div>
-        <div class="feat-desc">Ve exactamente cómo se verá tu post antes de publicarlo — con caption, hashtags, música y likes. Todo desde Notion.</div>
-      </div>
-      <div class="feat-card">
-        <span class="feat-icon">🗺️</span>
-        <div class="feat-title">Content Map</div>
-        <div class="feat-desc">Activa la vista de pilares y ve tu feed con colores por categoría. Sabes de un vistazo si tu estrategia está balanceada, no solo bonita.</div>
-      </div>
-      <div class="feat-card">
-        <span class="feat-icon">📅</span>
-        <div class="feat-title">Plan Grid</div>
-        <div class="feat-desc">Arrastra posts y cámbiales la fecha de publicación visualmente. El orden nuevo se guarda directo en tu base de datos de Notion.</div>
-      </div>
-      <div class="feat-card">
-        <span class="feat-icon">👁️</span>
-        <div class="feat-title">Hover con info</div>
-        <div class="feat-desc">Pasa el cursor sobre cualquier post y ve el título y la fecha al instante — sin saturar el grid ni distraer la vista.</div>
-      </div>
-      <div class="feat-card">
-        <span class="feat-icon">▶️</span>
-        <div class="feat-title">Carruseles y reels</div>
-        <div class="feat-desc">Navega tus carruseles y previsualiza reels dentro del widget. Exactamente como los verán tus seguidores — sin salir de Notion.</div>
-      </div>
-      <div class="feat-card">
-        <span class="feat-icon">🌙</span>
-        <div class="feat-title">Dark mode</div>
-        <div class="feat-desc">Tu widget, tu aesthetic. Cambia entre modo claro y oscuro con un clic y guarda tu preferencia para siempre.</div>
-      </div>
-      <div class="feat-card">
-        <span class="feat-icon">👤</span>
-        <div class="feat-title">Profile Preview</div>
-        <div class="feat-desc">Visualiza tu bio de Instagram completa — foto, nombre, descripción y highlights — antes de tocar nada en tu cuenta.</div>
-      </div>
-      <div class="feat-card feat-mobile-only">
-        <span class="feat-icon">∞</span>
-        <div class="feat-title">Widgets ilimitados</div>
-        <div class="feat-desc">Crea uno para cada cliente o cuenta. Un solo pago para siempre, sin suscripciones ni sorpresas.</div>
-      </div>
+      <div class="feat-card"><span class="feat-icon">🎨</span><div class="feat-title">Canva Connect</div><div class="feat-desc">Pega tu link de Canva y el diseño aparece directo en tu grid. Actualiza en Canva y se actualiza aquí — sin exportar nada, nunca.</div></div>
+      <div class="feat-card"><span class="feat-icon">🔗</span><div class="feat-title">Links externos</div><div class="feat-desc">¿Tienes imágenes en Pinterest o en cualquier URL? Pégalas directo. Sin descargar, sin subir, sin pasos extra.</div></div>
+      <div class="feat-card"><span class="feat-icon">🖼️</span><div class="feat-title">Post Preview <span class="feat-new">NUEVO</span></div><div class="feat-desc">Ve exactamente cómo se verá tu post antes de publicarlo — con caption, hashtags, música y likes. Todo desde Notion.</div></div>
+      <div class="feat-card"><span class="feat-icon">🗺️</span><div class="feat-title">Content Map</div><div class="feat-desc">Activa la vista de pilares y ve tu feed con colores por categoría. Sabes de un vistazo si tu estrategia está balanceada, no solo bonita.</div></div>
+      <div class="feat-card"><span class="feat-icon">📅</span><div class="feat-title">Plan Grid</div><div class="feat-desc">Arrastra posts y cámbiales la fecha de publicación visualmente. El orden nuevo se guarda directo en tu base de datos de Notion.</div></div>
+      <div class="feat-card"><span class="feat-icon">👁️</span><div class="feat-title">Hover con info</div><div class="feat-desc">Pasa el cursor sobre cualquier post y ve el título y la fecha al instante — sin saturar el grid ni distraer la vista.</div></div>
+      <div class="feat-card"><span class="feat-icon">▶️</span><div class="feat-title">Carruseles y reels</div><div class="feat-desc">Navega tus carruseles y previsualiza reels dentro del widget. Exactamente como los verán tus seguidores — sin salir de Notion.</div></div>
+      <div class="feat-card"><span class="feat-icon">🌙</span><div class="feat-title">Dark mode</div><div class="feat-desc">Tu widget, tu aesthetic. Cambia entre modo claro y oscuro con un clic y guarda tu preferencia para siempre.</div></div>
+      <div class="feat-card"><span class="feat-icon">👤</span><div class="feat-title">Profile Preview</div><div class="feat-desc">Visualiza tu bio de Instagram completa — foto, nombre, descripción y highlights — antes de tocar nada en tu cuenta.</div></div>
+      <div class="feat-card feat-mobile-only"><span class="feat-icon">∞</span><div class="feat-title">Widgets ilimitados</div><div class="feat-desc">Crea uno para cada cliente o cuenta. Un solo pago para siempre, sin suscripciones ni sorpresas.</div></div>
     </div>
   </div>
 </section>
@@ -282,9 +215,7 @@ footer { background: var(--ink); padding: 2rem 1.5rem; display: flex; justify-co
         <h2 style="font-family:var(--serif);font-size:clamp(26px,4vw,36px);line-height:1.05;letter-spacing:-0.01em;font-weight:400;margin-bottom:16px;">Todo tu perfil, <em style="font-style:italic;color:var(--accent)">en un solo lugar.</em></h2>
         <p style="font-size:14px;color:var(--muted);line-height:1.7;font-weight:300;">Configura tu foto, nombre, descripción y highlights directo desde Notion. Ve exactamente cómo se verá tu bio.</p>
       </div>
-      <div>
-        <img src="/iPad_Mockup_Dark-2.png" alt="Profile Preview en Notion" style="width:100%;display:block;border-radius:8px;filter:drop-shadow(0 20px 40px rgba(28,25,21,0.15));"/>
-      </div>
+      <div><img src="/iPad_Mockup_Dark-2.png" alt="Profile Preview en Notion" style="width:100%;display:block;border-radius:8px;filter:drop-shadow(0 20px 40px rgba(28,25,21,0.15));"/></div>
     </div>
   </div>
 </section>
@@ -294,27 +225,16 @@ footer { background: var(--ink); padding: 2rem 1.5rem; display: flex; justify-co
     <span class="label">Para quién es</span>
     <h2 style="font-family:var(--serif); font-size:clamp(22px,3.5vw,30px); line-height:1.25; font-weight:400;">Si creas contenido y vives en Notion, <em style="font-style:italic;color:var(--accent)">esto es para ti.</em></h2>
     <div class="who-list" style="margin-top:1.5rem;">
-      <div class="who-item">
-        <div class="who-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
-        Creators que planean su contenido semana a semana
-      </div>
-      <div class="who-item">
-        <div class="who-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-        Social media managers con múltiples clientes
-      </div>
-      <div class="who-item">
-        <div class="who-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7H4C2.9 7 2 7.9 2 9v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2z"/><path d="M16 3H8L6 7h12l-2-4z"/></svg></div>
-        Negocios que quieren un feed con intención y estética
-      </div>
+      <div class="who-item"><div class="who-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>Creators que planean su contenido semana a semana</div>
+      <div class="who-item"><div class="who-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>Social media managers con múltiples clientes</div>
+      <div class="who-item"><div class="who-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7H4C2.9 7 2 7.9 2 9v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2z"/><path d="M16 3H8L6 7h12l-2-4z"/></svg></div>Negocios que quieren un feed con intención y estética</div>
     </div>
   </div>
 </section>
 
 <section style="background:#F2EDE8;overflow:hidden;">
   <div id="content-map-inner" style="display:grid;grid-template-columns:1fr 380px;align-items:center;max-width:1100px;margin:0 auto;">
-    <div style="margin-left:-80px;">
-      <img src="/iPad_Content_Map.png" alt="Content Map en Notion" style="width:100%;display:block;"/>
-    </div>
+    <div style="margin-left:-80px;"><img src="/iPad_Content_Map.png" alt="Content Map en Notion" style="width:100%;display:block;"/></div>
     <div style="padding:0 48px 0 0;" class="fade-in">
       <span class="label">Content Map</span>
       <h2 style="font-family:var(--serif);font-size:clamp(26px,4vw,36px);line-height:1.05;letter-spacing:-0.01em;font-weight:400;margin-bottom:16px;">Ve tu estrategia, <em style="font-style:italic;color:var(--accent)">no solo tu feed.</em></h2>
@@ -344,34 +264,10 @@ footer { background: var(--ink); padding: 2rem 1.5rem; display: flex; justify-co
     <span class="label">Cómo funciona</span>
     <h2 style="font-family:var(--serif); font-size:clamp(22px,3.5vw,30px); line-height:1.25; font-weight:400;">Setup de una sola vez. <em style="font-style:italic;color:var(--accent)">Después es automático.</em></h2>
     <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <div>
-          <div class="step-title">Duplica la plantilla de Notion</div>
-          <div class="step-desc">Te damos una base de datos lista para usar con todas las propiedades configuradas. Solo duplícala y estás lista.</div>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <div>
-          <div class="step-title">Conecta tu integration token</div>
-          <div class="step-desc">Crea una integración gratuita en Notion, pega tu token en la página de setup y listo. Tarda menos de 3 minutos.</div>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <div>
-          <div class="step-title">Pega tu widget en Notion</div>
-          <div class="step-desc">Recibes un link único. Lo pegas como bloque <code style="font-size:11px;background:rgba(28,25,21,.07);padding:1px 5px;border-radius:4px;">/embed</code> en cualquier página de Notion y tu grid aparece al instante.</div>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">4</div>
-        <div>
-          <div class="step-title">Actualiza en Notion, el grid se actualiza solo</div>
-          <div class="step-desc">Cada vez que hagas cambios en Notion, presiona el botón de Refresh en el widget y tu feed refleja los cambios al instante.</div>
-        </div>
-      </div>
+      <div class="step"><div class="step-num">1</div><div><div class="step-title">Duplica la plantilla de Notion</div><div class="step-desc">Te damos una base de datos lista para usar con todas las propiedades configuradas. Solo duplícala y estás lista.</div></div></div>
+      <div class="step"><div class="step-num">2</div><div><div class="step-title">Conecta tu integration token</div><div class="step-desc">Crea una integración gratuita en Notion, pega tu token en la página de setup y listo. Tarda menos de 3 minutos.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div><div class="step-title">Pega tu widget en Notion</div><div class="step-desc">Recibes un link único. Lo pegas como bloque <code style="font-size:11px;background:rgba(28,25,21,.07);padding:1px 5px;border-radius:4px;">/embed</code> en cualquier página de Notion y tu grid aparece al instante.</div></div></div>
+      <div class="step"><div class="step-num">4</div><div><div class="step-title">Actualiza en Notion, el grid se actualiza solo</div><div class="step-desc">Cada vez que hagas cambios en Notion, presiona el botón de Refresh en el widget y tu feed refleja los cambios al instante.</div></div></div>
     </div>
   </div>
 </section>
@@ -379,34 +275,14 @@ footer { background: var(--ink); padding: 2rem 1.5rem; display: flex; justify-co
 <section id="testimonios">
   <div class="container-wide fade-in">
     <div id="testimonios-inner" style="display:grid;grid-template-columns:260px 1fr;gap:40px;align-items:center;">
-      <div>
-        <h2 style="font-family:var(--serif);font-size:clamp(22px,3vw,28px);color:var(--ink);font-weight:400;line-height:1.15;margin:0;">Lo que dicen <em style="font-style:italic;color:var(--accent)">quienes ya lo usan</em></h2>
-      </div>
+      <div><h2 style="font-family:var(--serif);font-size:clamp(22px,3vw,28px);color:var(--ink);font-weight:400;line-height:1.15;margin:0;">Lo que dicen <em style="font-style:italic;color:var(--accent)">quienes ya lo usan</em></h2></div>
       <div id="testimonios-cards" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <div style="background:#fff;border:0.5px solid rgba(28,25,21,0.08);border-radius:10px;padding:16px;">
-          <p style="font-size:12px;color:#3a3835;line-height:1.6;margin:0 0 10px;font-weight:300;">Llevaba meses haciendo capturas de mi grid. Esto cambió todo — lo veo en tiempo real desde Notion.</p>
-          <span style="font-size:11px;color:#888780;font-style:italic;">— Camila R., creadora de contenido</span>
-        </div>
-        <div style="background:#fff;border:0.5px solid rgba(28,25,21,0.08);border-radius:10px;padding:16px;">
-          <p style="font-size:12px;color:#3a3835;line-height:1.6;margin:0 0 10px;font-weight:300;">Administro 4 cuentas y este widget me ahorra horas cada semana. El setup fue superfácil.</p>
-          <span style="font-size:11px;color:#888780;font-style:italic;">— Sofía M., social media manager</span>
-        </div>
-        <div style="background:#fff;border:0.5px solid rgba(28,25,21,0.08);border-radius:10px;padding:16px;">
-          <p style="font-size:12px;color:#3a3835;line-height:1.6;margin:0 0 10px;font-weight:300;">Lo probé gratis y en 10 minutos ya quería el Pro. Exactamente lo que necesitaba.</p>
-          <span style="font-size:11px;color:#888780;font-style:italic;">— Valentina L., lifestyle creator</span>
-        </div>
-        <div style="background:#fff;border:0.5px solid rgba(28,25,21,0.08);border-radius:10px;padding:16px;">
-          <p style="font-size:12px;color:#3a3835;line-height:1.6;margin:0 0 10px;font-weight:300;">Nunca pensé que planear mi feed pudiera ser tan visual. Mis posts tienen más intención.</p>
-          <span style="font-size:11px;color:#888780;font-style:italic;">— Mariana G., content creator</span>
-        </div>
-        <div style="background:#fff;border:0.5px solid rgba(28,25,21,0.08);border-radius:10px;padding:16px;">
-          <p style="font-size:12px;color:#3a3835;line-height:1.6;margin:0 0 10px;font-weight:300;">Puedo fijar posts y ver exactamente cómo queda mi grid antes de publicar. Mis clientes también lo aman.</p>
-          <span style="font-size:11px;color:#888780;font-style:italic;">— Daniela P., estratega de contenido</span>
-        </div>
-        <div style="background:#fff;border:0.5px solid rgba(28,25,21,0.08);border-radius:10px;padding:16px;">
-          <p style="font-size:12px;color:#3a3835;line-height:1.6;margin:0 0 10px;font-weight:300;">Pensé que iba a ser complicado y lo tuve listo en 5 minutos. Se ve increíble dentro de Notion.</p>
-          <span style="font-size:11px;color:#888780;font-style:italic;">— Andrea V., creadora y SMM</span>
-        </div>
+        <div style="background:#fff;border:0.5px solid rgba(28,25,21,0.08);border-radius:10px;padding:16px;"><p style="font-size:12px;color:#3a3835;line-height:1.6;margin:0 0 10px;font-weight:300;">Llevaba meses haciendo capturas de mi grid. Esto cambió todo — lo veo en tiempo real desde Notion.</p><span style="font-size:11px;color:#888780;font-style:italic;">— Camila R., creadora de contenido</span></div>
+        <div style="background:#fff;border:0.5px solid rgba(28,25,21,0.08);border-radius:10px;padding:16px;"><p style="font-size:12px;color:#3a3835;line-height:1.6;margin:0 0 10px;font-weight:300;">Administro 4 cuentas y este widget me ahorra horas cada semana. El setup fue superfácil.</p><span style="font-size:11px;color:#888780;font-style:italic;">— Sofía M., social media manager</span></div>
+        <div style="background:#fff;border:0.5px solid rgba(28,25,21,0.08);border-radius:10px;padding:16px;"><p style="font-size:12px;color:#3a3835;line-height:1.6;margin:0 0 10px;font-weight:300;">Lo probé gratis y en 10 minutos ya quería el Pro. Exactamente lo que necesitaba.</p><span style="font-size:11px;color:#888780;font-style:italic;">— Valentina L., lifestyle creator</span></div>
+        <div style="background:#fff;border:0.5px solid rgba(28,25,21,0.08);border-radius:10px;padding:16px;"><p style="font-size:12px;color:#3a3835;line-height:1.6;margin:0 0 10px;font-weight:300;">Nunca pensé que planear mi feed pudiera ser tan visual. Mis posts tienen más intención.</p><span style="font-size:11px;color:#888780;font-style:italic;">— Mariana G., content creator</span></div>
+        <div style="background:#fff;border:0.5px solid rgba(28,25,21,0.08);border-radius:10px;padding:16px;"><p style="font-size:12px;color:#3a3835;line-height:1.6;margin:0 0 10px;font-weight:300;">Puedo fijar posts y ver exactamente cómo queda mi grid antes de publicar. Mis clientes también lo aman.</p><span style="font-size:11px;color:#888780;font-style:italic;">— Daniela P., estratega de contenido</span></div>
+        <div style="background:#fff;border:0.5px solid rgba(28,25,21,0.08);border-radius:10px;padding:16px;"><p style="font-size:12px;color:#3a3835;line-height:1.6;margin:0 0 10px;font-weight:300;">Pensé que iba a ser complicado y lo tuve listo en 5 minutos. Se ve increíble dentro de Notion.</p><span style="font-size:11px;color:#888780;font-style:italic;">— Andrea V., creadora y SMM</span></div>
       </div>
     </div>
   </div>
@@ -475,7 +351,7 @@ footer { background: var(--ink); padding: 2rem 1.5rem; display: flex; justify-co
     <a href="#">Contacto</a>
     <a href="/privacidad">Política de privacidad</a>
   </div>
-  <p class="footer-copy">© 2025 The Content Edit. Todos los derechos reservados.</p>
+  <p class="footer-copy">© 2026 The Content Edit. Todos los derechos reservados.</p>
   <p class="footer-copy" style="margin-top:4px;">Las imágenes de referencia son únicamente con fines ilustrativos. Todos los derechos pertenecen a sus respectivos dueños.</p>
 </footer>
 
@@ -493,6 +369,7 @@ full.forEach(el => track.appendChild(el));
 const faqs = [
   { q: "¿Necesito saber programar?", a: "Para nada. Si sabes usar Notion, puedes usar este widget. Hay una configuración inicial de un solo paso y las instrucciones te guían en todo. Tarda menos de 5 minutos." },
   { q: "¿Funciona con mi base de datos de Notion actual?", a: "Sí, siempre que tenga las propiedades requeridas. Si usas nombres diferentes solo tendrás que renombrarlas. También hay una plantilla lista para duplicar." },
+  { q: "¿Puedo usar el widget desde mi iPhone o iPad?", a: "Sí. Abre tu página de Notion en Safari o Chrome desde tu iPhone o iPad y el widget aparece perfecto. La app móvil de Notion no soporta contenido embebido, por eso el widget no se muestra ahí — pero en el navegador funciona sin problema." },
   { q: "¿Cuántos widgets puedo crear?", a: "Los que necesites. Tanto el plan gratis como el Pro te permiten crear widgets ilimitados. Cada uno se conecta a una base de datos de Notion diferente — perfecto para gestionar múltiples cuentas o clientes." },
   { q: "¿Qué tipos de contenido puedo mostrar?", a: "Gratis: imágenes adjuntadas directamente en Notion. Pro: imágenes desde links externos, diseños de Canva sin exportar, videos, carruseles con múltiples imágenes y posts fijados." },
   { q: "¿Necesito cuenta de Notion de pago?", a: "No. El widget funciona perfectamente con el plan gratuito de Notion." },
