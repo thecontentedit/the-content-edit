@@ -555,12 +555,14 @@ footer {
   </div>
   <div class="ipad-mockup-wrapper" style="margin-top: -20px;">
     <video
+      id="heroVideo"
       class="ipad-screen-gif"
       autoplay
       muted
       loop
       playsinline
       preload="auto"
+      webkit-playsinline
     >
       <source src="/demo.mp4" type="video/mp4">
     </video>
@@ -883,10 +885,18 @@ const observer = new IntersectionObserver(entries => {
 }, { threshold: 0.1 });
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-// Force autoplay on Safari
-document.querySelectorAll('video').forEach(v => {
-  v.muted = true;
-  v.play().catch(() => {});
+// Safari autoplay fix
+document.addEventListener('DOMContentLoaded', () => {
+  const video = document.getElementById('heroVideo');
+  if (video) {
+    video.muted = true;
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+    video.play().catch(() => {
+      document.addEventListener('touchstart', () => video.play(), { once: true });
+      document.addEventListener('click', () => video.play(), { once: true });
+    });
+  }
 });
 </script>
 </body>
