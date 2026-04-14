@@ -2,7 +2,8 @@
   "rewrites": [
     { "source": "/setup", "destination": "/setup.html" },
     { "source": "/embed/:widgetId", "destination": "/embed.html" },
-    { "source": "/widget/:widgetId", "destination": "/embed.html" }
+    { "source": "/widget/:widgetId", "destination": "/embed.html" },
+    { "source": "/privacidad", "destination": "/privacidad.html" }
   ],
   "headers": [
     {
