@@ -54,8 +54,8 @@
   .toggle-switch::after { content: ''; position: absolute; width: 14px; height: 14px; border-radius: 50%; background: white; top: 3px; left: 3px; transition: transform .2s; }
   .toggle-confirm.confirmed .toggle-switch { background: var(--success); }
   .toggle-confirm.confirmed .toggle-switch::after { transform: translateX(16px); }
-  .status { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: var(--radius-sm); font-size: 12px; margin-top: 8px; }
-  .status.idle { background: var(--cream); color: var(--muted); }
+  .status { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: var(--radius-sm); font-size: 12px; margin-top: 8px; min-height: 38px; }
+  .status.idle { background: transparent; color: var(--muted); }
   .status.loading { background: var(--cream); color: var(--muted); }
   .status.success { background: var(--success-bg); color: var(--success); }
   .status.error { background: var(--error-bg); color: var(--error); }
@@ -106,7 +106,7 @@
   .btn-upgrade:hover { opacity: .85; }
   .upgrade-note { font-size: 11px; color: rgba(249,246,241,0.45); margin-top: 10px; text-align: center; }
 
-  /* ── DASHBOARD ─────────────────────────────────────────────────── */
+  /* ── DASHBOARD ─────────────────────────────────────────────── */
   .dashboard-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px; }
   .dashboard-title { font-family: var(--serif); font-size: 26px; letter-spacing: -0.02em; }
   .dashboard-meta { display: flex; align-items: center; gap: 8px; }
@@ -115,28 +115,47 @@
   .plan-badge.pro { background: var(--accent); color: #fff; }
   .btn-new-widget { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; background: var(--ink); color: var(--cream); border: none; border-radius: 999px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: var(--sans); transition: opacity .2s; white-space: nowrap; }
   .btn-new-widget:hover { opacity: .78; }
-  .btn-new-widget svg { width: 13px; height: 13px; }
   .widgets-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
-  .widget-card { background: var(--card-bg, #F2EDE8); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.1rem; position: relative; transition: box-shadow .15s; }
-  .widget-card:hover { box-shadow: 0 2px 12px rgba(28,25,21,.08); }
-  .widget-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-  .widget-card-icon { font-size: 16px; color: var(--accent); }
-  .widget-card-menu { background: none; border: none; cursor: pointer; color: var(--muted); padding: 4px; border-radius: 6px; position: relative; transition: background .15s; }
-  .widget-card-menu:hover { background: rgba(28,25,21,.08); color: var(--ink); }
-  .widget-dropdown { position: absolute; right: 0; top: 26px; background: #fff; border: 0.5px solid var(--border-strong); border-radius: var(--radius-sm); box-shadow: 0 4px 16px rgba(28,25,21,.12); z-index: 20; min-width: 140px; overflow: hidden; display: none; }
-  .widget-dropdown.open { display: block; }
-  .widget-dropdown button { display: block; width: 100%; text-align: left; padding: 9px 14px; font-size: 12px; background: none; border: none; cursor: pointer; font-family: var(--sans); color: var(--ink); transition: background .12s; }
-  .widget-dropdown button:hover { background: var(--cream); }
-  .widget-dropdown button.danger { color: var(--error); }
-  .widget-dropdown button.danger:hover { background: var(--error-bg); }
-  .widget-card-name { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 3px; min-height: 22px; }
-  .widget-card-id { font-size: 11px; color: var(--muted); margin-bottom: 10px; }
-  .widget-card-url { font-family: monospace; font-size: 10px; color: var(--muted); word-break: break-all; margin-bottom: 12px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .widget-card-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px; background: rgba(28,25,21,.06); border: none; border-radius: var(--radius-sm); font-size: 11px; font-weight: 500; color: var(--ink); cursor: pointer; font-family: var(--sans); transition: background .15s; }
-  .widget-card-btn:hover { background: rgba(28,25,21,.12); }
-  .rename-input { width: 100%; font-size: 14px; font-weight: 500; font-family: var(--sans); color: var(--ink); background: #fff; border: 0.5px solid var(--ink); border-radius: 4px; padding: 2px 6px; outline: none; }
+  .widget-card { background: var(--card-bg, #F2EDE8); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.1rem; position: relative; cursor: pointer; transition: box-shadow .15s, transform .15s; }
+  .widget-card:hover { box-shadow: 0 4px 16px rgba(28,25,21,.1); transform: translateY(-1px); }
+  .widget-card-icon { font-size: 18px; color: var(--accent); margin-bottom: 10px; }
+  .widget-card-name { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 3px; }
+  .widget-card-date { font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+  .widget-card-url { font-family: monospace; font-size: 10px; color: var(--muted); word-break: break-all; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 10px; }
+  .widget-card-arrow { display: flex; align-items: center; justify-content: flex-end; color: var(--muted); }
   .dashboard-empty { text-align: center; padding: 3rem 1rem; color: var(--muted); font-size: 14px; }
   .dashboard-empty p { margin-top: 8px; }
+
+  /* ── WIDGET DETAIL ──────────────────────────────────────────── */
+  .detail-back { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); cursor: pointer; margin-bottom: 1.5rem; padding: 4px 0; border: none; background: none; font-family: var(--sans); transition: color .15s; }
+  .detail-back:hover { color: var(--ink); }
+  .detail-back svg { width: 13px; height: 13px; }
+  .detail-header { margin-bottom: 1.5rem; }
+  .detail-title { font-family: var(--serif); font-size: 24px; letter-spacing: -0.02em; margin-bottom: 2px; }
+
+  /* Info row */
+  .info-row { display: flex; align-items: flex-start; justify-content: space-between; padding: 11px 0; border-bottom: 0.5px solid var(--border); gap: 12px; }
+  .info-row:last-child { border-bottom: none; }
+  .info-row-label { font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
+  .info-row-value { font-family: monospace; font-size: 12px; color: var(--ink); word-break: break-all; line-height: 1.5; }
+  .info-row-value.normal { font-family: var(--sans); font-size: 13px; }
+  .info-row-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .btn-mini { font-size: 11px; padding: 4px 10px; background: var(--cream); border: 0.5px solid var(--border-strong); border-radius: var(--radius-sm); cursor: pointer; color: var(--muted); font-family: var(--sans); transition: background .15s; white-space: nowrap; }
+  .btn-mini:hover { background: rgba(28,25,21,.08); color: var(--ink); }
+  .btn-mini-link { font-size: 11px; color: var(--ink); text-decoration: none; padding: 4px 10px; background: var(--cream); border: 0.5px solid var(--border-strong); border-radius: var(--radius-sm); white-space: nowrap; }
+  .btn-mini-link:hover { background: rgba(28,25,21,.08); }
+
+  /* Action buttons row */
+  .detail-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1rem; }
+  .btn-action { display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; background: transparent; border: 0.5px solid var(--border-strong); border-radius: 999px; font-size: 12px; cursor: pointer; font-family: var(--sans); color: var(--ink); transition: background .15s; }
+  .btn-action:hover { background: rgba(28,25,21,.05); }
+  .btn-action.danger { color: var(--error); border-color: rgba(163,45,45,.3); }
+  .btn-action.danger:hover { background: var(--error-bg); }
+  .btn-action svg { width: 13px; height: 13px; }
+
+  /* Collapsible action sections */
+  .action-section { margin-top: 8px; background: #fff; border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.25rem; }
+  .action-section-title { font-size: 13px; font-weight: 500; margin-bottom: 12px; }
 </style>
 </head>
 <body>
@@ -145,29 +164,44 @@
   <span class="nav-step">Widget Setup</span>
 </nav>
 
+<!-- ══ LOADING ════════════════════════════════════════════════════════════ -->
+<div class="screen active" id="screenLoading">
+  <div class="page">
+    <div style="text-align:center; padding:3rem 0; color:var(--muted); font-size:14px;">
+      <div class="spinner" style="margin:0 auto 1rem;"></div>
+      Verificando tu licencia…
+    </div>
+  </div>
+</div>
+
+<!-- ══ INVÁLIDO ═══════════════════════════════════════════════════════════ -->
+<div class="screen" id="screenInvalid">
+  <div class="page">
+    <div class="center-msg">
+      <h2>Link inválido o expirado</h2>
+      <p>Este link de setup ya no es válido.<br/>Revisa tu email de compra o contáctanos por Instagram.</p>
+    </div>
+  </div>
+</div>
+
 <!-- ══ DASHBOARD ══════════════════════════════════════════════════════════ -->
 <div class="screen" id="screenDashboard">
   <div class="page-wide">
     <div class="dashboard-header">
-      <div>
-        <div class="dashboard-title">Mis widgets</div>
-      </div>
+      <div class="dashboard-title">Mis widgets</div>
       <div class="dashboard-meta">
         <span class="plan-badge" id="dashboardPlan">Free</span>
         <button class="btn-new-widget" onclick="startNewWidget()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Nuevo widget
         </button>
       </div>
     </div>
-
     <div class="widgets-grid" id="widgetsGrid"></div>
-
     <div class="dashboard-empty" id="dashboardEmpty" style="display:none;">
       <div style="font-size:28px;">✦</div>
       <p>Aún no tienes widgets. Crea el primero.</p>
     </div>
-
     <div id="dashboardUpgrade" style="display:none;" class="upgrade-card">
       <div class="upgrade-card-title">Ya tienes el Free — pero te estás perdiendo lo mejor.</div>
       <div class="upgrade-card-sub">Haz upgrade a Pro una sola vez y desbloquea todo para siempre.</div>
@@ -187,22 +221,93 @@
   </div>
 </div>
 
-<!-- ══ LOADING ════════════════════════════════════════════════════════════ -->
-<div class="screen active" id="screenLoading">
+<!-- ══ WIDGET DETAIL ══════════════════════════════════════════════════════ -->
+<div class="screen" id="screenWidgetDetail">
   <div class="page">
-    <div style="text-align:center; padding:3rem 0; color:var(--muted); font-size:14px;">
-      <div class="spinner" style="margin:0 auto 1rem;"></div>
-      Verificando tu licencia…
+    <button class="detail-back" onclick="goToDashboard()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Mis widgets
+    </button>
+    <div class="detail-header">
+      <div class="detail-title" id="detailName">Widget</div>
     </div>
-  </div>
-</div>
 
-<!-- ══ INVÁLIDO ═══════════════════════════════════════════════════════════ -->
-<div class="screen" id="screenInvalid">
-  <div class="page">
-    <div class="center-msg">
-      <h2>Link inválido o expirado</h2>
-      <p>Este link de setup ya no es válido.<br/>Revisa tu email de compra o contáctanos por Instagram.</p>
+    <div class="card">
+      <!-- Embed URL -->
+      <div class="info-row">
+        <div style="flex:1; min-width:0;">
+          <div class="info-row-label">Embed Link</div>
+          <div class="info-row-value" id="detailEmbedUrl"></div>
+        </div>
+        <div class="info-row-right">
+          <button class="btn-mini" onclick="copyById('detailEmbedUrl', this)">Copiar</button>
+        </div>
+      </div>
+
+      <!-- Integration Token -->
+      <div class="info-row">
+        <div style="flex:1; min-width:0;">
+          <div class="info-row-label">Integration Token</div>
+          <div class="info-row-value" id="detailToken" style="letter-spacing:.05em;"></div>
+        </div>
+      </div>
+
+      <!-- Database ID -->
+      <div class="info-row">
+        <div style="flex:1; min-width:0;">
+          <div class="info-row-label">Database</div>
+          <div class="info-row-value" id="detailDbId"></div>
+        </div>
+        <div class="info-row-right">
+          <a class="btn-mini-link" id="detailDbLink" href="#" target="_blank">Ver →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="detail-actions">
+      <button class="btn-action" id="btnShowRename" onclick="toggleRenameSection()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Renombrar
+      </button>
+      <button class="btn-action" id="btnShowReconnect" onclick="toggleReconnectSection()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        Reconectar Notion
+      </button>
+      <button class="btn-action danger" onclick="deleteWidgetFromDetail()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        Eliminar widget
+      </button>
+    </div>
+
+    <!-- Rename section -->
+    <div class="action-section" id="renameSection" style="display:none;">
+      <div class="action-section-title">Renombrar widget</div>
+      <div class="field" style="margin-bottom:10px;">
+        <input type="text" id="detailRenameInput" placeholder="Nombre del widget" maxlength="60" style="font-family:var(--sans);"/>
+      </div>
+      <div class="btn-row" style="margin-top:0;">
+        <button class="btn-ghost" onclick="toggleRenameSection()">Cancelar</button>
+        <button class="btn-primary" onclick="renameWidgetFromDetail()">Guardar</button>
+      </div>
+    </div>
+
+    <!-- Reconnect section -->
+    <div class="action-section" id="reconnectSection" style="display:none;">
+      <div class="action-section-title">Reconectar a una base de datos diferente</div>
+      <div class="field">
+        <label>Nuevo Integration Token</label>
+        <input type="text" id="reconnectToken" placeholder="ntn_xxxxxxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="off"/>
+      </div>
+      <div class="field">
+        <label>URL de la nueva base de datos</label>
+        <input type="text" id="reconnectDbUrl" placeholder="https://www.notion.so/workspace/..."/>
+      </div>
+      <div id="reconnectStatus" class="status idle"></div>
+      <div class="btn-row">
+        <button class="btn-ghost" onclick="toggleReconnectSection()">Cancelar</button>
+        <button class="btn-primary" id="btnReconnect" onclick="reconnectWidget()">Reconectar →</button>
+      </div>
     </div>
   </div>
 </div>
@@ -230,8 +335,8 @@
       <div class="toggle-switch"></div>
       <span>Ya dupliqué la plantilla</span>
     </div>
-    <div class="btn-row">
-      <button class="btn-ghost" id="btnBackDashboard1" onclick="goToDashboard()" style="display:none;">← Mis widgets</button>
+    <div class="btn-row" style="margin-top:1.25rem;">
+      <button class="btn-ghost" onclick="goToDashboard()" id="btnBackDashboard">← Mis widgets</button>
       <button class="btn-primary" id="btn1" disabled onclick="goStep(2)">Siguiente →</button>
     </div>
   </div>
@@ -260,7 +365,7 @@
       </button>
       <div class="howto-collapsible open">
         <div class="howto" style="margin-bottom:14px;">
-          <div class="howto-step"><div class="howto-n">1</div><span>Ve a <a href="https://www.notion.so/my-integrations" target="_blank" style="color:var(--ink);">notion.so/my-integrations</a> (o "Mis integraciones")</span></div>
+          <div class="howto-step"><div class="howto-n">1</div><span>Ve a <a href="https://www.notion.so/my-integrations" target="_blank" style="color:var(--ink);">notion.so/my-integrations</a></span></div>
           <div class="howto-step"><div class="howto-n">2</div><span>Click en <strong>"New integration"</strong></span></div>
           <div class="howto-step"><div class="howto-n">3</div><span>Dale un nombre (ej: "The Content Edit") y guarda</span></div>
           <div class="howto-step"><div class="howto-n">4</div><span>Copia el <strong>"Internal Integration Token"</strong> — empieza con <code>ntn_</code> o <code>secret_</code></span></div>
@@ -308,7 +413,7 @@
         <div class="howto">
           <div class="howto-step"><div class="howto-n">1</div><span>Abre tu base de datos en Notion en <strong>otra pestaña</strong></span></div>
           <div class="howto-step"><div class="howto-n">2</div><span>Click en <code>···</code> arriba a la derecha</span></div>
-          <div class="howto-step"><div class="howto-n">3</div><span>Click en <strong>"Connections"</strong> (o "Conexiones") → busca tu integración → selecciónala</span></div>
+          <div class="howto-step"><div class="howto-n">3</div><span>Click en <strong>"Connections"</strong> → busca tu integración → selecciónala</span></div>
           <div class="howto-step"><div class="howto-n">4</div><span>Confirma el acceso — debería aparecer un check verde</span></div>
         </div>
       </div>
@@ -347,10 +452,10 @@
       </button>
       <div class="howto-collapsible open">
         <div class="howto" style="margin-bottom:14px;">
-          <div class="howto-step"><div class="howto-n">1</div><span>En la pestaña de Notion, asegúrate de que la base de datos esté en <strong>página completa</strong></span></div>
-          <div class="howto-step"><div class="howto-n">2</div><span>Haz click en <code>···</code> arriba a la derecha</span></div>
+          <div class="howto-step"><div class="howto-n">1</div><span>En Notion, asegúrate de que la base de datos esté en <strong>página completa</strong></span></div>
+          <div class="howto-step"><div class="howto-n">2</div><span>Click en <code>···</code> arriba a la derecha</span></div>
           <div class="howto-step"><div class="howto-n">3</div><span>Click en <strong>"Copiar enlace"</strong> y pégalo aquí abajo</span></div>
-          <div class="howto-step"><div class="howto-n">4</div><span><strong>Importante:</strong> hazlo desde el navegador web — en la app de Notion no aparece la URL</span></div>
+          <div class="howto-step"><div class="howto-n">4</div><span><strong>Importante:</strong> desde el navegador web — en la app de Notion no aparece la URL</span></div>
         </div>
       </div>
       <div class="field">
@@ -402,14 +507,14 @@
         <div class="url-label"><span>Grid completo</span><span class="url-tag">GRID</span></div>
         <div class="embed-wrap">
           <div class="embed-url" id="embedUrl"></div>
-          <button class="copy-btn" id="copyBtnGrid" onclick="copyEmbed('embedUrl', this)">copiar</button>
+          <button class="copy-btn" onclick="copyEmbed('embedUrl', this)">copiar</button>
         </div>
       </div>
       <div class="url-block" id="step5-bio-block">
         <div class="url-label"><span>Solo bio & highlights</span><span class="url-tag bio">BIO</span></div>
         <div class="embed-wrap">
           <div class="embed-url" id="embedBioUrl"></div>
-          <button class="copy-btn" id="copyBtnBio" onclick="copyEmbed('embedBioUrl', this)">copiar</button>
+          <button class="copy-btn" onclick="copyEmbed('embedBioUrl', this)">copiar</button>
         </div>
       </div>
       <button class="howto-toggle open" onclick="toggleHowto(this)" style="margin-top:14px;">
@@ -424,24 +529,21 @@
           <div class="howto-step"><div class="howto-n">4</div><span>Cada vez que actualices tu base de datos, presiona el botón de Refresh en el widget</span></div>
         </div>
       </div>
-      <div class="note-tip">💡 Si usas iPhone o iPad, abre tu página de Notion en Safari o Chrome para ver el widget. En la app de escritorio y en el navegador funciona perfecto. En la app móvil de Notion aún no es compatible.</div>
+      <div class="note-tip" style="margin-top:12px;">💡 Si usas iPhone o iPad, abre tu página de Notion en Safari o Chrome para ver el widget.</div>
     </div>
-
-    <!-- Botón para ir al dashboard -->
     <button class="btn-primary" onclick="goToDashboard()" style="width:100%; margin-bottom:12px;">Ver todos mis widgets →</button>
-
     <div id="upgrade-card-step5" style="display:none;" class="upgrade-card">
       <div class="upgrade-card-title">Ya tienes el Free — pero te estás perdiendo lo mejor.</div>
       <div class="upgrade-card-sub">Haz upgrade a Pro una sola vez y desbloquea todo para siempre.</div>
       <ul class="upgrade-features">
-        <li><span class="feat-icon">🎨</span> Canva Connect — pega tu link y aparece directo</li>
-        <li><span class="feat-icon">🔗</span> Links externos — Pinterest, URLs, lo que sea</li>
-        <li><span class="feat-icon">🗺️</span> Content Map — ve tu feed por pilares</li>
-        <li><span class="feat-icon">📅</span> Plan Grid — drag & drop para cambiar fechas</li>
-        <li><span class="feat-icon">👤</span> Profile Preview — visualiza tu bio completa</li>
-        <li><span class="feat-icon">🌙</span> Dark mode — tu widget, tu aesthetic</li>
-        <li><span class="feat-icon">⊞</span> Vista 5 columnas — como en Instagram desktop</li>
-        <li><span class="feat-icon">✦</span> Post Preview — ve cómo se verá tu post publicado <span class="feat-new">PRÓXIMO</span></li>
+        <li><span class="feat-icon">🎨</span> Canva Connect</li>
+        <li><span class="feat-icon">🔗</span> Links externos</li>
+        <li><span class="feat-icon">🗺️</span> Content Map</li>
+        <li><span class="feat-icon">📅</span> Plan Grid</li>
+        <li><span class="feat-icon">👤</span> Profile Preview</li>
+        <li><span class="feat-icon">🌙</span> Dark mode</li>
+        <li><span class="feat-icon">⊞</span> Vista 5 columnas</li>
+        <li><span class="feat-icon">✦</span> Post Preview <span class="feat-new">PRÓXIMO</span></li>
       </ul>
       <a href="https://thecontentedit.lemonsqueezy.com/checkout/buy/cd1c69d1-0d45-48a1-90e4-8e489f2aac0c?logo=0" class="btn-upgrade">Upgrade a Pro — $449 MXN →</a>
       <p class="upgrade-note">Usa este mismo email al comprar — tu widget se actualiza automáticamente.</p>
@@ -450,15 +552,5 @@
 </div>
 
 <script src="/setup.js"></script>
-
-<script>
-  // Mostrar botón "← Mis widgets" en paso 1 solo si ya tiene widgets
-  window.addEventListener('DOMContentLoaded', () => {
-    const btn = document.getElementById('btnBackDashboard1');
-    if (btn && typeof allWidgets !== 'undefined' && allWidgets.length > 0) {
-      btn.style.display = 'block';
-    }
-  });
-</script>
 </body>
 </html>
