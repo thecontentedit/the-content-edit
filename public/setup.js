@@ -33,7 +33,6 @@ async function init() {
     document.getElementById('appLoading').style.display = 'none';
     document.getElementById('appShell').style.display = 'flex';
 
-    // Poblar Account
     renderAccount();
 
     if (data.activated && allWidgets.length > 0) {
@@ -91,7 +90,6 @@ function switchTab(tab) {
   if (navEl) navEl.classList.add('active');
   const panelEl = document.getElementById('panel-' + tab);
   if (panelEl) panelEl.classList.add('active');
-
   if (tab === 'widgets') renderDashboard();
 }
 
@@ -157,16 +155,25 @@ function openWidgetDetail(widgetId) {
   document.getElementById('detailName').textContent = widget.name || 'Widget';
   document.getElementById('detailEmbedUrl').textContent = widget.embedUrl || '';
   document.getElementById('detailToken').textContent = widget.maskedToken || '••••••••••••••••••••••••••••••';
+  document.getElementById('detailDbId').textContent = widget.notionDbId || '';
 
-  const dbId = widget.notionDbId || '';
-  document.getElementById('detailDbId').textContent = dbId;
+  // Usar notionDbUrl si existe, si no construir link básico
   const dbLink = document.getElementById('detailDbLink');
-  if (dbId) {
-    const fmt = dbId.replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, '$1-$2-$3-$4-$5');
+  if (widget.notionDbUrl) {
+    dbLink.href = widget.notionDbUrl;
+    dbLink.style.display = 'inline';
+  } else if (widget.notionDbId) {
+    const fmt = widget.notionDbId.replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, '$1-$2-$3-$4-$5');
     dbLink.href = `https://www.notion.so/${fmt}`;
     dbLink.style.display = 'inline';
   } else {
     dbLink.style.display = 'none';
+  }
+
+  // Cargar preview del widget
+  const previewIframe = document.getElementById('widgetPreviewIframe');
+  if (previewIframe && widget.embedUrl) {
+    previewIframe.src = widget.embedUrl;
   }
 
   document.getElementById('reconnectStatus').className = 'status idle';
@@ -177,8 +184,7 @@ function openWidgetDetail(widgetId) {
   document.getElementById('btnShowRename').style.display = 'inline-flex';
 
   document.getElementById('widgetsDashboard').style.display = 'none';
-  document.getElementById('widgetDetail').style.display = 'block';
-  document.querySelector('.panel.active').scrollTop = 0;
+  document.getElementById('widgetDetail').style.display = 'flex';
 }
 
 function toggleReconnectSection() {
@@ -246,7 +252,7 @@ async function reconnectWidget() {
     const res = await fetch(`${BASE_URL}/api/setup`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ setupToken, widgetId: activeWidgetId, notionToken: token, notionDbId: dbId }),
+      body: JSON.stringify({ setupToken, widgetId: activeWidgetId, notionToken: token, notionDbId: dbId, notionDbUrl: dbUrl }),
     });
     const data = await res.json();
     if (!res.ok) {
@@ -258,9 +264,16 @@ async function reconnectWidget() {
     const idx = allWidgets.findIndex(w => w.widgetId === activeWidgetId);
     if (idx !== -1) {
       allWidgets[idx].notionDbId = dbId;
+      allWidgets[idx].notionDbUrl = dbUrl;
       allWidgets[idx].maskedToken = token.slice(0, 8) + '•'.repeat(Math.max(0, token.length - 8));
       document.getElementById('detailToken').textContent = allWidgets[idx].maskedToken;
       document.getElementById('detailDbId').textContent = dbId;
+      const dbLink = document.getElementById('detailDbLink');
+      dbLink.href = dbUrl;
+      dbLink.style.display = 'inline';
+      // Recargar preview
+      const iframe = document.getElementById('widgetPreviewIframe');
+      if (iframe) iframe.src = iframe.src;
     }
     status.className = 'status success';
     status.innerHTML = successIcon() + ' ¡Reconectado correctamente!';
@@ -302,7 +315,6 @@ function renderAccount() {
     planEl.textContent = currentPlan === 'pro' ? 'Pro' : 'Free';
     planEl.className = 'account-row-val' + (currentPlan === 'pro' ? ' pro' : '');
   }
-
   if (licenseEl && accountData.licenseKey) {
     const date = accountData.purchaseDate
       ? new Date(accountData.purchaseDate).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' })
@@ -317,11 +329,10 @@ function renderAccount() {
       </div>
     `;
   }
-
   if (upgradeEl) upgradeEl.style.display = currentPlan === 'pro' ? 'none' : 'block';
 }
 
-// ─── WIZARD STEPS ────────────────────────────────────────────────────────────
+// ─── WIZARD ───────────────────────────────────────────────────────────────────
 function resetWizard() {
   [1,2,3,4].forEach(n => {
     toggleStates[n] = false;
@@ -335,7 +346,10 @@ function resetWizard() {
   const dbUrl = document.getElementById('notionDbUrl');
   if (dbUrl) dbUrl.value = '';
   const status = document.getElementById('connectStatus');
-  if (status) { status.className = 'status idle'; status.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Ingresa la URL para continuar'; }
+  if (status) {
+    status.className = 'status idle';
+    status.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Ingresa la URL para continuar';
+  }
   savedNotionToken = '';
   try { sessionStorage.removeItem('tce_notion_token'); } catch(e) {}
   goStep(1);
@@ -389,8 +403,8 @@ async function connectNotion() {
     || (savedNotionToken.length > 10 ? savedNotionToken : null)
     || (function(){ try { return sessionStorage.getItem('tce_notion_token') || ''; } catch(e) { return ''; } })();
 
-  const dbUrl = document.getElementById('notionDbUrl').value.trim();
-  const dbId = extractDbId(dbUrl);
+  const dbUrlInput = document.getElementById('notionDbUrl').value.trim();
+  const dbId = extractDbId(dbUrlInput);
   const status = document.getElementById('connectStatus');
   const btn = document.getElementById('btn4');
 
@@ -415,7 +429,7 @@ async function connectNotion() {
     const res = await fetch(`${BASE_URL}/api/setup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ setupToken, notionToken: token, notionDbId: dbId, widgetName }),
+      body: JSON.stringify({ setupToken, notionToken: token, notionDbId: dbId, notionDbUrl: dbUrlInput, widgetName }),
     });
     const data = await res.json();
 
@@ -437,6 +451,7 @@ async function connectNotion() {
       embedUrl: data.embedUrl,
       maskedToken: token.slice(0, 8) + '•'.repeat(Math.max(0, token.length - 8)),
       notionDbId: dbId,
+      notionDbUrl: dbUrlInput,
     });
     currentPlan = data.plan || currentPlan;
 
@@ -461,10 +476,9 @@ async function connectNotion() {
   }
 }
 
-// ─── HELP FAQ ─────────────────────────────────────────────────────────────────
+// ─── FAQ ─────────────────────────────────────────────────────────────────────
 function toggleFaq(header) {
-  const item = header.parentElement;
-  item.classList.toggle('open');
+  header.parentElement.classList.toggle('open');
 }
 
 // ─── UTILS ───────────────────────────────────────────────────────────────────
