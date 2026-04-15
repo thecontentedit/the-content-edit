@@ -35,7 +35,7 @@ export default async function handler(req, res) {
     const data = typeof raw === 'string' ? JSON.parse(raw) : raw;
     const base = process.env.NEXT_PUBLIC_BASE_URL;
 
-    // Migración legacy: widgetId string → array
+    // Migración legacy
     let widgets = data.widgets || [];
     if (!widgets.length && data.widgetId) {
       widgets = [{
@@ -51,6 +51,8 @@ export default async function handler(req, res) {
       email: data.email,
       plan: data.plan,
       activated: data.activated,
+      licenseKey: data.licenseKey || null,
+      purchaseDate: data.purchaseDate || data.activatedAt || null,
       widgets: widgets.map(w => {
         let maskedToken = null;
         if (w.notionToken) {
@@ -117,7 +119,6 @@ export default async function handler(req, res) {
       ...data,
       widgets,
       activated: true,
-      // legacy compat
       notionToken: newWidget.notionToken,
       notionDbId,
       widgetId,
@@ -159,17 +160,10 @@ export default async function handler(req, res) {
         await new Promise(r => setTimeout(r, 800));
       }
       if (!valid.ok) return res.status(422).json({ error: valid.message });
-
       widgets[idx].notionToken = encryptToken(notionToken);
       widgets[idx].notionDbId = notionDbId;
-
-      // Si es el widget legacy activo, actualizar campos raíz también
       if (data.widgetId === widgetId) {
-        await redis.set(`setup:${setupToken}`, JSON.stringify({
-          ...data, widgets,
-          notionToken: widgets[idx].notionToken,
-          notionDbId,
-        }));
+        await redis.set(`setup:${setupToken}`, JSON.stringify({ ...data, widgets, notionToken: widgets[idx].notionToken, notionDbId }));
         return res.status(200).json({ ok: true });
       }
     }
