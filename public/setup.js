@@ -5,7 +5,8 @@ const toggleStates = { 1: false, 2: false, 3: false, 4: false };
 let savedNotionToken = '';
 let currentPlan = 'free';
 let allWidgets = [];
-let activeWidgetId = null; // widget actualmente en detalle
+let activeWidgetId = null;
+let accountData = {};
 
 // ─── INIT ────────────────────────────────────────────────────────────────────
 async function init() {
@@ -14,31 +15,45 @@ async function init() {
     if (stored && stored.startsWith('http')) sessionStorage.removeItem('tce_notion_token');
   } catch(e) {}
 
-  if (!setupToken) { showScreen('screenInvalid'); return; }
+  if (!setupToken) {
+    document.getElementById('appLoading').style.display = 'none';
+    document.getElementById('appInvalid').style.display = 'flex';
+    return;
+  }
 
   try {
     const res = await fetch(`${BASE_URL}/api/setup?token=${setupToken}`);
-    if (!res.ok) { showScreen('screenInvalid'); return; }
+    if (!res.ok) throw new Error('invalid');
     const data = await res.json();
 
     currentPlan = data.plan || 'free';
     allWidgets = data.widgets || [];
+    accountData = data;
+
+    document.getElementById('appLoading').style.display = 'none';
+    document.getElementById('appShell').style.display = 'flex';
+
+    // Poblar Account
+    renderAccount();
 
     if (data.activated && allWidgets.length > 0) {
-      renderDashboard();
-      showScreen('screenDashboard');
-      return;
+      switchTab('widgets');
+    } else {
+      switchTab('welcome');
     }
-    showScreen('screenStep1');
-  } catch { showScreen('screenInvalid'); }
 
-  // Validación en tiempo real del token
+  } catch(e) {
+    document.getElementById('appLoading').style.display = 'none';
+    document.getElementById('appInvalid').style.display = 'flex';
+  }
+
+  // Validación token en tiempo real
   const tokenInput = document.getElementById('notionToken');
   const tokenHint = document.getElementById('tokenHint');
   if (tokenInput && tokenHint) {
     const validateToken = () => {
       const val = tokenInput.value.trim();
-      if (val.length === 0) {
+      if (!val.length) {
         tokenHint.style.color = '';
         tokenHint.innerHTML = 'El token empieza con <code>ntn_</code> o <code>secret_</code> y tiene ~50 caracteres.';
         checkStep2(); return;
@@ -47,7 +62,7 @@ async function init() {
       const looksLikeUrl = val.startsWith('http') || val.includes('setup.html') || val.includes('token=');
       if (looksLikeUrl) {
         tokenHint.style.color = '#c0392b';
-        tokenHint.innerHTML = 'Eso parece una URL, no un token. Ve a notion.so/my-integrations y copia el Internal Integration Token — empieza con <code>ntn_</code> o <code>secret_</code>.';
+        tokenHint.innerHTML = 'Eso parece una URL, no un token. Ve a notion.so/my-integrations y copia el Internal Integration Token.';
       } else if (val.length > 5 && !isValid) {
         tokenHint.style.color = '#c0392b';
         tokenHint.innerHTML = '⚠️ El token debe empezar con <code>ntn_</code> o <code>secret_</code>.';
@@ -68,47 +83,69 @@ async function init() {
   }
 }
 
+// ─── TAB NAVIGATION ──────────────────────────────────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(el => el.classList.remove('active'));
+  const navEl = document.getElementById('nav-' + tab);
+  if (navEl) navEl.classList.add('active');
+  const panelEl = document.getElementById('panel-' + tab);
+  if (panelEl) panelEl.classList.add('active');
+
+  if (tab === 'widgets') renderDashboard();
+}
+
 // ─── DASHBOARD ───────────────────────────────────────────────────────────────
 function renderDashboard() {
+  showWidgetsDashboard();
   const grid = document.getElementById('widgetsGrid');
-  const emptyState = document.getElementById('dashboardEmpty');
+  const empty = document.getElementById('widgetsEmpty');
+  const upgradeEl = document.getElementById('dashboardUpgrade');
   const planBadge = document.getElementById('dashboardPlan');
 
   if (planBadge) {
     planBadge.textContent = currentPlan === 'pro' ? 'Pro' : 'Free';
-    planBadge.className = 'plan-badge ' + (currentPlan === 'pro' ? 'pro' : 'free');
+    planBadge.className = 'plan-badge ' + currentPlan;
   }
 
   if (!allWidgets.length) {
-    if (grid) grid.style.display = 'none';
-    if (emptyState) emptyState.style.display = 'block';
+    grid.style.display = 'none';
+    empty.style.display = 'block';
+    if (upgradeEl) upgradeEl.style.display = 'none';
     return;
   }
 
-  if (emptyState) emptyState.style.display = 'none';
-  if (grid) grid.style.display = 'grid';
+  empty.style.display = 'none';
+  grid.style.display = 'grid';
 
-  const colors = ['#F2EDE8', '#EAF4EE', '#EBF0F8', '#F8EBF0', '#F0EBF8'];
+  const colors = ['#F2EDE8', '#EAF4EE', '#EBF0F8', '#F8EBF0', '#F0EBF8', '#FFF8E7'];
   grid.innerHTML = allWidgets.map((w, i) => {
     const bg = colors[i % colors.length];
     const date = w.createdAt
       ? new Date(w.createdAt).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' })
       : '';
+    const shortUrl = w.embedUrl ? w.embedUrl.replace('https://', '') : '';
     return `
       <div class="widget-card" style="--card-bg:${bg}" onclick="openWidgetDetail('${w.widgetId}')">
         <div class="widget-card-icon">✦</div>
-        <div class="widget-card-name">${w.name || 'Widget #' + (i + 1)}</div>
+        <div class="widget-card-name">${escHtml(w.name || 'Widget #' + (i + 1))}</div>
         <div class="widget-card-date">${date}</div>
-        <div class="widget-card-url">${w.embedUrl}</div>
-        <div class="widget-card-arrow">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </div>
+        <div class="widget-card-url">${shortUrl}</div>
       </div>
     `;
   }).join('');
 
-  const upgradeCard = document.getElementById('dashboardUpgrade');
-  if (upgradeCard) upgradeCard.style.display = currentPlan === 'pro' ? 'none' : 'block';
+  if (upgradeEl) upgradeEl.style.display = currentPlan === 'pro' ? 'none' : 'block';
+}
+
+function showWidgetsDashboard() {
+  document.getElementById('widgetsDashboard').style.display = 'block';
+  document.getElementById('widgetDetail').style.display = 'none';
+}
+
+function startNewWidget() {
+  resetWizard();
+  switchTab('setup');
 }
 
 // ─── WIDGET DETAIL ────────────────────────────────────────────────────────────
@@ -118,38 +155,69 @@ function openWidgetDetail(widgetId) {
   activeWidgetId = widgetId;
 
   document.getElementById('detailName').textContent = widget.name || 'Widget';
-  document.getElementById('detailEmbedUrl').textContent = widget.embedUrl;
+  document.getElementById('detailEmbedUrl').textContent = widget.embedUrl || '';
   document.getElementById('detailToken').textContent = widget.maskedToken || '••••••••••••••••••••••••••••••';
 
   const dbId = widget.notionDbId || '';
-  const dbEl = document.getElementById('detailDbId');
-  const dbLinkEl = document.getElementById('detailDbLink');
-  if (dbEl) dbEl.textContent = dbId;
-  if (dbLinkEl) {
-    if (dbId) {
-      const formatted = dbId.replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, '$1-$2-$3-$4-$5');
-      dbLinkEl.href = `https://www.notion.so/${formatted}`;
-      dbLinkEl.style.display = 'inline';
-    } else {
-      dbLinkEl.style.display = 'none';
-    }
+  document.getElementById('detailDbId').textContent = dbId;
+  const dbLink = document.getElementById('detailDbLink');
+  if (dbId) {
+    const fmt = dbId.replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, '$1-$2-$3-$4-$5');
+    dbLink.href = `https://www.notion.so/${fmt}`;
+    dbLink.style.display = 'inline';
+  } else {
+    dbLink.style.display = 'none';
   }
 
-  // Reconect form: limpiar
   document.getElementById('reconnectStatus').className = 'status idle';
   document.getElementById('reconnectStatus').innerHTML = '';
   document.getElementById('reconnectSection').style.display = 'none';
+  document.getElementById('renameSection').style.display = 'none';
   document.getElementById('btnShowReconnect').style.display = 'inline-flex';
+  document.getElementById('btnShowRename').style.display = 'inline-flex';
 
-  showScreen('screenWidgetDetail');
+  document.getElementById('widgetsDashboard').style.display = 'none';
+  document.getElementById('widgetDetail').style.display = 'block';
+  document.querySelector('.panel.active').scrollTop = 0;
 }
 
 function toggleReconnectSection() {
-  const section = document.getElementById('reconnectSection');
+  const s = document.getElementById('reconnectSection');
   const btn = document.getElementById('btnShowReconnect');
-  const isOpen = section.style.display !== 'none';
-  section.style.display = isOpen ? 'none' : 'block';
+  const isOpen = s.style.display !== 'none';
+  s.style.display = isOpen ? 'none' : 'block';
   btn.style.display = isOpen ? 'inline-flex' : 'none';
+}
+
+function toggleRenameSection() {
+  const s = document.getElementById('renameSection');
+  const btn = document.getElementById('btnShowRename');
+  const isOpen = s.style.display !== 'none';
+  s.style.display = isOpen ? 'none' : 'block';
+  btn.style.display = isOpen ? 'inline-flex' : 'none';
+  if (s.style.display !== 'none') {
+    const widget = allWidgets.find(w => w.widgetId === activeWidgetId);
+    const input = document.getElementById('detailRenameInput');
+    input.value = widget ? widget.name : '';
+    input.focus();
+  }
+}
+
+async function renameWidgetFromDetail() {
+  const input = document.getElementById('detailRenameInput');
+  const newName = input.value.trim();
+  if (!newName || !activeWidgetId) return;
+  try {
+    await fetch(`${BASE_URL}/api/setup`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ setupToken, widgetId: activeWidgetId, name: newName }),
+    });
+    const idx = allWidgets.findIndex(w => w.widgetId === activeWidgetId);
+    if (idx !== -1) allWidgets[idx].name = newName;
+    document.getElementById('detailName').textContent = newName;
+    toggleRenameSection();
+  } catch(e) { console.error(e); }
 }
 
 async function reconnectWidget() {
@@ -166,7 +234,7 @@ async function reconnectWidget() {
   }
   if (!dbId) {
     status.className = 'status error';
-    status.innerHTML = errorIcon() + ' No encontré el ID de tu DB en esa URL.';
+    status.innerHTML = errorIcon() + ' No encontré el ID en esa URL.';
     return;
   }
 
@@ -181,25 +249,21 @@ async function reconnectWidget() {
       body: JSON.stringify({ setupToken, widgetId: activeWidgetId, notionToken: token, notionDbId: dbId }),
     });
     const data = await res.json();
-
     if (!res.ok) {
       status.className = 'status error';
       status.innerHTML = errorIcon() + ' ' + (data.error || 'Error al reconectar');
       btn.disabled = false;
       return;
     }
-
-    // Actualizar datos locales
     const idx = allWidgets.findIndex(w => w.widgetId === activeWidgetId);
     if (idx !== -1) {
       allWidgets[idx].notionDbId = dbId;
       allWidgets[idx].maskedToken = token.slice(0, 8) + '•'.repeat(Math.max(0, token.length - 8));
+      document.getElementById('detailToken').textContent = allWidgets[idx].maskedToken;
+      document.getElementById('detailDbId').textContent = dbId;
     }
-
     status.className = 'status success';
     status.innerHTML = successIcon() + ' ¡Reconectado correctamente!';
-    document.getElementById('detailToken').textContent = allWidgets[idx]?.maskedToken || '';
-    document.getElementById('detailDbId').textContent = dbId;
     document.getElementById('reconnectToken').value = '';
     document.getElementById('reconnectDbUrl').value = '';
     btn.disabled = false;
@@ -210,45 +274,10 @@ async function reconnectWidget() {
   }
 }
 
-async function renameWidgetFromDetail() {
-  const input = document.getElementById('detailRenameInput');
-  const newName = input.value.trim();
-  if (!newName || !activeWidgetId) return;
-
-  try {
-    await fetch(`${BASE_URL}/api/setup`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ setupToken, widgetId: activeWidgetId, name: newName }),
-    });
-    const idx = allWidgets.findIndex(w => w.widgetId === activeWidgetId);
-    if (idx !== -1) allWidgets[idx].name = newName;
-    document.getElementById('detailName').textContent = newName;
-    input.value = '';
-    document.getElementById('renameSection').style.display = 'none';
-    document.getElementById('btnShowRename').style.display = 'inline-flex';
-  } catch(e) { console.error('Error al renombrar', e); }
-}
-
-function toggleRenameSection() {
-  const section = document.getElementById('renameSection');
-  const btn = document.getElementById('btnShowRename');
-  const isOpen = section.style.display !== 'none';
-  section.style.display = isOpen ? 'none' : 'block';
-  btn.style.display = isOpen ? 'inline-flex' : 'none';
-  if (section.style.display !== 'none') {
-    const input = document.getElementById('detailRenameInput');
-    const widget = allWidgets.find(w => w.widgetId === activeWidgetId);
-    input.value = widget ? widget.name : '';
-    input.focus();
-  }
-}
-
 async function deleteWidgetFromDetail() {
   const widget = allWidgets.find(w => w.widgetId === activeWidgetId);
   const name = widget ? widget.name : 'este widget';
   if (!confirm(`¿Eliminar "${name}"? Esta acción no se puede deshacer. El embed en Notion dejará de funcionar.`)) return;
-
   try {
     await fetch(`${BASE_URL}/api/setup`, {
       method: 'DELETE',
@@ -258,17 +287,42 @@ async function deleteWidgetFromDetail() {
     allWidgets = allWidgets.filter(w => w.widgetId !== activeWidgetId);
     activeWidgetId = null;
     renderDashboard();
-    showScreen('screenDashboard');
-  } catch(e) {
-    alert('Error al eliminar. Intenta de nuevo.');
-  }
+  } catch(e) { alert('Error al eliminar. Intenta de nuevo.'); }
 }
 
-// ─── DASHBOARD / SETUP FLOW ───────────────────────────────────────────────────
-function goToDashboard() {
-  renderDashboard();
-  showScreen('screenDashboard');
-  // Resetear estado del flujo
+// ─── ACCOUNT ─────────────────────────────────────────────────────────────────
+function renderAccount() {
+  const emailEl = document.getElementById('accountEmail');
+  const planEl = document.getElementById('accountPlan');
+  const licenseEl = document.getElementById('accountLicenseKey');
+  const upgradeEl = document.getElementById('accountUpgrade');
+
+  if (emailEl) emailEl.textContent = accountData.email || '—';
+  if (planEl) {
+    planEl.textContent = currentPlan === 'pro' ? 'Pro' : 'Free';
+    planEl.className = 'account-row-val' + (currentPlan === 'pro' ? ' pro' : '');
+  }
+
+  if (licenseEl && accountData.licenseKey) {
+    const date = accountData.purchaseDate
+      ? new Date(accountData.purchaseDate).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' })
+      : '';
+    licenseEl.innerHTML = `
+      <div class="license-item">
+        <div class="license-meta">
+          <span class="license-type">${currentPlan === 'pro' ? 'Pro' : 'Free'} License Key</span>
+          <span class="license-date">${date}</span>
+        </div>
+        <div class="license-key">${accountData.licenseKey}</div>
+      </div>
+    `;
+  }
+
+  if (upgradeEl) upgradeEl.style.display = currentPlan === 'pro' ? 'none' : 'block';
+}
+
+// ─── WIZARD STEPS ────────────────────────────────────────────────────────────
+function resetWizard() {
   [1,2,3,4].forEach(n => {
     toggleStates[n] = false;
     const el = document.getElementById('toggle' + n);
@@ -280,31 +334,25 @@ function goToDashboard() {
   if (tokenInput) tokenInput.value = '';
   const dbUrl = document.getElementById('notionDbUrl');
   if (dbUrl) dbUrl.value = '';
+  const status = document.getElementById('connectStatus');
+  if (status) { status.className = 'status idle'; status.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Ingresa la URL para continuar'; }
   savedNotionToken = '';
   try { sessionStorage.removeItem('tce_notion_token'); } catch(e) {}
-}
-
-function startNewWidget() {
-  showScreen('screenStep1');
-}
-
-// ─── SCREENS ─────────────────────────────────────────────────────────────────
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0, 0);
+  goStep(1);
 }
 
 function goStep(n) {
   if (n === 3) {
     const tokenInput = document.getElementById('notionToken');
-    const tokenFromInput = tokenInput ? tokenInput.value.trim() : '';
-    if (tokenFromInput.length > 10) {
-      savedNotionToken = tokenFromInput;
-      try { sessionStorage.setItem('tce_notion_token', tokenFromInput); } catch(e) {}
+    const val = tokenInput ? tokenInput.value.trim() : '';
+    if (val.length > 10) {
+      savedNotionToken = val;
+      try { sessionStorage.setItem('tce_notion_token', val); } catch(e) {}
     }
   }
-  showScreen('screenStep' + n);
+  document.querySelectorAll('.wscreen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('screenStep' + n);
+  if (el) { el.classList.add('active'); el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 }
 
 function toggleConfirm(n) {
@@ -318,8 +366,8 @@ function toggleConfirm(n) {
 
 function checkStep2() {
   const token = document.getElementById('notionToken').value.trim();
-  const isValidToken = (token.startsWith('ntn_') || token.startsWith('secret_')) && token.length > 20;
-  document.getElementById('btn2').disabled = !(toggleStates[2] && isValidToken);
+  const isValid = (token.startsWith('ntn_') || token.startsWith('secret_')) && token.length > 20;
+  document.getElementById('btn2').disabled = !(toggleStates[2] && isValid);
 }
 
 function checkStep4() {
@@ -413,27 +461,29 @@ async function connectNotion() {
   }
 }
 
+// ─── HELP FAQ ─────────────────────────────────────────────────────────────────
+function toggleFaq(header) {
+  const item = header.parentElement;
+  item.classList.toggle('open');
+}
+
 // ─── UTILS ───────────────────────────────────────────────────────────────────
 function copyEmbed(id, btn) {
   const text = document.getElementById(id).textContent;
   navigator.clipboard.writeText(text).then(() => {
-    const original = btn.textContent;
+    const orig = btn.textContent;
     btn.textContent = '✓ copiado';
-    setTimeout(() => btn.textContent = original, 2000);
-  });
-}
-
-function copyText(text, btn) {
-  navigator.clipboard.writeText(text).then(() => {
-    const original = btn.textContent;
-    btn.textContent = '✓';
-    setTimeout(() => btn.textContent = original, 2000);
+    setTimeout(() => btn.textContent = orig, 2000);
   });
 }
 
 function copyById(id, btn) {
   const text = document.getElementById(id).textContent;
-  copyText(text, btn);
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✓';
+    setTimeout(() => btn.textContent = orig, 2000);
+  });
 }
 
 function toggleHowto(btn) {
@@ -441,7 +491,9 @@ function toggleHowto(btn) {
   const isOpen = collapsible.classList.contains('open');
   collapsible.classList.toggle('open', !isOpen);
   btn.classList.toggle('open', !isOpen);
-  btn.querySelector('span') && (btn.querySelector('span').textContent = isOpen ? 'Ver instrucciones' : 'Ocultar instrucciones');
+  if (btn.querySelector('span')) {
+    btn.querySelector('span').textContent = isOpen ? 'Ver instrucciones' : 'Ocultar instrucciones';
+  }
 }
 
 function errorIcon() {
@@ -449,6 +501,9 @@ function errorIcon() {
 }
 function successIcon() {
   return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;flex-shrink:0"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+}
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 init();
