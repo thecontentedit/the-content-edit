@@ -43,6 +43,7 @@ export default async function handler(req, res) {
         name: 'Widget #1',
         notionToken: data.notionToken,
         notionDbId: data.notionDbId,
+        notionDbUrl: data.notionDbUrl || null,
         createdAt: data.activatedAt || new Date().toISOString(),
       }];
     }
@@ -70,6 +71,7 @@ export default async function handler(req, res) {
           embedUrl: `${base}/embed/${w.widgetId}`,
           maskedToken,
           notionDbId: w.notionDbId || null,
+          notionDbUrl: w.notionDbUrl || null,
         };
       }),
     });
@@ -77,7 +79,7 @@ export default async function handler(req, res) {
 
   // ─── POST: crear widget nuevo ─────────────────────────────────────────────
   if (req.method === 'POST') {
-    const { setupToken, notionToken, notionDbId, widgetName } = req.body;
+    const { setupToken, notionToken, notionDbId, notionDbUrl, widgetName } = req.body;
     if (!setupToken || !notionToken || !notionDbId) {
       return res.status(400).json({ error: 'Faltan campos requeridos' });
     }
@@ -101,6 +103,7 @@ export default async function handler(req, res) {
         name: 'Widget #1',
         notionToken: data.notionToken,
         notionDbId: data.notionDbId,
+        notionDbUrl: data.notionDbUrl || null,
         createdAt: data.activatedAt || new Date().toISOString(),
       }];
     }
@@ -111,6 +114,7 @@ export default async function handler(req, res) {
       name: widgetName || `Widget #${widgets.length + 1}`,
       notionToken: encryptToken(notionToken),
       notionDbId,
+      notionDbUrl: notionDbUrl || null,
       createdAt: new Date().toISOString(),
     };
     widgets.push(newWidget);
@@ -121,6 +125,7 @@ export default async function handler(req, res) {
       activated: true,
       notionToken: newWidget.notionToken,
       notionDbId,
+      notionDbUrl: notionDbUrl || null,
       widgetId,
       activatedAt: data.activatedAt || new Date().toISOString(),
     };
@@ -139,7 +144,7 @@ export default async function handler(req, res) {
 
   // ─── PATCH: renombrar o reconectar ────────────────────────────────────────
   if (req.method === 'PATCH') {
-    const { setupToken, widgetId, name, notionToken, notionDbId } = req.body;
+    const { setupToken, widgetId, name, notionToken, notionDbId, notionDbUrl } = req.body;
     if (!setupToken || !widgetId) return res.status(400).json({ error: 'Faltan campos requeridos' });
 
     const raw = await redis.get(`setup:${setupToken}`);
@@ -160,10 +165,18 @@ export default async function handler(req, res) {
         await new Promise(r => setTimeout(r, 800));
       }
       if (!valid.ok) return res.status(422).json({ error: valid.message });
+
       widgets[idx].notionToken = encryptToken(notionToken);
       widgets[idx].notionDbId = notionDbId;
+      widgets[idx].notionDbUrl = notionDbUrl || null;
+
       if (data.widgetId === widgetId) {
-        await redis.set(`setup:${setupToken}`, JSON.stringify({ ...data, widgets, notionToken: widgets[idx].notionToken, notionDbId }));
+        await redis.set(`setup:${setupToken}`, JSON.stringify({
+          ...data, widgets,
+          notionToken: widgets[idx].notionToken,
+          notionDbId,
+          notionDbUrl: notionDbUrl || null,
+        }));
         return res.status(200).json({ ok: true });
       }
     }
@@ -172,7 +185,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true });
   }
 
-  // ─── DELETE: eliminar widget ──────────────────────────────────────────────
+  // ─── DELETE ───────────────────────────────────────────────────────────────
   if (req.method === 'DELETE') {
     const { setupToken, widgetId } = req.body;
     if (!setupToken || !widgetId) return res.status(400).json({ error: 'Faltan campos requeridos' });
