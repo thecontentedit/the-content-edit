@@ -225,8 +225,9 @@ function formatPost(page, plan) {
     canvaUrl = canvaUrl.split('?')[0] + '?embed';
   }
 
-  const portadaUrlDirecta = normalizeLink(props[PROPS.portadaUrl]?.url || null);
-  const portadaFiles = props[PROPS.portada]?.files || [];
+  // ✅ Portada Reel solo para Pro
+  const portadaUrlDirecta = plan === 'pro' ? normalizeLink(props[PROPS.portadaUrl]?.url || null) : null;
+  const portadaFiles = plan === 'pro' ? (props[PROPS.portada]?.files || []) : [];
   const portadaArchivo = portadaFiles.length > 0
     ? (portadaFiles[0].type === 'file' ? portadaFiles[0].file.url : portadaFiles[0].external?.url)
     : null;
