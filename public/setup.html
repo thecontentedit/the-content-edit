@@ -150,7 +150,7 @@ code { font-size: 11px; background: rgba(28,25,21,.07); padding: 1px 5px; border
 .widgets-empty { text-align: center; padding: 60px 40px; color: var(--muted); font-size: 14px; }
 .widgets-empty-icon { font-size: 32px; margin-bottom: 12px; }
 
-/* WIDGET DETAIL — two column layout */
+/* WIDGET DETAIL */
 #widgetDetail { display: none; height: calc(100vh - 0px); overflow: hidden; }
 .detail-layout { display: flex; height: 100%; }
 .detail-sidebar { width: 320px; flex-shrink: 0; border-right: 0.5px solid var(--border); overflow-y: auto; padding: 24px; }
@@ -188,7 +188,6 @@ code { font-size: 11px; background: rgba(28,25,21,.07); padding: 1px 5px; border
 .upgrade-features { list-style: none; margin-bottom: 16px; display: flex; flex-direction: column; gap: 6px; }
 .upgrade-features li { font-size: 12px; color: rgba(249,246,241,0.85); display: flex; align-items: center; gap: 8px; }
 .feat-icon { font-size: 13px; width: 18px; text-align: center; flex-shrink: 0; }
-.feat-new { font-size: 9px; background: var(--accent); color: #fff; padding: 1px 5px; border-radius: 999px; margin-left: 4px; }
 .btn-upgrade { display: block; background: #fff; color: var(--ink); text-align: center; padding: 11px; border-radius: 999px; font-size: 13px; font-weight: 500; text-decoration: none; transition: opacity .2s; }
 .btn-upgrade:hover { opacity: .85; }
 .upgrade-note { font-size: 11px; color: rgba(249,246,241,0.45); margin-top: 10px; text-align: center; }
@@ -422,7 +421,11 @@ code { font-size: 11px; background: rgba(28,25,21,.07); padding: 1px 5px; border
             <div class="step-item active"><div class="step-circle">5</div><span>Widget</span></div>
           </div>
           <div class="success-card">
-            <div class="success-card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>¡Tu widget está listo!</div>
+            <div class="success-card-title">
+              🎞️
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              ¡Tu widget está listo!
+            </div>
             <div class="success-card-body">Copia tus links y pégalos en Notion con <strong>/embed</strong>.</div>
           </div>
           <div class="card">
@@ -452,11 +455,15 @@ code { font-size: 11px; background: rgba(28,25,21,.07); padding: 1px 5px; border
             <div class="upgrade-card-title">Ya tienes el Free — pero te estás perdiendo lo mejor.</div>
             <div class="upgrade-card-sub">Haz upgrade a Pro una sola vez y desbloquea todo para siempre.</div>
             <ul class="upgrade-features">
-              <li><span class="feat-icon">🎨</span> Canva Connect</li><li><span class="feat-icon">🔗</span> Links externos</li>
-              <li><span class="feat-icon">🗺️</span> Content Map</li><li><span class="feat-icon">📅</span> Plan Grid</li>
-              <li><span class="feat-icon">👤</span> Profile Preview</li><li><span class="feat-icon">🌙</span> Dark mode</li>
+              <li><span class="feat-icon">🎨</span> Canva Connect</li>
+              <li><span class="feat-icon">🔗</span> Links externos</li>
+              <li><span class="feat-icon">🗺️</span> Content Map</li>
+              <li><span class="feat-icon">📅</span> Plan Grid</li>
+              <li><span class="feat-icon">👤</span> Profile Preview</li>
+              <li><span class="feat-icon">🌙</span> Dark mode</li>
               <li><span class="feat-icon">⊞</span> Vista 5 columnas</li>
-              <li><span class="feat-icon">✦</span> Post Preview <span class="feat-new">PRÓXIMO</span></li>
+              <li><span class="feat-icon">▶️</span> Carruseles y reels</li>
+              <li><span class="feat-icon">✦</span> Post Preview</li>
             </ul>
             <a href="https://thecontentedit.lemonsqueezy.com/checkout/buy/cd1c69d1-0d45-48a1-90e4-8e489f2aac0c?logo=0" class="btn-upgrade">Upgrade a Pro — $449 MXN →</a>
             <p class="upgrade-note">Usa este mismo email al comprar — tu widget se actualiza automáticamente.</p>
@@ -479,9 +486,10 @@ code { font-size: 11px; background: rgba(28,25,21,.07); padding: 1px 5px; border
           </button>
         </div>
         <div id="widgetsGrid" class="widgets-grid"></div>
+        <!-- ✅ Empty state actualizado -->
         <div id="widgetsEmpty" class="widgets-empty" style="display:none;">
-          <div class="widgets-empty-icon">✦</div>
-          <p>Aún no tienes widgets.</p>
+          <div class="widgets-empty-icon">🗂️</div>
+          <p>Aún no tienes widgets. Tu feed de Instagram te está esperando.</p>
           <p style="margin-top:4px;font-size:13px;">Ve a <button onclick="switchTab('setup')" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:13px;font-family:var(--sans);">Setup</button> para crear el primero.</p>
         </div>
         <div id="dashboardUpgrade" style="display:none;padding:0 40px 40px;">
@@ -496,7 +504,8 @@ code { font-size: 11px; background: rgba(28,25,21,.07); padding: 1px 5px; border
               <li><span class="feat-icon">👤</span> Profile Preview — visualiza tu bio completa</li>
               <li><span class="feat-icon">🌙</span> Dark mode — tu widget, tu aesthetic</li>
               <li><span class="feat-icon">⊞</span> Vista 5 columnas — como en Instagram desktop</li>
-              <li><span class="feat-icon">✦</span> Post Preview <span class="feat-new">PRÓXIMO</span></li>
+              <li><span class="feat-icon">▶️</span> Carruseles y reels — navega y previsualiza</li>
+              <li><span class="feat-icon">✦</span> Post Preview — ve cómo quedará tu post</li>
             </ul>
             <a href="https://thecontentedit.lemonsqueezy.com/checkout/buy/cd1c69d1-0d45-48a1-90e4-8e489f2aac0c?logo=0" class="btn-upgrade">Upgrade a Pro — $449 MXN →</a>
             <p class="upgrade-note">Usa este mismo email al comprar — tu widget se actualiza automáticamente.</p>
@@ -504,10 +513,9 @@ code { font-size: 11px; background: rgba(28,25,21,.07); padding: 1px 5px; border
         </div>
       </div>
 
-      <!-- WIDGET DETAIL — two column -->
+      <!-- WIDGET DETAIL -->
       <div id="widgetDetail">
         <div class="detail-layout">
-          <!-- Left sidebar -->
           <div class="detail-sidebar">
             <button class="detail-back" onclick="showWidgetsDashboard()">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
@@ -577,7 +585,6 @@ code { font-size: 11px; background: rgba(28,25,21,.07); padding: 1px 5px; border
               </div>
             </div>
           </div>
-          <!-- Right preview -->
           <div class="detail-preview">
             <div class="detail-preview-header">
               <div class="detail-preview-label">
@@ -599,13 +606,14 @@ code { font-size: 11px; background: rgba(28,25,21,.07); padding: 1px 5px; border
         <div class="faq-col">
           <div class="faq-title">Preguntas frecuentes</div>
           <div class="faq-item"><div class="faq-header" onclick="toggleFaq(this)"><div class="faq-q">¿Cómo empiezo con el widget?</div><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">Sigue la guía en la pestaña Welcome o ve directo a Setup. Solo necesitas duplicar la plantilla de Notion, crear una integración gratuita y conectar tu base de datos. El proceso tarda menos de 5 minutos.</div></div>
-          <div class="faq-item"><div class="faq-header" onclick="toggleFaq(this)"><div class="faq-q">¿Cómo configuro mi base de datos de Notion?</div><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">Tu base de datos debe tener estas propiedades con los nombres exactos: <strong>Título</strong> (texto), <strong>Fecha de publicación</strong> (fecha), <strong>Attachment</strong> (archivo). Usuarios Pro también necesitan: <strong>Imagen desde</strong> (select), <strong>Link</strong> (texto), <strong>Canva Link</strong> (URL). Recomendamos usar nuestra plantilla.</div></div>
+          <div class="faq-item"><div class="faq-header" onclick="toggleFaq(this)"><div class="faq-q">¿Cómo configuro mi base de datos de Notion?</div><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">Tu base de datos debe tener estas propiedades con los nombres exactos: <strong>Título</strong> (texto), <strong>Fecha de publicación</strong> (fecha), <strong>Attachment</strong> (archivo). Usuarios Pro también necesitan: <strong>Link</strong> (texto), <strong>Canva Link</strong> (URL). Recomendamos usar nuestra plantilla.</div></div>
           <div class="faq-item"><div class="faq-header" onclick="toggleFaq(this)"><div class="faq-q">¿Por qué no se ven mis imágenes?</div><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">Verifica: ✅ ¿La URL es de la base de datos directamente? ✅ ¿Le diste acceso a la integración desde ··· → Connections? ✅ ¿Subiste imágenes al campo Attachment? ✅ ¿Los nombres de las propiedades están escritos igual que en la plantilla?</div></div>
           <div class="faq-item"><div class="faq-header" onclick="toggleFaq(this)"><div class="faq-q">El widget dice que no puede acceder a mi base de datos</div><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">Esto casi siempre pasa porque el link no es el de la base de datos real. Abre tu base de datos en página completa en el navegador y copia la URL desde ahí. Si ves una flechita junto al título, es una vista vinculada — necesitas ir a la base de datos original.</div></div>
           <div class="faq-item"><div class="faq-header" onclick="toggleFaq(this)"><div class="faq-q">¿Puedo usarlo para varios clientes?</div><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">¡Sí! Puedes crear widgets ilimitados, uno por cada cliente. Cada widget se conecta a una base de datos diferente. Puedes reutilizar el mismo Integration Token para todas — solo conéctalo a cada base de datos por separado.</div></div>
           <div class="faq-item"><div class="faq-header" onclick="toggleFaq(this)"><div class="faq-q">¿Puedo renombrar las columnas de mi base de datos?</div><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">No, las propiedades deben mantener sus nombres exactos. Puedes agregar columnas adicionales, pero no renombrar las que usa el widget.</div></div>
-          <div class="faq-item"><div class="faq-header" onclick="toggleFaq(this)"><div class="faq-q">¿Cómo agrego diseños de Canva? (Pro)</div><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">Selecciona "Canva" como Imagen desde. En Canva ve a Compartir → Embed y copia el link de embed. Pégalo en la propiedad Canva Link. Nota: no es la URL del navegador sino el link de embed específico.</div></div>
-          <div class="faq-item"><div class="faq-header" onclick="toggleFaq(this)"><div class="faq-q">¿Cómo agrego videos? (Pro)</div><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">Sube videos al campo Attachment, o pega links de Dropbox o Google Drive en la propiedad Link. Selecciona "Link" como Imagen desde. El widget detecta automáticamente que es video por la extensión.</div></div>
+          <!-- ✅ FAQ Canva corregido: Enlace público en lugar de Embed -->
+          <div class="faq-item"><div class="faq-header" onclick="toggleFaq(this)"><div class="faq-q">¿Cómo agrego diseños de Canva? (Pro)</div><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">En Canva ve a Compartir → Enlace público y copia ese link. Pégalo en la propiedad Canva Link de tu base de datos. El widget lo mostrará directamente sin necesidad de exportar nada.</div></div>
+          <div class="faq-item"><div class="faq-header" onclick="toggleFaq(this)"><div class="faq-q">¿Cómo agrego videos? (Pro)</div><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">Sube videos al campo Attachment, o pega links de Dropbox o Google Drive en la propiedad Link. El widget detecta automáticamente que es video por la extensión.</div></div>
           <div class="faq-item"><div class="faq-header" onclick="toggleFaq(this)"><div class="faq-q">¿Cómo hago upgrade a Pro?</div><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">Ve a la sección Account o haz click en cualquier botón de upgrade. Compra usando el mismo email — tus widgets se actualizan automáticamente sin reconfigurar nada.</div></div>
           <div class="faq-item"><div class="faq-header" onclick="toggleFaq(this)"><div class="faq-q">¿Ofrecen reembolsos?</div><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">El plan Free está disponible para que puedas probar antes de comprar. Si tienes algún problema escríbenos a hola@thecontentedit.digital y te ayudamos.</div></div>
         </div>
@@ -634,11 +642,15 @@ code { font-size: 11px; background: rgba(28,25,21,.07); padding: 1px 5px; border
           <div class="upgrade-card-title">Ya tienes el Free — pero te estás perdiendo lo mejor.</div>
           <div class="upgrade-card-sub">Haz upgrade a Pro una sola vez y desbloquea todo para siempre.</div>
           <ul class="upgrade-features">
-            <li><span class="feat-icon">🎨</span> Canva Connect</li><li><span class="feat-icon">🔗</span> Links externos</li>
-            <li><span class="feat-icon">🗺️</span> Content Map</li><li><span class="feat-icon">📅</span> Plan Grid</li>
-            <li><span class="feat-icon">👤</span> Profile Preview</li><li><span class="feat-icon">🌙</span> Dark mode</li>
+            <li><span class="feat-icon">🎨</span> Canva Connect</li>
+            <li><span class="feat-icon">🔗</span> Links externos</li>
+            <li><span class="feat-icon">🗺️</span> Content Map</li>
+            <li><span class="feat-icon">📅</span> Plan Grid</li>
+            <li><span class="feat-icon">👤</span> Profile Preview</li>
+            <li><span class="feat-icon">🌙</span> Dark mode</li>
             <li><span class="feat-icon">⊞</span> Vista 5 columnas</li>
-            <li><span class="feat-icon">✦</span> Post Preview <span class="feat-new">PRÓXIMO</span></li>
+            <li><span class="feat-icon">▶️</span> Carruseles y reels</li>
+            <li><span class="feat-icon">✦</span> Post Preview</li>
           </ul>
           <a href="https://thecontentedit.lemonsqueezy.com/checkout/buy/cd1c69d1-0d45-48a1-90e4-8e489f2aac0c?logo=0" class="btn-upgrade">Upgrade a Pro — $449 MXN →</a>
           <p class="upgrade-note">Usa este mismo email al comprar — tu widget se actualiza automáticamente.</p>
