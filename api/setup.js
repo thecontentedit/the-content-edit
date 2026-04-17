@@ -35,7 +35,6 @@ export default async function handler(req, res) {
     const data = typeof raw === 'string' ? JSON.parse(raw) : raw;
     const base = process.env.NEXT_PUBLIC_BASE_URL;
 
-    // Migración legacy
     let widgets = data.widgets || [];
     if (!widgets.length && data.widgetId) {
       widgets = [{
@@ -119,14 +118,11 @@ export default async function handler(req, res) {
     };
     widgets.push(newWidget);
 
+    // ✅ FIX: no sobreescribir notionToken, notionDbId ni widgetId en la raíz
     const updated = {
       ...data,
       widgets,
       activated: true,
-      notionToken: newWidget.notionToken,
-      notionDbId,
-      notionDbUrl: notionDbUrl || null,
-      widgetId,
       activatedAt: data.activatedAt || new Date().toISOString(),
     };
 
@@ -169,16 +165,6 @@ export default async function handler(req, res) {
       widgets[idx].notionToken = encryptToken(notionToken);
       widgets[idx].notionDbId = notionDbId;
       widgets[idx].notionDbUrl = notionDbUrl || null;
-
-      if (data.widgetId === widgetId) {
-        await redis.set(`setup:${setupToken}`, JSON.stringify({
-          ...data, widgets,
-          notionToken: widgets[idx].notionToken,
-          notionDbId,
-          notionDbUrl: notionDbUrl || null,
-        }));
-        return res.status(200).json({ ok: true });
-      }
     }
 
     await redis.set(`setup:${setupToken}`, JSON.stringify({ ...data, widgets }));
