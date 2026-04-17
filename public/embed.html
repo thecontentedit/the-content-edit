@@ -455,7 +455,7 @@ function renderGrid(posts, plan) {
     }
     if (!planModeActive && !post.proBlocked) cell.addEventListener('click', () => openModal(post));
     const isCarrusel = post.mediaType === 'carrusel' || (post.images && post.images.length > 1);
-    if (plan === 'pro' && !planModeActive && (isCarrusel || post.mediaType === 'reel')) { const b = document.createElement('div'); b.className = 'badge-tr'; b.innerHTML = post.mediaType === 'reel' ? icons.reel : icons.carousel; cell.appendChild(b); }
+    if (!planModeActive && (isCarrusel || post.mediaType === 'reel')) { const b = document.createElement('div'); b.className = 'badge-tr'; b.innerHTML = post.mediaType === 'reel' ? icons.reel : icons.carousel; cell.appendChild(b); }
     if (plan === 'pro' && !planModeActive && post.pinned) { const p = document.createElement('div'); p.className = 'badge-tl'; p.innerHTML = icons.pinned; cell.appendChild(p); }
     const isDragEnabled = planModeActive || (plan === 'pro' && settings.sortMode === 'custom');
     if (isDragEnabled) { cell.draggable = true; cell.addEventListener('dragstart', onDragStart); cell.addEventListener('dragover', onDragOver); cell.addEventListener('dragleave', onDragLeave); cell.addEventListener('drop', planModeActive ? onPlanDrop : onDrop); cell.addEventListener('dragend', onDragEnd); }
@@ -624,9 +624,7 @@ function renderPostPreview() {
   const captionEl = document.getElementById('pp-caption');
   const captionText = modalPost.caption || modalPost.name;
   if (captionText) {
-    const hashtagsText = modalPost.hashtags ? `<span style="color:#7A3B4A;"> ${modalPost.hashtags}</span>` : '';
-    const fechaText = modalPost.publishDate ? `<div style="font-size:10px;color:#7A7570;margin-top:4px;">${modalPost.publishDate}</div>` : '';
-    captionEl.innerHTML = `<strong>${username}</strong> ${captionText}${hashtagsText}${fechaText}`;
+    captionEl.innerHTML = `<strong>${username}</strong> ${captionText}`;
     captionEl.style.display = 'block';
   } else { captionEl.style.display = 'none'; }
 }
