@@ -46,8 +46,19 @@ export default async function handler(req, res) {
     if (!raw) return res.status(403).json({ error: 'Widget no activado' });
     const data = typeof raw === 'string' ? JSON.parse(raw) : raw;
     if (!data.activated) return res.status(403).json({ error: 'Widget no activado' });
-    const notionToken = decryptToken(data.notionToken);
-    const dbId = data.notionDbId.replace(/-/g, '');
+
+    // ✅ FIX: leer token y dbId del widget específico, no de la raíz
+    let widgetData = (data.widgets || []).find(w => w.widgetId === widgetId);
+    if (!widgetData && data.widgetId === widgetId) {
+      widgetData = {
+        notionToken: data.notionToken,
+        notionDbId: data.notionDbId,
+      };
+    }
+    if (!widgetData) return res.status(404).json({ error: 'Widget no encontrado' });
+
+    const notionToken = decryptToken(widgetData.notionToken);
+    const dbId = widgetData.notionDbId.replace(/-/g, '');
     const plan = data.plan;
     const limit = plan === 'pro' ? 60 : 9;
 
