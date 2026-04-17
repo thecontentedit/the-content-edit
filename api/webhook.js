@@ -44,6 +44,8 @@ export default async function handler(req, res) {
     const email = order.user_email;
     const customerName = order.user_name || '';
     const orderId = payload.data.id;
+    const orderNumber = order.order_number || orderId;
+    const orderDate = new Date().toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' });
     const variantId = order.first_order_item?.variant_id?.toString();
 
     const PRO_VARIANT_ID = process.env.LS_PRO_VARIANT_ID;
@@ -58,13 +60,12 @@ export default async function handler(req, res) {
           const existingData = typeof raw === 'string' ? JSON.parse(raw) : raw;
           const updated = { ...existingData, plan: 'pro', upgradedAt: new Date().toISOString() };
           await redis.set(`setup:${existingSetupToken}`, JSON.stringify(updated));
-          // ✅ upgrade=true agregado para que activate.html muestre pantalla de upgrade
           const setupUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/setup.html?token=${existingSetupToken}`;
           await resend.emails.send({
             from: 'The Content Edit <hola@thecontentedit.digital>',
             to: email,
             subject: '¡Ya eres Pro! Tu widget se actualizó',
-            html: getUpgradeEmailHTML({ customerName, setupUrl }),
+            html: getUpgradeEmailHTML({ customerName, setupUrl, orderNumber, orderDate }),
           });
           return res.status(200).json({ success: true, upgraded: true });
         }
@@ -95,8 +96,8 @@ export default async function handler(req, res) {
         ? 'Bienvenida al plan Pro — tu widget está listo'
         : firstName ? `Tu widget está listo, ${firstName}` : 'Tu widget está listo',
       html: plan === 'pro'
-        ? getProEmailHTML({ customerName, licenseKey, setupUrl })
-        : getFreeEmailHTML({ customerName, licenseKey, setupUrl }),
+        ? getProEmailHTML({ customerName, licenseKey, setupUrl, orderNumber, orderDate })
+        : getFreeEmailHTML({ customerName, licenseKey, setupUrl, orderNumber, orderDate }),
     });
 
     return res.status(200).json({ success: true, licenseKey });
@@ -153,24 +154,54 @@ const FEATURES_GRID = `
       </td>
     </tr>
     <tr>
-      <td style="width:50%;vertical-align:top;padding:10px 10px 0 0;">
+      <td style="width:50%;vertical-align:top;padding:10px 10px 10px 0;border-bottom:0.5px solid rgba(28,25,21,0.08);">
         <p style="margin:0 0 2px;font-size:12px;font-weight:500;color:#1C1915;">⊞ Vista 5 columnas</p>
         <p style="margin:0;font-size:11px;color:#5F5E5A;line-height:1.5;">Ve tu feed tal como se ve en Instagram desde desktop.</p>
       </td>
-      <td style="width:50%;vertical-align:top;padding:10px 0 0 12px;border-left:0.5px solid rgba(28,25,21,0.08);">
+      <td style="width:50%;vertical-align:top;padding:10px 0 10px 12px;border-left:0.5px solid rgba(28,25,21,0.08);border-bottom:0.5px solid rgba(28,25,21,0.08);">
         <p style="margin:0 0 2px;font-size:12px;font-weight:500;color:#1C1915;">▶️ Carruseles y reels</p>
         <p style="margin:0;font-size:11px;color:#5F5E5A;line-height:1.5;">Navega carruseles y previsualiza reels sin salir de Notion.</p>
+      </td>
+    </tr>
+    <tr>
+      <td style="width:50%;vertical-align:top;padding:10px 10px 0 0;">
+        <p style="margin:0 0 2px;font-size:12px;font-weight:500;color:#1C1915;">✦ Post Preview</p>
+        <p style="margin:0;font-size:11px;color:#5F5E5A;line-height:1.5;">Ve cómo se verá tu post publicado con likes y caption.</p>
+      </td>
+      <td style="width:50%;vertical-align:top;padding:10px 0 0 12px;border-left:0.5px solid rgba(28,25,21,0.08);">
+        <p style="margin:0 0 2px;font-size:12px;font-weight:500;color:#1C1915;">📌 Posts fijados</p>
+        <p style="margin:0;font-size:11px;color:#5F5E5A;line-height:1.5;">Fija los posts más importantes para que aparezcan siempre primero.</p>
       </td>
     </tr>
   </table>`;
 
 const FOOTER = `
   <div style="padding:18px 32px 20px;border-top:0.5px solid #D3D1C7;">
+    <p style="margin:0 0 8px;font-size:13px;color:#1C1915;">Con cariño, The Content Edit 🤍</p>
     <p style="margin:0;font-size:12px;color:#888780;line-height:1.6;">
       ¿Dudas? Escríbenos a <a href="mailto:hola@thecontentedit.digital" style="color:#888780;text-decoration:underline;">hola@thecontentedit.digital</a><br/>
       © The Content Edit. Solo para uso personal — prohibida su redistribución o reventa.
     </p>
   </div>`;
+
+function orderInfo(orderNumber, orderDate) {
+  return `
+    <div style="background:#ECEAE5;border-radius:8px;padding:12px 16px;margin-bottom:20px;">
+      <p style="margin:0 0 3px;font-size:11px;color:#888780;">Orden <strong style="color:#1C1915;">#${orderNumber}</strong> · ${orderDate}</p>
+    </div>`;
+}
+
+function setupInstructions(setupUrl) {
+  return `
+    <div style="margin-bottom:20px;">
+      <p style="margin:0 0 10px;font-size:13px;font-weight:500;color:#1C1915;">Cómo empezar:</p>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <p style="margin:0;font-size:12px;color:#5F5E5A;line-height:1.5;"><strong style="color:#1C1915;">1.</strong> Haz clic en el botón de abajo para ir a tu página de activación</p>
+        <p style="margin:0;font-size:12px;color:#5F5E5A;line-height:1.5;"><strong style="color:#1C1915;">2.</strong> Guarda tu link de setup — es tu acceso personal cada vez que crees un widget nuevo</p>
+        <p style="margin:0;font-size:12px;color:#5F5E5A;line-height:1.5;"><strong style="color:#1C1915;">3.</strong> Sigue los pasos del setup y pega tu widget en Notion con <code style="font-size:11px;background:rgba(28,25,21,.07);padding:1px 4px;border-radius:3px;">/embed</code></p>
+      </div>
+    </div>`;
+}
 
 function emailWrapper(content) {
   return `<!DOCTYPE html>
@@ -191,7 +222,7 @@ function emailWrapper(content) {
 </html>`;
 }
 
-function getFreeEmailHTML({ customerName, licenseKey, setupUrl }) {
+function getFreeEmailHTML({ customerName, licenseKey, setupUrl, orderNumber, orderDate }) {
   const firstName = customerName ? customerName.split(' ')[0] : '';
   const greeting = firstName ? `Hola, ${firstName} 🤍` : 'Hola 🤍';
   return emailWrapper(`
@@ -199,10 +230,14 @@ function getFreeEmailHTML({ customerName, licenseKey, setupUrl }) {
       <h1 style="margin:0 0 6px;font-size:22px;font-weight:500;color:#1C1915;">${greeting}</h1>
       <p style="margin:0 0 20px;font-size:13px;color:#5F5E5A;line-height:1.5;">Tu widget está listo. Guarda este email — aquí están tus credenciales únicas.</p>
 
+      ${orderInfo(orderNumber, orderDate)}
+
       <div style="background:#ECEAE5;border-radius:8px;padding:14px 16px;margin-bottom:20px;">
         <p style="margin:0 0 5px;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:#888780;">Tu license key</p>
         <p style="margin:0;font-size:15px;font-weight:500;color:#1C1915;letter-spacing:0.05em;font-family:monospace;">${licenseKey}</p>
       </div>
+
+      ${setupInstructions(setupUrl)}
 
       <a href="${setupUrl}" style="display:block;background:#1C1915;color:#F9F6F1;text-align:center;padding:13px 20px;border-radius:999px;font-size:14px;font-weight:500;text-decoration:none;margin-bottom:20px;">Empezar setup →</a>
 
@@ -217,7 +252,7 @@ function getFreeEmailHTML({ customerName, licenseKey, setupUrl }) {
   `);
 }
 
-function getProEmailHTML({ customerName, licenseKey, setupUrl }) {
+function getProEmailHTML({ customerName, licenseKey, setupUrl, orderNumber, orderDate }) {
   const firstName = customerName ? customerName.split(' ')[0] : '';
   const greeting = firstName ? `Hola, ${firstName} 🤍` : 'Hola 🤍';
   return emailWrapper(`
@@ -225,10 +260,14 @@ function getProEmailHTML({ customerName, licenseKey, setupUrl }) {
       <h1 style="margin:0 0 6px;font-size:22px;font-weight:500;color:#1C1915;">${greeting}</h1>
       <p style="margin:0 0 20px;font-size:13px;color:#5F5E5A;line-height:1.5;">Tu widget Pro está listo. Guarda este email — aquí están tus credenciales únicas.</p>
 
+      ${orderInfo(orderNumber, orderDate)}
+
       <div style="background:#ECEAE5;border-radius:8px;padding:14px 16px;margin-bottom:20px;">
         <p style="margin:0 0 5px;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:#888780;">Tu license key</p>
         <p style="margin:0;font-size:15px;font-weight:500;color:#1C1915;letter-spacing:0.05em;font-family:monospace;">${licenseKey}</p>
       </div>
+
+      ${setupInstructions(setupUrl)}
 
       <a href="${setupUrl}" style="display:block;background:#1C1915;color:#F9F6F1;text-align:center;padding:13px 20px;border-radius:999px;font-size:14px;font-weight:500;text-decoration:none;margin-bottom:20px;">Empezar setup →</a>
 
@@ -241,13 +280,15 @@ function getProEmailHTML({ customerName, licenseKey, setupUrl }) {
   `);
 }
 
-function getUpgradeEmailHTML({ customerName, setupUrl }) {
+function getUpgradeEmailHTML({ customerName, setupUrl, orderNumber, orderDate }) {
   const firstName = customerName ? customerName.split(' ')[0] : '';
   const greeting = firstName ? `¡Ya eres Pro, ${firstName}! 🤍` : '¡Ya eres Pro! 🤍';
   return emailWrapper(`
     <div style="padding:32px 32px 24px;">
       <h1 style="margin:0 0 6px;font-size:22px;font-weight:500;color:#1C1915;">${greeting}</h1>
       <p style="margin:0 0 20px;font-size:13px;color:#5F5E5A;line-height:1.6;">Tu widget se actualizó automáticamente. Solo refresca el widget en Notion y listo — todo ya está activo.</p>
+
+      ${orderInfo(orderNumber, orderDate)}
 
       <div style="height:0.5px;background:#D3D1C7;margin-bottom:16px;"></div>
 
