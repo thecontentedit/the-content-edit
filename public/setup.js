@@ -55,6 +55,7 @@ async function init() {
       if (!val.length) {
         tokenHint.style.color = '';
         tokenHint.innerHTML = 'El token empieza con <code>ntn_</code> o <code>secret_</code> y tiene ~50 caracteres.';
+        savedNotionToken = '';
         checkStep2(); return;
       }
       const isValid = (val.startsWith('ntn_') || val.startsWith('secret_')) && val.length > 20;
@@ -62,9 +63,11 @@ async function init() {
       if (looksLikeUrl) {
         tokenHint.style.color = '#c0392b';
         tokenHint.innerHTML = 'Eso parece una URL, no un token. Ve a notion.so/my-integrations y copia el Internal Integration Token.';
+        savedNotionToken = '';
       } else if (val.length > 5 && !isValid) {
         tokenHint.style.color = '#c0392b';
         tokenHint.innerHTML = '⚠️ El token debe empezar con <code>ntn_</code> o <code>secret_</code>.';
+        savedNotionToken = '';
       } else if (isValid) {
         tokenHint.style.color = '#2e7d32';
         tokenHint.innerHTML = '✓ Token válido.';
@@ -73,6 +76,7 @@ async function init() {
       } else {
         tokenHint.style.color = '';
         tokenHint.innerHTML = 'El token empieza con <code>ntn_</code> o <code>secret_</code> y tiene ~50 caracteres.';
+        savedNotionToken = '';
       }
       checkStep2();
     };
@@ -157,7 +161,6 @@ function openWidgetDetail(widgetId) {
   document.getElementById('detailToken').textContent = widget.maskedToken || '••••••••••••••••••••••••••••••';
   document.getElementById('detailDbId').textContent = widget.notionDbId || '';
 
-  // Usar notionDbUrl si existe, si no construir link básico
   const dbLink = document.getElementById('detailDbLink');
   if (widget.notionDbUrl) {
     dbLink.href = widget.notionDbUrl;
@@ -170,7 +173,6 @@ function openWidgetDetail(widgetId) {
     dbLink.style.display = 'none';
   }
 
-  // Cargar preview del widget
   const previewIframe = document.getElementById('widgetPreviewIframe');
   if (previewIframe && widget.embedUrl) {
     previewIframe.src = widget.embedUrl;
@@ -271,7 +273,6 @@ async function reconnectWidget() {
       const dbLink = document.getElementById('detailDbLink');
       dbLink.href = dbUrl;
       dbLink.style.display = 'inline';
-      // Recargar preview
       const iframe = document.getElementById('widgetPreviewIframe');
       if (iframe) iframe.src = iframe.src;
     }
@@ -341,17 +342,30 @@ function resetWizard() {
     const btn = document.getElementById('btn' + n);
     if (btn) btn.disabled = true;
   });
+
+  // ✅ FIX: limpiar token input y hint visualmente
   const tokenInput = document.getElementById('notionToken');
   if (tokenInput) tokenInput.value = '';
+
+  const tokenHint = document.getElementById('tokenHint');
+  if (tokenHint) {
+    tokenHint.style.color = '';
+    tokenHint.innerHTML = 'El token empieza con <code>ntn_</code> o <code>secret_</code> y tiene ~50 caracteres.';
+  }
+
   const dbUrl = document.getElementById('notionDbUrl');
   if (dbUrl) dbUrl.value = '';
+
   const status = document.getElementById('connectStatus');
   if (status) {
     status.className = 'status idle';
     status.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Ingresa la URL para continuar';
   }
+
+  // ✅ FIX: limpiar token en memoria y sessionStorage
   savedNotionToken = '';
   try { sessionStorage.removeItem('tce_notion_token'); } catch(e) {}
+
   goStep(1);
 }
 
@@ -397,11 +411,9 @@ function extractDbId(input) {
 
 // ─── CONNECT NOTION ──────────────────────────────────────────────────────────
 async function connectNotion() {
+  // ✅ FIX: solo usar token del input, no de sessionStorage
   const tokenInput = document.getElementById('notionToken');
-  const tokenFromInput = tokenInput ? tokenInput.value.trim() : '';
-  const token = (tokenFromInput.length > 10 ? tokenFromInput : null)
-    || (savedNotionToken.length > 10 ? savedNotionToken : null)
-    || (function(){ try { return sessionStorage.getItem('tce_notion_token') || ''; } catch(e) { return ''; } })();
+  const token = tokenInput ? tokenInput.value.trim() : '';
 
   const dbUrlInput = document.getElementById('notionDbUrl').value.trim();
   const dbId = extractDbId(dbUrlInput);
