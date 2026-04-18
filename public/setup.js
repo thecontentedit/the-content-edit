@@ -479,6 +479,10 @@ async function connectNotion() {
       if (upgradeCardStep5) upgradeCardStep5.style.display = 'block';
     }
 
+    // ✅ Cargar live preview en paso 5
+    const step5Iframe = document.getElementById('step5PreviewIframe');
+    if (step5Iframe && data.embedUrl) { step5Iframe.src = data.embedUrl; }
+
     setTimeout(() => goStep(5), 900);
 
   } catch {
