@@ -71,6 +71,10 @@ export default async function handler(req, res) {
           maskedToken,
           notionDbId: w.notionDbId || null,
           notionDbUrl: w.notionDbUrl || null,
+          // ✅ NEW: card customization + pin
+          pinned: w.pinned || false,
+          cardColor: w.cardColor || null,
+          cardEmoji: w.cardEmoji || null,
         };
       }),
     });
@@ -115,6 +119,9 @@ export default async function handler(req, res) {
       notionDbId,
       notionDbUrl: notionDbUrl || null,
       createdAt: new Date().toISOString(),
+      pinned: false,
+      cardColor: null,
+      cardEmoji: null,
     };
     widgets.push(newWidget);
 
@@ -138,9 +145,9 @@ export default async function handler(req, res) {
     });
   }
 
-  // ─── PATCH: renombrar o reconectar ────────────────────────────────────────
+  // ─── PATCH: renombrar, reconectar, o actualizar card ─────────────────────
   if (req.method === 'PATCH') {
-    const { setupToken, widgetId, name, notionToken, notionDbId, notionDbUrl } = req.body;
+    const { setupToken, widgetId, name, notionToken, notionDbId, notionDbUrl, pinned, cardColor, cardEmoji } = req.body;
     if (!setupToken || !widgetId) return res.status(400).json({ error: 'Faltan campos requeridos' });
 
     const raw = await redis.get(`setup:${setupToken}`);
@@ -151,7 +158,14 @@ export default async function handler(req, res) {
     const idx = widgets.findIndex(w => w.widgetId === widgetId);
     if (idx === -1) return res.status(404).json({ error: 'Widget no encontrado' });
 
-    if (name) widgets[idx].name = name.trim().slice(0, 60);
+    if (name !== undefined) widgets[idx].name = name.trim().slice(0, 60);
+
+    // ✅ NEW: pin/unpin
+    if (pinned !== undefined) widgets[idx].pinned = !!pinned;
+
+    // ✅ NEW: card customization
+    if (cardColor !== undefined) widgets[idx].cardColor = cardColor;
+    if (cardEmoji !== undefined) widgets[idx].cardEmoji = cardEmoji;
 
     if (notionToken && notionDbId) {
       let valid;
