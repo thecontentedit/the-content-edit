@@ -946,6 +946,14 @@ code { font-size: 11px; background: rgba(28,25,21,.07); padding: 1px 5px; border
         <div class="card-preview-initials" id="modalCardInitials"></div>
         <div class="card-preview-emoji" id="modalCardEmoji"></div>
       </div>
+      <!-- Nombre -->
+      <div class="picker-label">Nombre</div>
+      <input type="text" id="modalWidgetName" maxlength="60" placeholder="Nombre del widget"
+        style="width:100%;padding:9px 12px;background:var(--cream);border:0.5px solid var(--border-strong);border-radius:var(--radius-sm);font-size:13px;font-family:var(--sans);color:var(--ink);outline:none;margin-bottom:16px;"
+        oninput="onModalNameInput(this.value)"
+        onfocus="this.style.borderColor='var(--ink)';this.style.background='#fff'"
+        onblur="this.style.borderColor='';this.style.background='var(--cream)'"
+      />
       <!-- Color picker -->
       <div class="picker-label">Color de fondo</div>
       <div class="color-swatches" id="colorSwatches"></div>
