@@ -8,6 +8,32 @@ let allWidgets = [];
 let activeWidgetId = null;
 let accountData = {};
 
+// ─── CARD CUSTOMIZER STATE ────────────────────────────────────────────────────
+const CARD_COLORS = [
+  { value: '#F2EDE8', label: 'Arena' },
+  { value: '#EAF4EE', label: 'Menta' },
+  { value: '#EBF0F8', label: 'Cielo' },
+  { value: '#F8EBF0', label: 'Rosa' },
+  { value: '#F0EBF8', label: 'Lavanda' },
+  { value: '#FFF8E7', label: 'Vainilla' },
+  { value: '#FBF0E8', label: 'Melocotón' },
+  { value: '#E8F4F8', label: 'Agua' },
+  { value: '#F5F5F0', label: 'Niebla' },
+  { value: '#F0F8F0', label: 'Hoja' },
+  { value: '#F8F0F5', label: 'Orquídea' },
+  { value: '#FEFCE8', label: 'Limón' },
+];
+
+const CARD_EMOJIS = [
+  '✦', '✿', '◆', '▲', '✪', '❋',
+  '🌸', '🌿', '🍃', '🌙', '⭐', '🦋',
+  '📸', '🎞️', '📱', '💫', '🌺', '🍀',
+  '🎨', '✏️', '📌', '🔮', '🧿', '💎',
+];
+
+let modalState = { color: null, emoji: null, widgetId: null };
+let ctxWidgetId = null;
+
 // ─── INIT ────────────────────────────────────────────────────────────────────
 async function init() {
   try {
@@ -84,6 +110,14 @@ async function init() {
     tokenInput.addEventListener('change', validateToken);
     tokenInput.addEventListener('paste', () => setTimeout(validateToken, 50));
   }
+
+  // Cerrar menú contextual al click fuera
+  document.addEventListener('click', (e) => {
+    const menu = document.getElementById('ctxMenu');
+    if (menu && menu.style.display !== 'none' && !menu.contains(e.target)) {
+      closeCtxMenu();
+    }
+  });
 }
 
 // ─── TAB NAVIGATION ──────────────────────────────────────────────────────────
@@ -120,24 +154,59 @@ function renderDashboard() {
   empty.style.display = 'none';
   grid.style.display = 'grid';
 
-  const colors = ['#F2EDE8', '#EAF4EE', '#EBF0F8', '#F8EBF0', '#F0EBF8', '#FFF8E7'];
-  grid.innerHTML = allWidgets.map((w, i) => {
-    const bg = colors[i % colors.length];
+  // Ordenar: fijados primero, luego por fecha descendente
+  const sorted = [...allWidgets].sort((a, b) => {
+    if (a.pinned && !b.pinned) return -1;
+    if (!a.pinned && b.pinned) return 1;
+    return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+  });
+
+  const DEFAULT_COLORS = ['#F2EDE8', '#EAF4EE', '#EBF0F8', '#F8EBF0', '#F0EBF8', '#FFF8E7'];
+
+  grid.innerHTML = sorted.map((w, i) => {
+    const bg = w.cardColor || DEFAULT_COLORS[i % DEFAULT_COLORS.length];
+    const emoji = w.cardEmoji || null;
+    const initials = getInitials(w.name || `Widget #${i + 1}`);
     const date = w.createdAt
       ? new Date(w.createdAt).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' })
       : '';
     const shortUrl = w.embedUrl ? w.embedUrl.replace('https://', '') : '';
+    const pinnedClass = w.pinned ? ' is-pinned' : '';
+
     return `
-      <div class="widget-card" style="--card-bg:${bg}" onclick="openWidgetDetail('${w.widgetId}')">
-        <div class="widget-card-icon">✦</div>
-        <div class="widget-card-name">${escHtml(w.name || 'Widget #' + (i + 1))}</div>
-        <div class="widget-card-date">${date}</div>
-        <div class="widget-card-url">${shortUrl}</div>
+      <div class="widget-card${pinnedClass}" data-widget-id="${w.widgetId}" onclick="handleCardClick(event, '${w.widgetId}')">
+        <div class="widget-card-banner" style="background-color:${bg};">
+          <div class="pin-badge">Fijado</div>
+          <button class="widget-menu-btn" onclick="openCtxMenu(event, '${w.widgetId}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <circle cx="12" cy="5" r="1.2" fill="currentColor"/>
+              <circle cx="12" cy="12" r="1.2" fill="currentColor"/>
+              <circle cx="12" cy="19" r="1.2" fill="currentColor"/>
+            </svg>
+          </button>
+          <div class="widget-initials">${emoji ? `<span style="font-size:17px;line-height:1">${emoji}</span>` : initials}</div>
+        </div>
+        <div class="widget-card-body">
+          <div class="widget-card-name">${escHtml(w.name || 'Widget #' + (i + 1))}</div>
+          <div class="widget-card-date">${date}</div>
+          <div class="widget-card-url">${shortUrl}</div>
+        </div>
       </div>
     `;
   }).join('');
 
   if (upgradeEl) upgradeEl.style.display = currentPlan === 'pro' ? 'none' : 'block';
+}
+
+function handleCardClick(event, widgetId) {
+  if (event.target.closest('.widget-menu-btn')) return;
+  openWidgetDetail(widgetId);
+}
+
+function getInitials(name) {
+  const words = name.trim().split(/\s+/);
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+  return (words[0][0] + words[words.length - 1][0]).toUpperCase();
 }
 
 function showWidgetsDashboard() {
@@ -148,6 +217,184 @@ function showWidgetsDashboard() {
 function startNewWidget() {
   resetWizard();
   switchTab('setup');
+}
+
+// ─── CONTEXT MENU ─────────────────────────────────────────────────────────────
+function openCtxMenu(event, widgetId) {
+  event.stopPropagation();
+  ctxWidgetId = widgetId;
+  const widget = allWidgets.find(w => w.widgetId === widgetId);
+  if (!widget) return;
+
+  const pinLabel = document.getElementById('ctxPinLabel');
+  if (pinLabel) pinLabel.textContent = widget.pinned ? 'Quitar fijado' : 'Fijar widget';
+
+  const menu = document.getElementById('ctxMenu');
+  menu.style.display = 'block';
+
+  const btn = event.currentTarget;
+  const rect = btn.getBoundingClientRect();
+  const menuW = 190;
+  let left = rect.right - menuW;
+  let top = rect.bottom + 6;
+
+  if (left < 8) left = 8;
+  if (top + 260 > window.innerHeight) top = rect.top - 264;
+
+  menu.style.left = left + 'px';
+  menu.style.top = top + 'px';
+}
+
+function closeCtxMenu() {
+  const menu = document.getElementById('ctxMenu');
+  if (menu) menu.style.display = 'none';
+  ctxWidgetId = null;
+}
+
+async function ctxPinWidget() {
+  const wId = ctxWidgetId;
+  closeCtxMenu();
+  const widget = allWidgets.find(w => w.widgetId === wId);
+  if (!widget) return;
+  const newPinned = !widget.pinned;
+
+  try {
+    await fetch(`${BASE_URL}/api/setup`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ setupToken, widgetId: wId, pinned: newPinned }),
+    });
+    const idx = allWidgets.findIndex(w => w.widgetId === wId);
+    if (idx !== -1) allWidgets[idx].pinned = newPinned;
+    renderDashboard();
+  } catch(e) { console.error(e); }
+}
+
+function ctxEditCard() {
+  const wId = ctxWidgetId;
+  closeCtxMenu();
+  openCardModal(wId);
+}
+
+function ctxRename() {
+  const wId = ctxWidgetId;
+  closeCtxMenu();
+  openWidgetDetail(wId);
+  setTimeout(() => toggleRenameSection(), 120);
+}
+
+function ctxOpenDetail() {
+  const wId = ctxWidgetId;
+  closeCtxMenu();
+  openWidgetDetail(wId);
+}
+
+async function ctxDelete() {
+  const wId = ctxWidgetId;
+  closeCtxMenu();
+  const widget = allWidgets.find(w => w.widgetId === wId);
+  const name = widget ? widget.name : 'este widget';
+  if (!confirm(`¿Eliminar "${name}"? Esta acción no se puede deshacer. El embed en Notion dejará de funcionar.`)) return;
+  try {
+    await fetch(`${BASE_URL}/api/setup`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ setupToken, widgetId: wId }),
+    });
+    allWidgets = allWidgets.filter(w => w.widgetId !== wId);
+    renderDashboard();
+  } catch(e) { alert('Error al eliminar. Intenta de nuevo.'); }
+}
+
+// ─── CARD CUSTOMIZER MODAL ────────────────────────────────────────────────────
+function openCardModal(widgetId) {
+  const widget = allWidgets.find(w => w.widgetId === widgetId);
+  if (!widget) return;
+
+  modalState = {
+    widgetId,
+    color: widget.cardColor || CARD_COLORS[0].value,
+    emoji: widget.cardEmoji || null,
+  };
+
+  renderColorSwatches();
+  renderEmojiGrid();
+  updateModalPreview(widget);
+
+  document.getElementById('cardModal').style.display = 'flex';
+}
+
+function renderColorSwatches() {
+  const container = document.getElementById('colorSwatches');
+  container.innerHTML = CARD_COLORS.map(c => `
+    <div class="color-swatch ${c.value === modalState.color ? 'selected' : ''}"
+      style="background-color:${c.value};"
+      title="${c.label}"
+      onclick="selectColor('${c.value}')">
+    </div>
+  `).join('');
+}
+
+function renderEmojiGrid() {
+  const container = document.getElementById('emojiGrid');
+  container.innerHTML = `
+    <button class="emoji-btn none-btn ${!modalState.emoji ? 'selected' : ''}" onclick="selectEmoji(null)" title="Sin emoji">—</button>
+    ${CARD_EMOJIS.map(e => `
+      <button class="emoji-btn ${e === modalState.emoji ? 'selected' : ''}" onclick="selectEmoji('${e}')">${e}</button>
+    `).join('')}
+  `;
+}
+
+function selectColor(color) {
+  modalState.color = color;
+  renderColorSwatches();
+  document.getElementById('modalCardPreview').style.backgroundColor = color;
+}
+
+function selectEmoji(emoji) {
+  modalState.emoji = emoji;
+  renderEmojiGrid();
+  const emojiEl = document.getElementById('modalCardEmoji');
+  if (emojiEl) emojiEl.textContent = emoji || '';
+}
+
+function updateModalPreview(widget) {
+  const preview = document.getElementById('modalCardPreview');
+  if (preview) preview.style.backgroundColor = modalState.color || '#F2EDE8';
+
+  const initials = document.getElementById('modalCardInitials');
+  if (initials) initials.textContent = getInitials(widget.name || 'W');
+
+  const emojiEl = document.getElementById('modalCardEmoji');
+  if (emojiEl) emojiEl.textContent = modalState.emoji || '';
+}
+
+function closeCardModal(event) {
+  if (event && event.target !== document.getElementById('cardModal')) return;
+  document.getElementById('cardModal').style.display = 'none';
+}
+
+async function saveCardCustomization() {
+  const { widgetId, color, emoji } = modalState;
+  if (!widgetId) return;
+
+  try {
+    const res = await fetch(`${BASE_URL}/api/setup`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ setupToken, widgetId, cardColor: color, cardEmoji: emoji }),
+    });
+    if (!res.ok) throw new Error('error');
+    const idx = allWidgets.findIndex(w => w.widgetId === widgetId);
+    if (idx !== -1) {
+      allWidgets[idx].cardColor = color;
+      allWidgets[idx].cardEmoji = emoji;
+    }
+    document.getElementById('cardModal').style.display = 'none';
+    renderDashboard();
+  } catch(e) {
+    alert('Error al guardar. Intenta de nuevo.');
+  }
 }
 
 // ─── WIDGET DETAIL ────────────────────────────────────────────────────────────
@@ -174,9 +421,7 @@ function openWidgetDetail(widgetId) {
   }
 
   const previewIframe = document.getElementById('widgetPreviewIframe');
-  if (previewIframe && widget.embedUrl) {
-    previewIframe.src = widget.embedUrl;
-  }
+  if (previewIframe && widget.embedUrl) previewIframe.src = widget.embedUrl;
 
   document.getElementById('reconnectStatus').className = 'status idle';
   document.getElementById('reconnectStatus').innerHTML = '';
@@ -343,7 +588,6 @@ function resetWizard() {
     if (btn) btn.disabled = true;
   });
 
-  // ✅ FIX: limpiar token input y hint visualmente
   const tokenInput = document.getElementById('notionToken');
   if (tokenInput) tokenInput.value = '';
 
@@ -362,7 +606,6 @@ function resetWizard() {
     status.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Ingresa la URL para continuar';
   }
 
-  // ✅ FIX: limpiar token en memoria y sessionStorage
   savedNotionToken = '';
   try { sessionStorage.removeItem('tce_notion_token'); } catch(e) {}
 
@@ -411,10 +654,8 @@ function extractDbId(input) {
 
 // ─── CONNECT NOTION ──────────────────────────────────────────────────────────
 async function connectNotion() {
-  // ✅ FIX: solo usar token del input, no de sessionStorage
   const tokenInput = document.getElementById('notionToken');
   const token = tokenInput ? tokenInput.value.trim() : '';
-
   const dbUrlInput = document.getElementById('notionDbUrl').value.trim();
   const dbId = extractDbId(dbUrlInput);
   const status = document.getElementById('connectStatus');
@@ -464,6 +705,9 @@ async function connectNotion() {
       maskedToken: token.slice(0, 8) + '•'.repeat(Math.max(0, token.length - 8)),
       notionDbId: dbId,
       notionDbUrl: dbUrlInput,
+      pinned: false,
+      cardColor: null,
+      cardEmoji: null,
     });
     currentPlan = data.plan || currentPlan;
 
@@ -485,9 +729,8 @@ async function connectNotion() {
       if (instrPro) instrPro.style.display = 'none';
     }
 
-    // ✅ Cargar live preview en paso 5
     const step5Iframe = document.getElementById('step5PreviewIframe');
-    if (step5Iframe && data.embedUrl) { step5Iframe.src = data.embedUrl; }
+    if (step5Iframe && data.embedUrl) step5Iframe.src = data.embedUrl;
 
     setTimeout(() => goStep(5), 900);
 
