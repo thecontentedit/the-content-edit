@@ -446,16 +446,14 @@ code { font-size: 11px; background: rgba(28,25,21,.07); padding: 1px 5px; border
                   <div class="url-label"><span>Solo bio & highlights</span><span class="url-tag bio">BIO</span></div>
                   <div class="embed-wrap"><div class="embed-url" id="embedBioUrl"></div><button class="copy-btn" onclick="copyEmbed('embedBioUrl', this)">copiar</button></div>
                 </div>
-                <button class="howto-toggle open" onclick="toggleHowto(this)" style="margin-top:14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg><span>Cómo embeber en Notion</span></button>
-                <div class="howto-collapsible open">
-                  <div class="howto">
-                    <div class="howto-step"><div class="howto-n">1</div><span>En Notion escribe <code>/embed</code></span></div>
-                    <div class="howto-step"><div class="howto-n">2</div><span>Pega el link y presiona <strong>Embed link</strong></span></div>
-                    <div class="howto-step"><div class="howto-n">3</div><span>Ajusta el tamaño del bloque</span></div>
-                    <div class="howto-step"><div class="howto-n">4</div><span>Presiona Refresh en el widget cada vez que actualices tu base de datos</span></div>
-                  </div>
+                <!-- Instrucciones dinámicas por plan -->
+                <div id="step5-instructions-free" class="note-tip" style="margin-top:12px;">
+                  📋 Copia el link y pégalo en el bloque <strong>Tu Widget</strong> de tu plantilla de Notion → presiona <strong>Insertar enlace</strong>.
                 </div>
-                <div class="note-tip" style="margin-top:12px;">💡 Si usas iPhone o iPad, abre Notion en Safari o Chrome — en la app móvil el widget aún no es compatible.</div>
+                <div id="step5-instructions-pro" style="display:none;margin-top:12px;">
+                  <div class="note-tip" style="margin-bottom:6px;">📋 Tienes dos links — pega el <strong>Grid</strong> en el bloque <strong>Tu Widget</strong> y el <strong>Bio</strong> en el bloque <strong>Profile Preview</strong> de tu plantilla → presiona <strong>Insertar enlace</strong> en cada uno.</div>
+                </div>
+                <div class="note-tip" style="margin-top:6px;">💡 Si usas iPhone o iPad, abre Notion en Safari o Chrome — en la app móvil el widget aún no es compatible.</div>
               </div>
               <button class="btn-primary" style="width:100%;margin-bottom:12px;" onclick="switchTab('widgets')">Ver todos mis widgets →</button>
               <div id="upgrade-card-step5" style="display:none;" class="upgrade-card">
