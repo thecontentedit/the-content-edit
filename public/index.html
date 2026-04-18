@@ -76,6 +76,8 @@ section + section { border-top: 0.5px solid var(--border); }
 .step-num { width: 28px; height: 28px; border-radius: 50%; border: 0.5px solid var(--border-strong); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 400; color: var(--muted); flex-shrink: 0; margin-top: 2px; }
 .step-title { font-weight: 500; font-size: 14px; margin-bottom: 3px; }
 .step-desc { font-size: 13px; color: var(--muted); line-height: 1.55; font-weight: 300; }
+
+/* ─── PLANS ─────────────────────────────────────────── */
 .plans { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 2rem; }
 .plan { background: var(--cream); border: 0.5px solid var(--border-strong); border-radius: var(--radius); padding: 1.5rem; }
 .plan.featured { border: 1.5px solid var(--accent); background: var(--accent); color: var(--cream); }
@@ -91,7 +93,7 @@ section + section { border-top: 0.5px solid var(--border); }
 .plan-divider { height: 0.5px; margin-bottom: 1.25rem; background: var(--border); }
 .plan.featured .plan-divider { background: rgba(249,246,241,.15); }
 .plan-feats { list-style: none; margin-bottom: 1.5rem; }
-.plan-feats li { display: flex; align-items: flex-start; gap: 7px; font-size: 13px; padding: 5px 0; border-bottom: 0.5px solid var(--border); line-height: 1.4; font-weight: 300; }
+.plan-feats li { display: flex; align-items: flex-start; gap: 7px; font-size: 13px; padding: 5px 0; border-bottom: 0.5px solid var(--border); line-height: 1.4; font-weight: 300; position: relative; }
 .plan.featured .plan-feats li { border-bottom-color: rgba(249,246,241,.1); color: rgba(249,246,241,.85); }
 .plan-feats li:last-child { border-bottom: none; }
 .plan-feats li svg { width: 12px; height: 12px; flex-shrink: 0; margin-top: 2px; }
@@ -102,6 +104,38 @@ section + section { border-top: 0.5px solid var(--border); }
 .plan-btn.light:hover { background: rgba(28,25,21,.05); }
 .plan-btn.dark { background: var(--cream); color: var(--ink); border: none; }
 .plan-btn.dark:hover { opacity: .85; }
+
+/* ─── TOOLTIPS TCE ──────────────────────────────────── */
+.has-tip { cursor: default; }
+.has-tip .tip-text {
+  display: none;
+  position: absolute;
+  left: 20px;
+  bottom: calc(100% + 6px);
+  background: #F9F6F1;
+  color: #1C1915;
+  border: 0.5px solid rgba(28,25,21,0.14);
+  border-radius: 8px;
+  padding: 8px 11px;
+  font-size: 11px;
+  line-height: 1.55;
+  font-weight: 300;
+  width: 210px;
+  box-shadow: 0 6px 20px rgba(28,25,21,0.1);
+  z-index: 20;
+  pointer-events: none;
+  font-family: 'Inter', system-ui, sans-serif;
+  letter-spacing: 0;
+}
+.plan.featured .has-tip .tip-text {
+  background: #2C1F1C;
+  color: rgba(249,246,241,0.88);
+  border-color: rgba(249,246,241,0.12);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+.has-tip:hover .tip-text { display: block; }
+
+/* ─── FAQ ───────────────────────────────────────────── */
 .faq-list { margin-top: 2rem; }
 .faq-item { border-bottom: 0.5px solid var(--border); cursor: pointer; }
 .faq-q { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.1rem 0; font-size: 14px; font-weight: 400; color: var(--ink); }
@@ -131,6 +165,7 @@ footer { background: var(--ink); padding: 2rem 1.5rem; display: flex; justify-co
   #testimonios-cards { grid-template-columns: 1fr !important; }
   .feat-grid { grid-template-columns: 1fr 1fr !important; }
   .container-wide { padding: 0 1.25rem; }
+  .has-tip .tip-text { display: none !important; }
 }
 .feat-mobile-only { display: none; }
 @media (max-width: 768px) { .feat-mobile-only { display: block; } }
@@ -243,7 +278,6 @@ footer { background: var(--ink); padding: 2rem 1.5rem; display: flex; justify-co
   </div>
 </section>
 
-<!-- POST PREVIEW -->
 <section style="background:#FAFAF8;">
   <div class="container-wide fade-in">
     <div id="post-preview-inner" style="display:grid;grid-template-columns:1fr 1.6fr;gap:48px;align-items:center;">
@@ -288,12 +322,14 @@ footer { background: var(--ink); padding: 2rem 1.5rem; display: flex; justify-co
   </div>
 </section>
 
+<!-- PRICING con tooltips -->
 <section id="pricing">
   <div class="container fade-in">
     <span class="label">Precio</span>
     <h2 style="font-family:var(--serif);font-size:clamp(24px,4vw,32px);line-height:1.2;font-weight:400;">Un solo pago. <em style="font-style:italic;color:var(--accent)">Tuyo para siempre.</em></h2>
     <p style="font-size:14px;color:var(--muted);margin-top:.5rem;font-weight:300;">Sin suscripciones, sin renovaciones. Paga una vez y úsalo cuanto quieras.</p>
     <div class="plans">
+      <!-- FREE -->
       <div class="plan">
         <div class="plan-name">Gratis</div>
         <div class="plan-desc">Empieza gratis, actualiza cuando quieras</div>
@@ -301,15 +337,17 @@ footer { background: var(--ink); padding: 2rem 1.5rem; display: flex; justify-co
         <div class="plan-period">para siempre · sin tarjeta</div>
         <div class="plan-divider"></div>
         <ul class="plan-feats">
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Grid preview básico</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Hasta 9 imágenes</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Solo archivos adjuntos desde Notion</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Widgets ilimitados</li>
-          <li class="dim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Sin Canva ni links externos</li>
-          <li class="dim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Sin carrusel, reel ni posts fijados</li>
+          <li class="has-tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Grid preview básico<span class="tip-text">Ve tu feed de Instagram como cuadrícula de 3x3 en tiempo real, directo en Notion.</span></li>
+          <li class="has-tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Hasta 9 imágenes<span class="tip-text">Muestra las 9 imágenes más recientes — exactamente 3 filas completas de tu feed.</span></li>
+          <li class="has-tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Solo archivos adjuntos desde Notion<span class="tip-text">Sube tus imágenes directamente al campo Attachment en tu base de datos de Notion.</span></li>
+          <li class="has-tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Carruseles y reels con archivos adjuntos<span class="tip-text">Sube múltiples imágenes o videos al campo Attachment y navégalos directo en el widget.</span></li>
+          <li class="has-tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Widgets ilimitados<span class="tip-text">Crea un widget por cada cliente o cuenta sin límite. Cada uno conecta a una base de datos diferente.</span></li>
+          <li class="has-tip dim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Sin Canva ni links externos<span class="tip-text">Para usar diseños de Canva o imágenes desde URLs externas necesitas el plan Pro.</span></li>
+          <li class="has-tip dim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Sin posts fijados<span class="tip-text">Para fijar posts y que aparezcan siempre primero en tu grid necesitas el plan Pro.</span></li>
         </ul>
         <button class="plan-btn light" onclick="window.location.href='https://thecontentedit.lemonsqueezy.com/checkout/buy/dfb73a7c-a196-4ff5-8944-edfe23f673a3?logo=0&discount=0'">Empezar gratis</button>
       </div>
+      <!-- PRO -->
       <div class="plan featured">
         <div class="plan-tag">Recomendado</div>
         <div class="plan-name">Pro</div>
@@ -318,16 +356,16 @@ footer { background: var(--ink); padding: 2rem 1.5rem; display: flex; justify-co
         <div class="plan-period">pago único · acceso de por vida</div>
         <div class="plan-divider"></div>
         <ul class="plan-feats">
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Todo lo del plan gratis</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Hasta 60 imágenes</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Canva + links externos</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Carruseles, reels y posts fijados</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Plan Grid con drag & drop</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Content Map por pilares</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Profile Preview (bio mode)</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Post Preview</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Dark mode + vista 5 columnas</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Actualizaciones incluidas para siempre</li>
+          <li class="has-tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Todo lo del plan gratis<span class="tip-text">Incluye grid básico, archivos adjuntos y widgets ilimitados.</span></li>
+          <li class="has-tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Hasta 60 imágenes<span class="tip-text">Visualiza hasta 60 posts — suficiente para planear más de 2 meses de contenido.</span></li>
+          <li class="has-tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Canva + links externos<span class="tip-text">Pega el enlace público de Canva y aparece directo en tu grid. También funciona con Pinterest, Dropbox o cualquier URL.</span></li>
+          <li class="has-tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Carruseles, reels y posts fijados<span class="tip-text">Navega entre imágenes de un carrusel, previsualiza reels y fija tus posts más importantes para que aparezcan primero.</span></li>
+          <li class="has-tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Plan Grid con drag & drop<span class="tip-text">Arrastra posts y cámbiales la fecha visualmente. Los cambios se guardan directo en Notion.</span></li>
+          <li class="has-tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Content Map por pilares<span class="tip-text">Ve tu feed coloreado por pilar de contenido. Sabe de un vistazo si tu estrategia está balanceada.</span></li>
+          <li class="has-tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Profile Preview (bio mode)<span class="tip-text">Visualiza tu bio completa de Instagram — foto, nombre, descripción y highlights — antes de publicar.</span></li>
+          <li class="has-tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Post Preview<span class="tip-text">Ve cómo se verá tu post con caption, hashtags, canción y likes — sin salir de Notion.</span></li>
+          <li class="has-tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Dark mode + vista 5 columnas<span class="tip-text">Modo oscuro y vista de 5 columnas para ver tu feed exactamente como en Instagram desktop.</span></li>
+          <li class="has-tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Actualizaciones incluidas para siempre<span class="tip-text">Cada nueva feature que agreguemos llega a tu widget automáticamente, sin costo adicional.</span></li>
         </ul>
         <button class="plan-btn dark" onclick="window.location.href='https://thecontentedit.lemonsqueezy.com/checkout/buy/cd1c69d1-0d45-48a1-90e4-8e489f2aac0c?logo=0'">Obtener Pro — $449 MXN →</button>
       </div>
@@ -371,7 +409,7 @@ const faqs = [
   { q: "¿Funciona con mi base de datos de Notion actual?", a: "Sí, siempre que tenga las propiedades requeridas. Si usas nombres diferentes solo tendrás que renombrarlas. También hay una plantilla lista para duplicar." },
   { q: "¿Puedo usar el widget desde mi iPhone o iPad?", a: "Sí. Abre tu página de Notion en Safari o Chrome desde tu iPhone o iPad y el widget aparece perfecto. La app móvil de Notion no soporta contenido embebido, por eso el widget no se muestra ahí — pero en el navegador funciona sin problema." },
   { q: "¿Cuántos widgets puedo crear?", a: "Los que necesites. Tanto el plan gratis como el Pro te permiten crear widgets ilimitados. Cada uno se conecta a una base de datos de Notion diferente — perfecto para gestionar múltiples cuentas o clientes." },
-  { q: "¿Qué tipos de contenido puedo mostrar?", a: "Gratis: imágenes adjuntadas directamente en Notion. Pro: imágenes desde links externos, diseños de Canva sin exportar, videos, carruseles con múltiples imágenes y posts fijados." },
+  { q: "¿Qué tipos de contenido puedo mostrar?", a: "Gratis: imágenes, carruseles y reels subidos directamente como archivos adjuntos en Notion. Pro: imágenes desde links externos, diseños de Canva sin exportar, videos, y posts fijados." },
   { q: "¿Necesito cuenta de Notion de pago?", a: "No. El widget funciona perfectamente con el plan gratuito de Notion." },
   { q: "¿Cuál es la política de reembolso?", a: "Todas las ventas son finales al ser un producto digital. Por eso existe la versión gratuita — para que puedas probar la experiencia antes de comprometerte con Pro." },
   { q: "¿El widget se actualiza automáticamente?", a: "Sí. Cada vez que editas tu base de datos de Notion solo necesitas refrescar el widget y refleja los cambios al instante." },
