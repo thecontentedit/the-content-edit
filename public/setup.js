@@ -470,13 +470,19 @@ async function connectNotion() {
     document.getElementById('embedUrl').textContent = data.embedUrl;
     const bioBlock = document.getElementById('step5-bio-block');
     const upgradeCardStep5 = document.getElementById('upgrade-card-step5');
+    const instrFree = document.getElementById('step5-instructions-free');
+    const instrPro = document.getElementById('step5-instructions-pro');
     if (data.plan === 'pro') {
       document.getElementById('embedBioUrl').textContent = data.embedUrl + '?mode=bio';
       if (bioBlock) bioBlock.style.display = 'block';
       if (upgradeCardStep5) upgradeCardStep5.style.display = 'none';
+      if (instrFree) instrFree.style.display = 'none';
+      if (instrPro) instrPro.style.display = 'block';
     } else {
       if (bioBlock) bioBlock.style.display = 'none';
       if (upgradeCardStep5) upgradeCardStep5.style.display = 'block';
+      if (instrFree) instrFree.style.display = 'block';
+      if (instrPro) instrPro.style.display = 'none';
     }
 
     // ✅ Cargar live preview en paso 5
