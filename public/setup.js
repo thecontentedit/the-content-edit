@@ -315,13 +315,24 @@ function openCardModal(widgetId) {
     widgetId,
     color: widget.cardColor || CARD_COLORS[0].value,
     emoji: widget.cardEmoji || null,
+    name: widget.name || '',
   };
+
+  const nameInput = document.getElementById('modalWidgetName');
+  if (nameInput) nameInput.value = modalState.name;
 
   renderColorSwatches();
   renderEmojiGrid();
   updateModalPreview(widget);
 
   document.getElementById('cardModal').style.display = 'flex';
+}
+
+function onModalNameInput(value) {
+  modalState.name = value;
+  // Actualizar iniciales en el preview
+  const initials = document.getElementById('modalCardInitials');
+  if (initials) initials.textContent = getInitials(value || 'W');
 }
 
 function renderColorSwatches() {
@@ -375,20 +386,29 @@ function closeCardModal(event) {
 }
 
 async function saveCardCustomization() {
-  const { widgetId, color, emoji } = modalState;
+  const { widgetId, color, emoji, name } = modalState;
   if (!widgetId) return;
+
+  const trimmedName = (name || '').trim().slice(0, 60);
 
   try {
     const res = await fetch(`${BASE_URL}/api/setup`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ setupToken, widgetId, cardColor: color, cardEmoji: emoji }),
+      body: JSON.stringify({
+        setupToken,
+        widgetId,
+        cardColor: color,
+        cardEmoji: emoji,
+        ...(trimmedName ? { name: trimmedName } : {}),
+      }),
     });
     if (!res.ok) throw new Error('error');
     const idx = allWidgets.findIndex(w => w.widgetId === widgetId);
     if (idx !== -1) {
       allWidgets[idx].cardColor = color;
       allWidgets[idx].cardEmoji = emoji;
+      if (trimmedName) allWidgets[idx].name = trimmedName;
     }
     document.getElementById('cardModal').style.display = 'none';
     renderDashboard();
