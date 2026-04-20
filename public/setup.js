@@ -31,7 +31,7 @@ const CARD_EMOJIS = [
   '🎨', '✏️', '📌', '🔮', '🧿', '💎',
 ];
 
-let modalState = { color: null, emoji: null, widgetId: null };
+let modalState = { color: null, emoji: null, widgetId: null, name: null };
 let ctxWidgetId = null;
 
 // ─── INIT ────────────────────────────────────────────────────────────────────
@@ -154,6 +154,7 @@ function renderDashboard() {
   empty.style.display = 'none';
   grid.style.display = 'grid';
 
+  // Ordenar: fijados primero, luego por fecha descendente
   const sorted = [...allWidgets].sort((a, b) => {
     if (a.pinned && !b.pinned) return -1;
     if (!a.pinned && b.pinned) return 1;
@@ -275,13 +276,6 @@ function ctxEditCard() {
   openCardModal(wId);
 }
 
-function ctxRename() {
-  const wId = ctxWidgetId;
-  closeCtxMenu();
-  openWidgetDetail(wId);
-  setTimeout(() => toggleRenameSection(), 120);
-}
-
 function ctxOpenDetail() {
   const wId = ctxWidgetId;
   closeCtxMenu();
@@ -370,10 +364,8 @@ function selectEmoji(emoji) {
 function updateModalPreview(widget) {
   const preview = document.getElementById('modalCardPreview');
   if (preview) preview.style.backgroundColor = modalState.color || '#F2EDE8';
-
   const initials = document.getElementById('modalCardInitials');
   if (initials) initials.textContent = getInitials(widget.name || 'W');
-
   const emojiEl = document.getElementById('modalCardEmoji');
   if (emojiEl) emojiEl.textContent = modalState.emoji || '';
 }
@@ -386,16 +378,13 @@ function closeCardModal(event) {
 async function saveCardCustomization() {
   const { widgetId, color, emoji, name } = modalState;
   if (!widgetId) return;
-
   const trimmedName = (name || '').trim().slice(0, 60);
-
   try {
     const res = await fetch(`${BASE_URL}/api/setup`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        setupToken,
-        widgetId,
+        setupToken, widgetId,
         cardColor: color,
         cardEmoji: emoji,
         ...(trimmedName ? { name: trimmedName } : {}),
@@ -438,7 +427,7 @@ function openWidgetDetail(widgetId) {
     dbLink.style.display = 'none';
   }
 
-  // ✅ Bio link para Pro
+  // Bio link para Pro
   const bioRow = document.getElementById('detailBioRow');
   const bioUrlEl = document.getElementById('detailBioUrl');
   if (currentPlan === 'pro' && widget.embedUrl) {
