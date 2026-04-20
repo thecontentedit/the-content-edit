@@ -134,7 +134,7 @@ export default async function handler(req, res) {
     const pinned  = plan === 'pro' ? posts.filter(p => p.pinned) : [];
     const regular = posts.filter(p => !p.pinned);
     const ordered = [...pinned, ...regular].slice(0, limit);
-    res.setHeader('Cache-Control', 's-maxage=10, stale-while-revalidate=20');
+    res.setHeader('Cache-Control', 'no-store');
     return res.status(200).json({ posts: ordered, plan, profile });
   } catch (err) {
     console.error('Widget API error:', err);
