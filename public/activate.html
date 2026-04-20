@@ -63,7 +63,7 @@ body { font-family: var(--sans); background: var(--cream); color: var(--ink); -w
     <button class="btn-ghost" id="copyGhost" onclick="copyUrl()">Copiar link</button>
 
     <p class="note" id="note">¿Perdiste este link? Búscalo en tu email de confirmación de compra o escríbenos por Instagram.</p>
-    <p class="footer">© 2025 The Content Edit</p>
+    <p class="footer">© 2026 The Content Edit</p>
   </div>
   <div class="right">
     <img src="/activate-photo.png" alt="The Content Edit widget en Notion"/>
@@ -76,7 +76,6 @@ var isUpgrade = params.get('upgrade') === 'true';
 var BASE_URL = location.origin;
 
 if (isUpgrade) {
-  // Pantalla de upgrade — no mostrar setup
   document.getElementById('emoji').textContent = '✨';
   document.getElementById('title').textContent = '¡Ya eres Pro!';
   document.getElementById('subtitle').textContent = 'Tu widget se actualizó automáticamente. Abre Notion, dale Refresh al widget y listo — todas las features ya están activas.';
@@ -85,7 +84,6 @@ if (isUpgrade) {
   document.getElementById('copyGhost').style.display = 'none';
   document.getElementById('note').textContent = '¿Tienes dudas? Escríbenos por Instagram o a hola@thecontentedit.digital';
 } else if (token) {
-  // Pantalla normal — nueva usuaria
   var setupUrl = BASE_URL + '/setup.html?token=' + token;
   document.getElementById('setupUrl').textContent = setupUrl;
   document.getElementById('setupLink').href = setupUrl;
