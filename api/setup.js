@@ -201,6 +201,38 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true });
   }
 
+  // ─── ADMIN: borrar registro por email ────────────────────────────────────
+  // Uso: DELETE /api/setup?admin=CLAVE&email=correo@ejemplo.com
+  if (req.method === 'DELETE' && req.query.admin) {
+    const adminKey = process.env.ADMIN_DELETE_KEY;
+    if (!adminKey || req.query.admin !== adminKey) {
+      return res.status(401).json({ error: 'No autorizado' });
+    }
+    const email = req.query.email;
+    if (!email) return res.status(400).json({ error: 'Falta email' });
+
+    // Buscar el setupToken por email
+    const setupToken = await redis.get(`email:${email}`);
+    if (!setupToken) return res.status(404).json({ error: 'Email no encontrado' });
+
+    // Leer los widgets para borrar sus keys también
+    const raw = await redis.get(`setup:${setupToken}`);
+    if (raw) {
+      const data = typeof raw === 'string' ? JSON.parse(raw) : raw;
+      const widgets = data.widgets || [];
+      for (const w of widgets) {
+        await redis.del(`widget:${w.widgetId}`);
+      }
+      // Borrar también widgetId legacy si existe
+      if (data.widgetId) await redis.del(`widget:${data.widgetId}`);
+    }
+
+    await redis.del(`setup:${setupToken}`);
+    await redis.del(`email:${email}`);
+
+    return res.status(200).json({ ok: true, message: `Registro de ${email} borrado correctamente.` });
+  }
+
   return res.status(405).json({ error: 'Method not allowed' });
 }
 
