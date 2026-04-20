@@ -154,7 +154,6 @@ function renderDashboard() {
   empty.style.display = 'none';
   grid.style.display = 'grid';
 
-  // Ordenar: fijados primero, luego por fecha descendente
   const sorted = [...allWidgets].sort((a, b) => {
     if (a.pinned && !b.pinned) return -1;
     if (!a.pinned && b.pinned) return 1;
@@ -330,7 +329,6 @@ function openCardModal(widgetId) {
 
 function onModalNameInput(value) {
   modalState.name = value;
-  // Actualizar iniciales en el preview
   const initials = document.getElementById('modalCardInitials');
   if (initials) initials.textContent = getInitials(value || 'W');
 }
@@ -438,6 +436,16 @@ function openWidgetDetail(widgetId) {
     dbLink.style.display = 'inline';
   } else {
     dbLink.style.display = 'none';
+  }
+
+  // ✅ Bio link para Pro
+  const bioRow = document.getElementById('detailBioRow');
+  const bioUrlEl = document.getElementById('detailBioUrl');
+  if (currentPlan === 'pro' && widget.embedUrl) {
+    if (bioRow) bioRow.style.display = 'flex';
+    if (bioUrlEl) bioUrlEl.textContent = widget.embedUrl + '?mode=bio';
+  } else {
+    if (bioRow) bioRow.style.display = 'none';
   }
 
   const previewIframe = document.getElementById('widgetPreviewIframe');
