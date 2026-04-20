@@ -132,7 +132,7 @@ code { font-size: 11px; background: rgba(28,25,21,.07); padding: 1px 5px; border
 .wscreen { display: none; }
 .wscreen.active { display: block; }
 
-/* ─── WIDGET CARDS ─────────────────────────────────────────────────────────── */
+/* WIDGETS */
 .section-header { padding: 28px 40px 20px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .section-title { font-family: var(--serif); font-size: 22px; letter-spacing: -.01em; }
 .plan-badge { font-size: 10px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; }
@@ -140,247 +140,15 @@ code { font-size: 11px; background: rgba(28,25,21,.07); padding: 1px 5px; border
 .plan-badge.free { background: rgba(28,25,21,.07); border: 0.5px solid var(--border-strong); color: var(--muted); }
 .btn-new-widget { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; background: var(--ink); color: var(--cream); border: none; border-radius: 999px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: var(--sans); transition: opacity .2s; }
 .btn-new-widget:hover { opacity: .78; }
-.widgets-grid { padding: 24px 40px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
-
-/* Nueva tarjeta */
-.widget-card {
-  background: #fff;
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  cursor: pointer;
-  transition: box-shadow .18s, transform .14s;
-  position: relative;
-}
-.widget-card:hover { box-shadow: 0 6px 20px rgba(28,25,21,.11); transform: translateY(-2px); }
-
-/* Área de color superior */
-.widget-card-banner {
-  height: 96px;
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  padding: 10px 12px;
-  transition: background-color .3s;
-}
-
-/* Badge fijado */
-.pin-badge {
-  position: absolute;
-  top: 10px;
-  left: 12px;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: .05em;
-  text-transform: uppercase;
-  background: rgba(28,25,21,.55);
-  color: #fff;
-  padding: 3px 8px;
-  border-radius: 999px;
-  backdrop-filter: blur(4px);
-  display: none;
-}
-.widget-card.is-pinned .pin-badge { display: block; }
-
-/* Botón menú ⋮ */
-.widget-menu-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: rgba(255,255,255,.7);
-  border: 0.5px solid rgba(28,25,21,.12);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  backdrop-filter: blur(4px);
-  opacity: 0;
-  transition: opacity .15s, background .12s;
-  z-index: 2;
-  flex-shrink: 0;
-}
-.widget-card:hover .widget-menu-btn { opacity: 1; }
-.widget-menu-btn:hover { background: #fff; }
-.widget-menu-btn svg { width: 14px; height: 14px; color: var(--ink); }
-
-/* Iniciales */
-.widget-initials {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba(255,255,255,.85);
-  border: 0.5px solid rgba(28,25,21,.12);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink);
-  letter-spacing: -.01em;
-  flex-shrink: 0;
-  backdrop-filter: blur(4px);
-  line-height: 1;
-}
-
-/* Info inferior */
-.widget-card-body {
-  padding: 12px 14px 14px;
-  border-top: 0.5px solid var(--border);
-}
-.widget-card-name { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.widget-card-date { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+.widgets-grid { padding: 24px 40px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.widget-card { background: var(--card-bg, #F2EDE8); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.1rem; cursor: pointer; transition: box-shadow .15s, transform .12s; }
+.widget-card:hover { box-shadow: 0 4px 16px rgba(28,25,21,.1); transform: translateY(-1px); }
+.widget-card-icon { font-size: 16px; color: var(--accent); margin-bottom: 10px; }
+.widget-card-name { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 2px; }
+.widget-card-date { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
 .widget-card-url { font-family: monospace; font-size: 10px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
 .widgets-empty { text-align: center; padding: 60px 40px; color: var(--muted); font-size: 14px; }
 .widgets-empty-icon { font-size: 32px; margin-bottom: 12px; }
-
-/* ─── DROPDOWN MENU ─────────────────────────────────────────────────────────── */
-.ctx-menu {
-  position: fixed;
-  background: #fff;
-  border: 0.5px solid var(--border-strong);
-  border-radius: var(--radius-sm);
-  box-shadow: 0 8px 24px rgba(28,25,21,.14);
-  z-index: 1000;
-  min-width: 170px;
-  overflow: hidden;
-  animation: menuIn .12s ease;
-}
-@keyframes menuIn { from { opacity:0; transform: scale(.96) translateY(-4px); } to { opacity:1; transform: scale(1) translateY(0); } }
-.ctx-item {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 9px 14px;
-  font-size: 13px;
-  color: var(--ink);
-  cursor: pointer;
-  transition: background .1s;
-  border: none;
-  background: none;
-  width: 100%;
-  font-family: var(--sans);
-  text-align: left;
-}
-.ctx-item:hover { background: var(--cream); }
-.ctx-item svg { width: 13px; height: 13px; color: var(--muted); flex-shrink: 0; }
-.ctx-item.danger { color: var(--error); }
-.ctx-item.danger svg { color: var(--error); }
-.ctx-separator { height: 0.5px; background: var(--border); margin: 3px 0; }
-
-/* ─── CARD CUSTOMIZER MODAL ─────────────────────────────────────────────────── */
-.modal-overlay {
-  position: fixed; inset: 0;
-  background: rgba(28,25,21,.35);
-  z-index: 2000;
-  display: flex; align-items: center; justify-content: center;
-  padding: 20px;
-  animation: fadeIn .15s ease;
-}
-@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-.modal {
-  background: #fff;
-  border-radius: var(--radius);
-  box-shadow: 0 24px 60px rgba(28,25,21,.2);
-  width: 100%;
-  max-width: 360px;
-  overflow: hidden;
-  animation: slideUp .18s ease;
-}
-@keyframes slideUp { from { transform: translateY(12px); opacity:0; } to { transform: translateY(0); opacity:1; } }
-.modal-header {
-  padding: 18px 20px 14px;
-  border-bottom: 0.5px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-}
-.modal-title { font-family: var(--serif); font-size: 17px; letter-spacing: -.01em; }
-.modal-close {
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  border: 0.5px solid var(--border-strong);
-  background: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--muted); transition: background .12s;
-}
-.modal-close:hover { background: var(--cream); }
-.modal-close svg { width: 13px; height: 13px; }
-.modal-body { padding: 20px; }
-
-/* Preview de la tarjeta en el modal */
-.card-preview {
-  height: 72px;
-  border-radius: var(--radius-sm);
-  margin-bottom: 20px;
-  display: flex;
-  align-items: flex-end;
-  padding: 10px 12px;
-  transition: background-color .25s;
-  border: 0.5px solid var(--border);
-  position: relative;
-}
-.card-preview-initials {
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  background: rgba(255,255,255,.85);
-  border: 0.5px solid rgba(28,25,21,.12);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 12px; font-weight: 600; color: var(--ink);
-}
-.card-preview-emoji {
-  font-size: 20px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  line-height: 1;
-}
-
-/* Paleta de colores */
-.picker-label { font-size: 11px; font-weight: 500; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
-.color-swatches { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-.color-swatch {
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: transform .12s, border-color .12s;
-  position: relative;
-}
-.color-swatch:hover { transform: scale(1.1); }
-.color-swatch.selected { border-color: var(--ink); }
-.color-swatch.selected::after {
-  content: '✓';
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px; color: rgba(28,25,21,.7);
-}
-
-/* Paleta de emojis */
-.emoji-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
-.emoji-btn {
-  width: 36px; height: 36px;
-  border-radius: var(--radius-sm);
-  border: 0.5px solid var(--border);
-  background: var(--cream);
-  cursor: pointer;
-  font-size: 18px;
-  display: flex; align-items: center; justify-content: center;
-  transition: background .12s, border-color .12s, transform .1s;
-}
-.emoji-btn:hover { background: #fff; transform: scale(1.08); }
-.emoji-btn.selected { border-color: var(--ink); background: #fff; box-shadow: 0 0 0 1.5px var(--ink); }
-.emoji-btn.none-btn { font-size: 13px; color: var(--muted); font-family: var(--sans); }
-
-.modal-footer {
-  padding: 14px 20px;
-  border-top: 0.5px solid var(--border);
-  display: flex; gap: 8px;
-}
-.modal-footer .btn-primary { flex: 1; }
-.modal-footer .btn-ghost { flex: none; }
 
 /* WIDGET DETAIL */
 #widgetDetail { display: none; height: calc(100vh - 0px); overflow: hidden; }
@@ -390,8 +158,8 @@ code { font-size: 11px; background: rgba(28,25,21,.07); padding: 1px 5px; border
 .detail-preview-header { padding: 14px 20px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--cream); }
 .detail-preview-label { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
 .detail-preview-label svg { width: 13px; height: 13px; }
-.detail-preview-body { flex: 1; display: flex; align-items: center; justify-content: flex-start; padding: 24px 24px 24px 40px; overflow: hidden; }
-.widget-preview-frame { width: 100%; max-width: 520px; height: 600px; max-height: calc(100vh - 120px); border: none; border-radius: var(--radius); box-shadow: 0 8px 32px rgba(28,25,21,.12); background: #fff; }
+.detail-preview-body { flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px; overflow: hidden; }
+.widget-preview-frame { width: 380px; max-width: 100%; height: 100%; max-height: 600px; border: none; border-radius: var(--radius); box-shadow: 0 8px 32px rgba(28,25,21,.12); background: #fff; }
 .detail-back { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); cursor: pointer; padding: 4px 0; border: none; background: none; font-family: var(--sans); transition: color .15s; margin-bottom: 16px; }
 .detail-back:hover { color: var(--ink); }
 .detail-title { font-family: var(--serif); font-size: 20px; letter-spacing: -.01em; margin-bottom: 16px; }
@@ -646,77 +414,85 @@ code { font-size: 11px; background: rgba(28,25,21,.07); padding: 1px 5px; border
       </div>
     </div>
 
-    <!-- PASO 5 -->
-    <div class="wscreen" id="screenStep5">
-      <div style="display:flex;height:calc(100vh - 69px);overflow:hidden;">
-        <div style="width:400px;flex-shrink:0;overflow-y:auto;padding:28px 32px 60px;border-right:0.5px solid var(--border);">
-          <div class="steps" style="margin-bottom:1.5rem;">
-            <div class="step-item done"><div class="step-circle">✓</div><span>Plantilla</span></div><div class="step-line"></div>
-            <div class="step-item done"><div class="step-circle">✓</div><span>Token</span></div><div class="step-line"></div>
-            <div class="step-item done"><div class="step-circle">✓</div><span>Conectar</span></div><div class="step-line"></div>
-            <div class="step-item done"><div class="step-circle">✓</div><span>URL</span></div><div class="step-line"></div>
-            <div class="step-item active"><div class="step-circle">5</div><span>Widget</span></div>
-          </div>
-          <div class="success-card">
-            <div class="success-card-title">
-              🎞️
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-              ¡Tu widget está listo!
+        <!-- PASO 5 — layout full width fuera del setup-body -->
+        <div class="wscreen" id="screenStep5">
+          <div style="display:flex;height:calc(100vh - 69px);overflow:hidden;">
+
+            <!-- Columna izquierda — links e instrucciones -->
+            <div style="width:400px;flex-shrink:0;overflow-y:auto;padding:28px 32px 60px;border-right:0.5px solid var(--border);">
+              <div class="steps" style="margin-bottom:1.5rem;">
+                <div class="step-item done"><div class="step-circle">✓</div><span>Plantilla</span></div><div class="step-line"></div>
+                <div class="step-item done"><div class="step-circle">✓</div><span>Token</span></div><div class="step-line"></div>
+                <div class="step-item done"><div class="step-circle">✓</div><span>Conectar</span></div><div class="step-line"></div>
+                <div class="step-item done"><div class="step-circle">✓</div><span>URL</span></div><div class="step-line"></div>
+                <div class="step-item active"><div class="step-circle">5</div><span>Widget</span></div>
+              </div>
+              <div class="success-card">
+                <div class="success-card-title">
+                  🎞️
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  ¡Tu widget está listo!
+                </div>
+                <div class="success-card-body">Copia tus links y pégalos en Notion con <strong>/embed</strong>.</div>
+              </div>
+              <div class="card">
+                <div class="card-title">Tus links de embed</div>
+                <div class="card-sub">Cada link es único y personal — <strong>guárdalos bien.</strong></div>
+                <div class="url-block">
+                  <div class="url-label"><span>Grid completo</span><span class="url-tag">GRID</span></div>
+                  <div class="embed-wrap"><div class="embed-url" id="embedUrl"></div><button class="copy-btn" onclick="copyEmbed('embedUrl', this)">copiar</button></div>
+                </div>
+                <div class="url-block" id="step5-bio-block" style="display:none;">
+                  <div class="url-label"><span>Solo bio & highlights</span><span class="url-tag bio">BIO</span></div>
+                  <div class="embed-wrap"><div class="embed-url" id="embedBioUrl"></div><button class="copy-btn" onclick="copyEmbed('embedBioUrl', this)">copiar</button></div>
+                </div>
+                <!-- Instrucciones dinámicas por plan -->
+                <div id="step5-instructions-free" class="note-tip" style="margin-top:12px;">
+                  📋 Copia el link y pégalo en el bloque <strong>Tu Widget</strong> de tu plantilla de Notion → presiona <strong>Insertar enlace</strong>.
+                </div>
+                <div id="step5-instructions-pro" style="display:none;margin-top:12px;">
+                  <div class="note-tip" style="margin-bottom:6px;">📋 Tienes dos links — pega el <strong>Grid</strong> en el bloque <strong>Tu Widget</strong> y el <strong>Bio</strong> en el bloque <strong>Profile Preview</strong> de tu plantilla → presiona <strong>Insertar enlace</strong> en cada uno.</div>
+                </div>
+                <div class="note-tip" style="margin-top:6px;">💡 Si usas iPhone o iPad, abre Notion en Safari o Chrome — en la app móvil el widget aún no es compatible.</div>
+              </div>
+              <button class="btn-primary" style="width:100%;margin-bottom:12px;" onclick="switchTab('widgets')">Ver todos mis widgets →</button>
+              <div id="upgrade-card-step5" style="display:none;" class="upgrade-card">
+                <div class="upgrade-card-title">Ya tienes el Free — pero te estás perdiendo lo mejor.</div>
+                <div class="upgrade-card-sub">Haz upgrade a Pro una sola vez y desbloquea todo para siempre.</div>
+                <ul class="upgrade-features">
+                  <li><span class="feat-icon">🎨</span> Canva Connect</li>
+                  <li><span class="feat-icon">🔗</span> Links externos</li>
+                  <li><span class="feat-icon">🗺️</span> Content Map</li>
+                  <li><span class="feat-icon">📅</span> Plan Grid</li>
+                  <li><span class="feat-icon">👤</span> Profile Preview</li>
+                  <li><span class="feat-icon">🌙</span> Dark mode</li>
+                  <li><span class="feat-icon">⊞</span> Vista 5 columnas</li>
+                  <li><span class="feat-icon">▶️</span> Carruseles y reels</li>
+                  <li><span class="feat-icon">✦</span> Post Preview</li>
+                </ul>
+                <a href="https://thecontentedit.lemonsqueezy.com/checkout/buy/cd1c69d1-0d45-48a1-90e4-8e489f2aac0c?logo=0" class="btn-upgrade">Upgrade a Pro — $449 MXN →</a>
+                <p class="upgrade-note">Usa este mismo email al comprar — tu widget se actualiza automáticamente.</p>
+              </div>
             </div>
-            <div class="success-card-body">Copia tus links y pégalos en Notion con <strong>/embed</strong>.</div>
-          </div>
-          <div class="card">
-            <div class="card-title">Tus links de embed</div>
-            <div class="card-sub">Cada link es único y personal — <strong>guárdalos bien.</strong></div>
-            <div class="url-block">
-              <div class="url-label"><span>Grid completo</span><span class="url-tag">GRID</span></div>
-              <div class="embed-wrap"><div class="embed-url" id="embedUrl"></div><button class="copy-btn" onclick="copyEmbed('embedUrl', this)">copiar</button></div>
+
+            <!-- Columna derecha — live preview -->
+            <div style="flex:1;background:#F5F2ED;display:flex;flex-direction:column;">
+              <div style="padding:14px 20px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--cream);">
+                <div style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="13" height="13"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                  Live Preview
+                </div>
+                <span style="font-size:11px;color:var(--muted);">Así se verá en Notion</span>
+              </div>
+              <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:24px;overflow:hidden;">
+                <iframe id="step5PreviewIframe" style="width:380px;max-width:100%;height:100%;max-height:600px;border:none;border-radius:var(--radius);box-shadow:0 8px 32px rgba(28,25,21,.12);background:#fff;" src="" title="Widget Preview"></iframe>
+              </div>
             </div>
-            <div class="url-block" id="step5-bio-block" style="display:none;">
-              <div class="url-label"><span>Solo bio & highlights</span><span class="url-tag bio">BIO</span></div>
-              <div class="embed-wrap"><div class="embed-url" id="embedBioUrl"></div><button class="copy-btn" onclick="copyEmbed('embedBioUrl', this)">copiar</button></div>
-            </div>
-            <div id="step5-instructions-free" class="note-tip" style="margin-top:12px;">
-              📋 Copia el link y pégalo en el bloque <strong>Tu Widget</strong> de tu plantilla de Notion → presiona <strong>Insertar enlace</strong>.
-            </div>
-            <div id="step5-instructions-pro" style="display:none;margin-top:12px;">
-              <div class="note-tip" style="margin-bottom:6px;">📋 Tienes dos links — pega el <strong>Grid</strong> en el bloque <strong>Tu Widget</strong> y el <strong>Bio</strong> en el bloque <strong>Profile Preview</strong> de tu plantilla → presiona <strong>Insertar enlace</strong> en cada uno.</div>
-            </div>
-            <div class="note-tip" style="margin-top:6px;">💡 Si usas iPhone o iPad, abre Notion en Safari o Chrome — en la app móvil el widget aún no es compatible.</div>
-          </div>
-          <button class="btn-primary" style="width:100%;margin-bottom:12px;" onclick="switchTab('widgets')">Ver todos mis widgets →</button>
-          <div id="upgrade-card-step5" style="display:none;" class="upgrade-card">
-            <div class="upgrade-card-title">Ya tienes el Free — pero te estás perdiendo lo mejor.</div>
-            <div class="upgrade-card-sub">Haz upgrade a Pro una sola vez y desbloquea todo para siempre.</div>
-            <ul class="upgrade-features">
-              <li><span class="feat-icon">🎨</span> Canva Connect</li>
-              <li><span class="feat-icon">🔗</span> Links externos</li>
-              <li><span class="feat-icon">🗺️</span> Content Map</li>
-              <li><span class="feat-icon">📅</span> Plan Grid</li>
-              <li><span class="feat-icon">👤</span> Profile Preview</li>
-              <li><span class="feat-icon">🌙</span> Dark mode</li>
-              <li><span class="feat-icon">⊞</span> Vista 5 columnas</li>
-              <li><span class="feat-icon">▶️</span> Carruseles y reels</li>
-              <li><span class="feat-icon">✦</span> Post Preview</li>
-            </ul>
-            <a href="https://thecontentedit.lemonsqueezy.com/checkout/buy/cd1c69d1-0d45-48a1-90e4-8e489f2aac0c?logo=0" class="btn-upgrade">Upgrade a Pro — $449 MXN →</a>
-            <p class="upgrade-note">Usa este mismo email al comprar — tu widget se actualiza automáticamente.</p>
+
           </div>
         </div>
-        <div style="flex:1;background:#F5F2ED;display:flex;flex-direction:column;">
-          <div style="padding:14px 20px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--cream);">
-            <div style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="13" height="13"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-              Live Preview
-            </div>
-            <span style="font-size:11px;color:var(--muted);">Así se verá en Notion</span>
-          </div>
-          <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:24px;overflow:hidden;">
-            <iframe id="step5PreviewIframe" style="width:380px;max-width:100%;height:100%;max-height:600px;border:none;border-radius:var(--radius);box-shadow:0 8px 32px rgba(28,25,21,.12);background:#fff;" src="" title="Widget Preview"></iframe>
-          </div>
-        </div>
-      </div>
-    </div>
+
+    <!-- WIDGETS -->
 
     <!-- WIDGETS -->
     <div class="panel" id="panel-widgets">
@@ -732,6 +508,7 @@ code { font-size: 11px; background: rgba(28,25,21,.07); padding: 1px 5px; border
           </button>
         </div>
         <div id="widgetsGrid" class="widgets-grid"></div>
+        <!-- ✅ Empty state actualizado -->
         <div id="widgetsEmpty" class="widgets-empty" style="display:none;">
           <div class="widgets-empty-icon">🗂️</div>
           <p>Aún no tienes widgets. Tu feed de Instagram te está esperando.</p>
@@ -770,10 +547,17 @@ code { font-size: 11px; background: rgba(28,25,21,.07); padding: 1px 5px; border
             <div class="info-block">
               <div class="info-row">
                 <div style="flex:1;min-width:0;">
-                  <div class="info-label">Embed Link</div>
+                  <div class="info-label">Grid Link</div>
                   <div class="info-value" id="detailEmbedUrl"></div>
                 </div>
                 <button class="btn-mini" onclick="copyById('detailEmbedUrl',this)">Copiar</button>
+              </div>
+              <div class="info-row" id="detailBioRow" style="display:none;">
+                <div style="flex:1;min-width:0;">
+                  <div class="info-label">Bio Link <span style="font-size:9px;background:#5B7FA6;color:#fff;padding:1px 6px;border-radius:999px;letter-spacing:.04em;margin-left:4px;">BIO</span></div>
+                  <div class="info-value" id="detailBioUrl"></div>
+                </div>
+                <button class="btn-mini" onclick="copyById('detailBioUrl',this)">Copiar</button>
               </div>
               <div class="info-row">
                 <div style="flex:1;min-width:0;">
@@ -856,6 +640,7 @@ code { font-size: 11px; background: rgba(28,25,21,.07); padding: 1px 5px; border
           <div class="faq-item"><div class="faq-header" onclick="toggleFaq(this)"><div class="faq-q">El widget dice que no puede acceder a mi base de datos</div><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">Esto casi siempre pasa porque el link no es el de la base de datos real. Abre tu base de datos en página completa en el navegador y copia la URL desde ahí. Si ves una flechita junto al título, es una vista vinculada — necesitas ir a la base de datos original.</div></div>
           <div class="faq-item"><div class="faq-header" onclick="toggleFaq(this)"><div class="faq-q">¿Puedo usarlo para varios clientes?</div><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">¡Sí! Puedes crear widgets ilimitados, uno por cada cliente. Cada widget se conecta a una base de datos diferente. Puedes reutilizar el mismo Integration Token para todas — solo conéctalo a cada base de datos por separado.</div></div>
           <div class="faq-item"><div class="faq-header" onclick="toggleFaq(this)"><div class="faq-q">¿Puedo renombrar las columnas de mi base de datos?</div><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">No, las propiedades deben mantener sus nombres exactos. Puedes agregar columnas adicionales, pero no renombrar las que usa el widget.</div></div>
+          <!-- ✅ FAQ Canva corregido: Enlace público en lugar de Embed -->
           <div class="faq-item"><div class="faq-header" onclick="toggleFaq(this)"><div class="faq-q">¿Cómo agrego diseños de Canva? (Pro)</div><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">En Canva ve a Compartir → Enlace público y copia ese link. Pégalo en la propiedad Canva Link de tu base de datos. El widget lo mostrará directamente sin necesidad de exportar nada.</div></div>
           <div class="faq-item"><div class="faq-header" onclick="toggleFaq(this)"><div class="faq-q">¿Cómo agrego videos? (Pro)</div><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">Sube videos al campo Attachment, o pega links de Dropbox o Google Drive en la propiedad Link. El widget detecta automáticamente que es video por la extensión.</div></div>
           <div class="faq-item"><div class="faq-header" onclick="toggleFaq(this)"><div class="faq-q">¿Cómo hago upgrade a Pro?</div><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">Ve a la sección Account o haz click en cualquier botón de upgrade. Compra usando el mismo email — tus widgets se actualizan automáticamente sin reconfigurar nada.</div></div>
@@ -902,65 +687,6 @@ code { font-size: 11px; background: rgba(28,25,21,.07); padding: 1px 5px; border
       </div>
     </div>
 
-  </div>
-</div>
-
-<!-- DROPDOWN MENU (global, posicionado por JS) -->
-<div id="ctxMenu" class="ctx-menu" style="display:none;">
-  <button class="ctx-item" id="ctxPin" onclick="ctxPinWidget()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-    <span id="ctxPinLabel">Fijar widget</span>
-  </button>
-  <button class="ctx-item" onclick="ctxEditCard()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
-    Personalizar tarjeta
-  </button>
-  <div class="ctx-separator"></div>
-  <button class="ctx-item" onclick="ctxOpenDetail()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-    Ver detalle
-  </button>
-  <div class="ctx-separator"></div>
-  <button class="ctx-item danger" onclick="ctxDelete()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
-    Eliminar
-  </button>
-</div>
-
-<!-- MODAL: Personalizar tarjeta -->
-<div id="cardModal" class="modal-overlay" style="display:none;" onclick="closeCardModal(event)">
-  <div class="modal" onclick="event.stopPropagation()">
-    <div class="modal-header">
-      <div class="modal-title">Personalizar tarjeta</div>
-      <button class="modal-close" onclick="closeCardModal()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div class="modal-body">
-      <!-- Preview -->
-      <div class="card-preview" id="modalCardPreview">
-        <div class="card-preview-initials" id="modalCardInitials"></div>
-        <div class="card-preview-emoji" id="modalCardEmoji"></div>
-      </div>
-      <!-- Nombre -->
-      <div class="picker-label">Nombre</div>
-      <input type="text" id="modalWidgetName" maxlength="60" placeholder="Nombre del widget"
-        style="width:100%;padding:9px 12px;background:var(--cream);border:0.5px solid var(--border-strong);border-radius:var(--radius-sm);font-size:13px;font-family:var(--sans);color:var(--ink);outline:none;margin-bottom:16px;"
-        oninput="onModalNameInput(this.value)"
-        onfocus="this.style.borderColor='var(--ink)';this.style.background='#fff'"
-        onblur="this.style.borderColor='';this.style.background='var(--cream)'"
-      />
-      <!-- Color picker -->
-      <div class="picker-label">Color de fondo</div>
-      <div class="color-swatches" id="colorSwatches"></div>
-      <!-- Emoji picker -->
-      <div class="picker-label">Emoji</div>
-      <div class="emoji-grid" id="emojiGrid"></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-ghost" onclick="closeCardModal()">Cancelar</button>
-      <button class="btn-primary" onclick="saveCardCustomization()">Guardar</button>
-    </div>
   </div>
 </div>
 
