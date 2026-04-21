@@ -4,8 +4,6 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>The Content Edit — Setup</title>
-<link rel="icon" type="image/x-icon" href="/favicon.ico"/>
-<link rel="apple-touch-icon" href="/apple-touch-icon.png"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
@@ -501,6 +499,17 @@ code { font-size: 11px; background: rgba(28,25,21,.07); padding: 1px 5px; border
       </div>
     </nav>
     <div class="sidebar-footer">
+      <div style="padding:8px 10px 6px;border-bottom:0.5px solid var(--border);margin-bottom:4px;">
+        <div style="font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;padding:0 2px;">Video tutoriales</div>
+        <a href="https://youtu.be/UX8Fp2ufwfE?si=0q-rdieZTx532eSM" target="_blank" style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:var(--radius-sm);font-size:12px;color:var(--accent);text-decoration:none;transition:background .12s;" onmouseover="this.style.background='rgba(122,59,74,.06)'" onmouseout="this.style.background='transparent'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;flex-shrink:0;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Setup Guide
+        </a>
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:var(--radius-sm);font-size:12px;color:var(--muted);cursor:default;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;flex-shrink:0;opacity:.4;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Pro Features <span style="font-size:9px;background:rgba(28,25,21,.07);padding:1px 5px;border-radius:999px;margin-left:2px;">Pronto</span>
+        </div>
+      </div>
       <div class="nav-item" id="nav-account" onclick="switchTab('account')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         Account
@@ -523,11 +532,21 @@ code { font-size: 11px; background: rgba(28,25,21,.07); padding: 1px 5px; border
         <div class="wstep"><div class="wstep-num">2</div><div class="wstep-title">Crea una integración</div><div class="wstep-sub">Genera un token en notion.so/my-integrations y conéctalo a tu base de datos.</div></div>
         <div class="wstep"><div class="wstep-num">3</div><div class="wstep-title">Genera tu widget</div><div class="wstep-sub">Pega tu token y URL, crea el widget y embébelo en Notion con /embed.</div></div>
       </div>
-      <div class="welcome-video">
-        <div class="welcome-video-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-        <div>
-          <div class="welcome-video-title">Video tutorial <span class="welcome-video-badge">Próximamente</span></div>
-          <div class="welcome-video-sub">Guía completa en español — paso a paso.</div>
+      <div style="margin:0 48px 48px;display:flex;flex-direction:column;gap:10px;">
+        <a href="https://youtu.be/UX8Fp2ufwfE?si=0q-rdieZTx532eSM" target="_blank" class="welcome-video" style="text-decoration:none;">
+          <div class="welcome-video-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+          <div>
+            <div class="welcome-video-title">Video tutorial — Setup</div>
+            <div class="welcome-video-sub">Configura tu widget en menos de 3 minutos.</div>
+          </div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px;color:var(--muted);margin-left:auto;flex-shrink:0;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
+        <div class="welcome-video" style="opacity:.5;cursor:default;">
+          <div class="welcome-video-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+          <div>
+            <div class="welcome-video-title">Video tutorial — Pro Features <span class="welcome-video-badge">Próximamente</span></div>
+            <div class="welcome-video-sub">Aprende a usar todas las features del Plan Pro.</div>
+          </div>
         </div>
       </div>
     </div>
