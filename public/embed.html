@@ -410,8 +410,15 @@ function renderGrid(posts, plan) {
     if (post.proBlocked) {
       inner.appendChild(makeProPlaceholder());
     } else if (post.imageSource === 'canva' && post.imageUrl) {
-      const wrapper = document.createElement('div'); wrapper.style.cssText = 'position:relative;width:100%;height:100%;overflow:hidden;';
-      const iframe = document.createElement('iframe'); iframe.src = post.imageUrl; iframe.style.cssText = 'width:120%;height:150%;border:none;pointer-events:none;margin-left:-10%;margin-top:-12%;'; iframe.setAttribute('allowfullscreen', ''); wrapper.appendChild(iframe); inner.appendChild(wrapper);
+      // ✅ FIX: usar transform scale para cubrir sin franja negra
+      const wrapper = document.createElement('div');
+      wrapper.style.cssText = 'position:relative;width:100%;height:100%;overflow:hidden;';
+      const iframe = document.createElement('iframe');
+      iframe.src = post.imageUrl;
+      iframe.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;border:none;pointer-events:none;transform:scale(1.15);transform-origin:center center;';
+      iframe.setAttribute('allowfullscreen', '');
+      wrapper.appendChild(iframe);
+      inner.appendChild(wrapper);
     } else if (post.imageUrl && !post.imageUrl.startsWith('__')) {
       if (isVideoUrl(post.imageUrl)) {
         const video = document.createElement('video');
@@ -588,7 +595,7 @@ function renderPostPreview() {
       wrapper.style.cssText = 'width:100%;height:100%;overflow:hidden;position:relative;';
       const iframe = document.createElement('iframe');
       iframe.src = existingModalIframe.src;
-      iframe.style.cssText = 'width:120%;height:150%;border:none;pointer-events:none;margin-left:-10%;margin-top:-12%;';
+      iframe.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;border:none;pointer-events:none;transform:scale(1.15);transform-origin:center center;';
       iframe.setAttribute('allowfullscreen', '');
       wrapper.appendChild(iframe);
       imgArea.appendChild(wrapper);
