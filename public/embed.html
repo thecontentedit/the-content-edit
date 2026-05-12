@@ -166,7 +166,9 @@
   .pp-song { font-size: 10px; color: #7A7570; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 4px; margin-top: 1px; }
   .pp-song svg { width: 10px; height: 10px; flex-shrink: 0; }
   .pp-dots { font-size: 18px; color: #1C1915; letter-spacing: 2px; line-height: 1; flex-shrink: 0; }
+  /* POST PREVIEW IMAGE - cuadrado por defecto, vertical para reels */
   .pp-image { width: 100%; aspect-ratio: 1/1; background: #EDEAE4; overflow: hidden; }
+  .pp-image.reel { aspect-ratio: 9/16; }
   .pp-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .pp-image video { width: 100%; height: 100%; object-fit: cover; display: block; }
   .pp-image-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #aaa; }
@@ -575,13 +577,17 @@ function renderPostPreview() {
   const songText = document.getElementById('pp-song-text');
   if (modalPost.song) { songText.textContent = modalPost.song; songRow.style.display = 'flex'; }
   else { songRow.style.display = 'none'; }
+
+  // Detectar si es reel y aplicar aspect ratio vertical
   const imgArea = document.getElementById('pp-image');
   imgArea.innerHTML = '';
+  const isReel = modalPost.mediaType === 'reel';
+  imgArea.className = 'pp-image' + (isReel ? ' reel' : '');
+
   const currentPlan = cachedData?.plan;
   if (currentPlan !== 'pro') {
     const ph = document.createElement('div'); ph.className = 'pp-image-placeholder'; ph.textContent = 'Función Pro'; imgArea.appendChild(ph);
   } else {
-    // FIX: Lee directamente de modalPost y modalImages en lugar de clonar el DOM
     const imgUrl = modalImages[modalIndex] || modalPost.imageUrl;
     if (modalIsCanva && imgUrl) {
       const wrapper = document.createElement('div');
