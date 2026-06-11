@@ -67,6 +67,13 @@ export default async function handler(req, res) {
             subject: '¡Ya eres Pro! Tu widget se actualizó',
             html: getUpgradeEmailHTML({ customerName, setupUrl, orderNumber, orderDate }),
           });
+          // Notificación a orders
+          await resend.emails.send({
+            from: 'The Content Edit <hola@thecontentedit.digital>',
+            to: 'orders@thecontentedit.digital',
+            subject: `🔥 Upgrade a Pro — #${orderNumber}`,
+            html: `<p><strong>Email:</strong> ${email}<br/><strong>Nombre:</strong> ${customerName}<br/><strong>Plan:</strong> Pro (upgrade)<br/><strong>Orden:</strong> #${orderNumber}<br/><strong>Fecha:</strong> ${orderDate}</p>`,
+          });
           return res.status(200).json({ success: true, upgraded: true });
         }
       }
@@ -98,6 +105,14 @@ export default async function handler(req, res) {
       html: plan === 'pro'
         ? getProEmailHTML({ customerName, licenseKey, setupUrl, orderNumber, orderDate })
         : getFreeEmailHTML({ customerName, licenseKey, setupUrl, orderNumber, orderDate }),
+    });
+
+    // Notificación a orders
+    await resend.emails.send({
+      from: 'The Content Edit <hola@thecontentedit.digital>',
+      to: 'orders@thecontentedit.digital',
+      subject: `🎉 Nueva orden ${plan === 'pro' ? 'Pro' : 'Free'} — #${orderNumber}`,
+      html: `<p><strong>Email:</strong> ${email}<br/><strong>Nombre:</strong> ${customerName}<br/><strong>Plan:</strong> ${plan}<br/><strong>Orden:</strong> #${orderNumber}<br/><strong>Fecha:</strong> ${orderDate}</p>`,
     });
 
     return res.status(200).json({ success: true, licenseKey });
