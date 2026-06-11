@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Content Edit — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #F9F6F1; --ink: #1C1915; --muted: #7A7570;
+  --border: rgba(28,25,21,0.09); --border-strong: rgba(28,25,21,0.2);
+  --success: #2D6A4F; --success-bg: #EAF4EE;
+  --error: #A32D2D; --error-bg: #FCEBEB;
+  --accent: #7A3B4A; --accent-light: rgba(122,59,74,0.08);
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans: 'DM Sans', system-ui, sans-serif;
+  --radius: 12px; --radius-sm: 8px;
+}
+html, body { height: 100%; }
+body { font-family: var(--sans); background: var(--cream); color: var(--ink); font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+.login-wrap { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
+.login-card { background: #fff; border: 0.5px solid var(--border); border-radius: var(--radius); padding: 2rem; width: 100%; max-width: 360px; }
+.login-title { font-family: var(--serif); font-size: 22px; margin-bottom: 6px; }
+.login-sub { font-size: 13px; color: var(--muted); margin-bottom: 1.5rem; }
+
+.app { display: none; max-width: 720px; margin: 0 auto; padding: 40px 24px 80px; }
+.app.visible { display: block; }
+
+.header { margin-bottom: 32px; }
+.header-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.header-title { font-family: var(--serif); font-size: 28px; letter-spacing: -.02em; }
+
+.search-bar { display: flex; gap: 8px; margin-bottom: 24px; }
+.search-input { flex: 1; padding: 10px 14px; background: #fff; border: 0.5px solid var(--border-strong); border-radius: var(--radius-sm); font-size: 13px; font-family: var(--sans); color: var(--ink); outline: none; transition: border-color .15s; }
+.search-input:focus { border-color: var(--ink); }
+.btn-search { padding: 10px 20px; background: var(--ink); color: var(--cream); border: none; border-radius: 999px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: var(--sans); transition: opacity .2s; white-space: nowrap; }
+.btn-search:hover { opacity: .78; }
+.btn-search:disabled { opacity: .35; cursor: not-allowed; }
+
+.result { display: none; }
+.result.visible { display: block; }
+
+.result-card { background: #fff; border: 0.5px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 12px; }
+.result-header { padding: 16px 20px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.result-email { font-size: 14px; font-weight: 500; color: var(--ink); }
+.plan-badge { font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; }
+.plan-badge.pro { background: var(--accent); color: #fff; }
+.plan-badge.free { background: rgba(28,25,21,.07); border: 0.5px solid var(--border-strong); color: var(--muted); }
+
+.info-row { display: flex; align-items: flex-start; justify-content: space-between; padding: 11px 20px; border-bottom: 0.5px solid var(--border); gap: 12px; }
+.info-row:last-child { border-bottom: none; }
+.info-label { font-size: 10px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+.info-value { font-size: 12px; color: var(--ink); font-family: monospace; word-break: break-all; line-height: 1.5; }
+.info-value.normal { font-family: var(--sans); }
+.btn-copy { font-size: 11px; padding: 3px 8px; background: var(--cream); border: 0.5px solid var(--border-strong); border-radius: var(--radius-sm); cursor: pointer; color: var(--muted); font-family: var(--sans); white-space: nowrap; flex-shrink: 0; transition: background .12s; }
+.btn-copy:hover { background: rgba(28,25,21,.08); color: var(--ink); }
+
+.widgets-title { font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 14px 20px 10px; border-top: 0.5px solid var(--border); }
+.widget-item { padding: 12px 20px; border-top: 0.5px solid var(--border); }
+.widget-name { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 8px; }
+.widget-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+.widget-row:last-child { margin-bottom: 0; }
+
+.error-card { background: var(--error-bg); border: 0.5px solid rgba(163,45,45,.2); border-radius: var(--radius); padding: 14px 18px; font-size: 13px; color: var(--error); }
+.empty-card { background: #fff; border: 0.5px solid var(--border); border-radius: var(--radius); padding: 32px; text-align: center; color: var(--muted); font-size: 13px; }
+
+.field { margin-bottom: 1rem; }
+.field label { display: block; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+.field input { width: 100%; padding: 10px 12px; background: var(--cream); border: 0.5px solid var(--border-strong); border-radius: var(--radius-sm); font-size: 13px; font-family: var(--sans); color: var(--ink); outline: none; transition: border-color .15s; }
+.field input:focus { border-color: var(--ink); background: #fff; }
+.btn-primary { width: 100%; padding: 11px; background: var(--ink); color: var(--cream); border: none; border-radius: 999px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: var(--sans); transition: opacity .2s; }
+.btn-primary:hover { opacity: .78; }
+
+.spinner-inline { display: inline-block; width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid rgba(249,246,241,.3); border-top-color: var(--cream); animation: spin .7s linear infinite; vertical-align: middle; margin-right: 6px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.logout-btn { font-size: 11px; color: var(--muted); background: none; border: none; cursor: pointer; font-family: var(--sans); padding: 0; transition: color .15s; }
+.logout-btn:hover { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-card">
+    <div class="login-title">Admin</div>
+    <div class="login-sub">The Content Edit — acceso restringido</div>
+    <div class="field">
+      <label>Contraseña</label>
+      <input type="password" id="passwordInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()"/>
+    </div>
+    <button class="btn-primary" onclick="login()">Entrar</button>
+    <div id="loginError" style="display:none;margin-top:10px;font-size:12px;color:var(--error);">Contraseña incorrecta.</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+  <div class="header">
+    <div class="header-eyebrow" style="display:flex;align-items:center;justify-content:space-between;">
+      <span>The Content Edit</span>
+      <button class="logout-btn" onclick="logout()">Cerrar sesión</button>
+    </div>
+    <div class="header-title">Panel de administración</div>
+  </div>
+
+  <div class="search-bar">
+    <input type="email" class="search-input" id="emailInput" placeholder="correo@ejemplo.com" onkeydown="if(event.key==='Enter')search()"/>
+    <button class="btn-search" id="searchBtn" onclick="search()">Buscar</button>
+  </div>
+
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+const ADMIN_KEY = 'tce_admin_session';
+
+function login() {
+  const pwd = document.getElementById('passwordInput').value;
+  const err = document.getElementById('loginError');
+  
+  fetch(`/api/admin?password=${encodeURIComponent(pwd)}`)
+    .then(r => r.json())
+    .then(data => {
+      if (data.ok) {
+        sessionStorage.setItem(ADMIN_KEY, pwd);
+        document.getElementById('loginWrap').style.display = 'none';
+        document.getElementById('app').classList.add('visible');
+        err.style.display = 'none';
+      } else {
+        err.style.display = 'block';
+      }
+    })
+    .catch(() => { err.style.display = 'block'; });
+}
+
+function logout() {
+  sessionStorage.removeItem(ADMIN_KEY);
+  location.reload();
+}
+
+function getPassword() {
+  return sessionStorage.getItem(ADMIN_KEY);
+}
+
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✓';
+    setTimeout(() => btn.textContent = orig, 1500);
+  });
+}
+
+async function search() {
+  const email = document.getElementById('emailInput').value.trim();
+  if (!email) return;
+
+  const btn = document.getElementById('searchBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner-inline"></span>Buscando';
+
+  const result = document.getElementById('result');
+  result.classList.remove('visible');
+
+  try {
+    const r = await fetch(`/api/admin?email=${encodeURIComponent(email)}&password=${encodeURIComponent(getPassword())}`);
+    const data = await r.json();
+
+    if (!data.ok) {
+      result.innerHTML = `<div class="error-card">${data.error || 'Usuario no encontrado.'}</div>`;
+      result.classList.add('visible');
+      return;
+    }
+
+    const u = data.user;
+    const setupUrl = `${location.origin}/setup.html?token=${u.setupToken}`;
+    const planBadge = u.plan === 'pro' 
+      ? '<span class="plan-badge pro">Pro</span>' 
+      : '<span class="plan-badge free">Free</span>';
+
+    const widgetsHTML = u.widgets && u.widgets.length > 0
+      ? `<div class="widgets-title">Widgets (${u.widgets.length})</div>` +
+        u.widgets.map(w => `
+          <div class="widget-item">
+            <div class="widget-name">${w.name}</div>
+            <div class="widget-row">
+              <div style="flex:1;min-width:0;">
+                <div class="info-label">Embed URL</div>
+                <div class="info-value">${w.embedUrl}</div>
+              </div>
+              <button class="btn-copy" onclick="copyText('${w.embedUrl}', this)">Copiar</button>
+            </div>
+            ${w.notionDbId ? `
+            <div class="widget-row" style="margin-top:6px;">
+              <div style="flex:1;min-width:0;">
+                <div class="info-label">Notion DB ID</div>
+                <div class="info-value">${w.notionDbId}</div>
+              </div>
+            </div>` : ''}
+          </div>
+        `).join('')
+      : '<div style="padding:14px 20px;font-size:13px;color:var(--muted);border-top:0.5px solid var(--border);">Sin widgets todavía.</div>';
+
+    result.innerHTML = `
+      <div class="result-card">
+        <div class="result-header">
+          <div class="result-email">${u.email}</div>
+          ${planBadge}
+        </div>
+        <div class="info-row">
+          <div style="flex:1;min-width:0;">
+            <div class="info-label">License Key</div>
+            <div class="info-value">${u.licenseKey || '—'}</div>
+          </div>
+          ${u.licenseKey ? `<button class="btn-copy" onclick="copyText('${u.licenseKey}', this)">Copiar</button>` : ''}
+        </div>
+        <div class="info-row">
+          <div style="flex:1;min-width:0;">
+            <div class="info-label">Setup Link</div>
+            <div class="info-value">${setupUrl}</div>
+          </div>
+          <button class="btn-copy" onclick="copyText('${setupUrl}', this)">Copiar</button>
+        </div>
+        <div class="info-row">
+          <div style="flex:1;min-width:0;">
+            <div class="info-label">Creado</div>
+            <div class="info-value normal">${u.createdAt ? new Date(u.createdAt).toLocaleDateString('es-MX', { day:'numeric', month:'long', year:'numeric' }) : '—'}</div>
+          </div>
+        </div>
+        <div class="info-row">
+          <div style="flex:1;min-width:0;">
+            <div class="info-label">Activado</div>
+            <div class="info-value normal">${u.activated ? 'Sí' : 'No'}</div>
+          </div>
+        </div>
+        ${widgetsHTML}
+      </div>
+    `;
+    result.classList.add('visible');
+
+  } catch(e) {
+    result.innerHTML = `<div class="error-card">Error al buscar. Intenta de nuevo.</div>`;
+    result.classList.add('visible');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Buscar';
+  }
+}
+
+// Check session on load
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = sessionStorage.getItem(ADMIN_KEY);
+  if (saved) {
+    fetch(`/api/admin?password=${encodeURIComponent(saved)}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.ok) {
+          document.getElementById('loginWrap').style.display = 'none';
+          document.getElementById('app').classList.add('visible');
+        }
+      });
+  }
+  document.getElementById('passwordInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') login();
+  });
+});
+</script>
+</body>
+</html>
