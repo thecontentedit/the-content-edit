@@ -27,12 +27,17 @@ body { font-family: var(--sans); background: var(--cream); color: var(--ink); fo
 .login-title { font-family: var(--serif); font-size: 22px; margin-bottom: 6px; }
 .login-sub { font-size: 13px; color: var(--muted); margin-bottom: 1.5rem; }
 
-.app { display: none; max-width: 720px; margin: 0 auto; padding: 40px 24px 80px; }
+.app { display: none; max-width: 760px; margin: 0 auto; padding: 40px 24px 80px; }
 .app.visible { display: block; }
 
-.header { margin-bottom: 32px; }
-.header-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.header { margin-bottom: 28px; display: flex; align-items: flex-end; justify-content: space-between; }
+.header-left {}
+.header-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
 .header-title { font-family: var(--serif); font-size: 28px; letter-spacing: -.02em; }
+
+.tabs { display: flex; gap: 4px; margin-bottom: 24px; background: #fff; border: 0.5px solid var(--border); border-radius: 999px; padding: 4px; width: fit-content; }
+.tab-btn { padding: 6px 16px; border-radius: 999px; font-size: 12px; font-weight: 500; cursor: pointer; border: none; background: none; font-family: var(--sans); color: var(--muted); transition: all .15s; }
+.tab-btn.active { background: var(--ink); color: var(--cream); }
 
 .search-bar { display: flex; gap: 8px; margin-bottom: 24px; }
 .search-input { flex: 1; padding: 10px 14px; background: #fff; border: 0.5px solid var(--border-strong); border-radius: var(--radius-sm); font-size: 13px; font-family: var(--sans); color: var(--ink); outline: none; transition: border-color .15s; }
@@ -45,8 +50,9 @@ body { font-family: var(--sans); background: var(--cream); color: var(--ink); fo
 .result.visible { display: block; }
 
 .result-card { background: #fff; border: 0.5px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 12px; }
-.result-header { padding: 16px 20px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.result-header { padding: 16px 20px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .result-email { font-size: 14px; font-weight: 500; color: var(--ink); }
+.result-header-right { display: flex; align-items: center; gap: 8px; }
 .plan-badge { font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; }
 .plan-badge.pro { background: var(--accent); color: #fff; }
 .plan-badge.free { background: rgba(28,25,21,.07); border: 0.5px solid var(--border-strong); color: var(--muted); }
@@ -59,6 +65,15 @@ body { font-family: var(--sans); background: var(--cream); color: var(--ink); fo
 .btn-copy { font-size: 11px; padding: 3px 8px; background: var(--cream); border: 0.5px solid var(--border-strong); border-radius: var(--radius-sm); cursor: pointer; color: var(--muted); font-family: var(--sans); white-space: nowrap; flex-shrink: 0; transition: background .12s; }
 .btn-copy:hover { background: rgba(28,25,21,.08); color: var(--ink); }
 
+.action-row { padding: 14px 20px; border-top: 0.5px solid var(--border); display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-action { font-size: 12px; padding: 7px 14px; border-radius: 999px; border: 0.5px solid var(--border-strong); background: transparent; color: var(--ink); cursor: pointer; font-family: var(--sans); transition: background .15s; font-weight: 500; }
+.btn-action:hover { background: rgba(28,25,21,.05); }
+.btn-action.success { border-color: rgba(45,106,79,.3); color: var(--success); background: var(--success-bg); }
+.btn-action.loading { opacity: .5; cursor: not-allowed; }
+.btn-action-pro { border-color: rgba(122,59,74,.3); color: var(--accent); }
+.btn-action-pro:hover { background: var(--accent-light); }
+.btn-action-free { border-color: var(--border-strong); color: var(--muted); }
+
 .widgets-title { font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 14px 20px 10px; border-top: 0.5px solid var(--border); }
 .widget-item { padding: 12px 20px; border-top: 0.5px solid var(--border); }
 .widget-name { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 8px; }
@@ -66,7 +81,16 @@ body { font-family: var(--sans); background: var(--cream); color: var(--ink); fo
 .widget-row:last-child { margin-bottom: 0; }
 
 .error-card { background: var(--error-bg); border: 0.5px solid rgba(163,45,45,.2); border-radius: var(--radius); padding: 14px 18px; font-size: 13px; color: var(--error); }
-.empty-card { background: #fff; border: 0.5px solid var(--border); border-radius: var(--radius); padding: 32px; text-align: center; color: var(--muted); font-size: 13px; }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--cream); padding: 8px 18px; border-radius: 999px; font-size: 12px; font-weight: 500; z-index: 9999; display: none; }
+.toast.visible { display: block; }
+
+/* Tabla de usuarios */
+.users-table { width: 100%; border-collapse: collapse; background: #fff; border: 0.5px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.users-table th { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 10px 16px; text-align: left; border-bottom: 0.5px solid var(--border); background: var(--cream); }
+.users-table td { font-size: 12px; color: var(--ink); padding: 10px 16px; border-bottom: 0.5px solid var(--border); }
+.users-table tr:last-child td { border-bottom: none; }
+.users-table tr:hover td { background: #fafaf8; cursor: pointer; }
+.users-count { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
 
 .field { margin-bottom: 1rem; }
 .field label { display: block; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
@@ -75,7 +99,7 @@ body { font-family: var(--sans); background: var(--cream); color: var(--ink); fo
 .btn-primary { width: 100%; padding: 11px; background: var(--ink); color: var(--cream); border: none; border-radius: 999px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: var(--sans); transition: opacity .2s; }
 .btn-primary:hover { opacity: .78; }
 
-.spinner-inline { display: inline-block; width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid rgba(249,246,241,.3); border-top-color: var(--cream); animation: spin .7s linear infinite; vertical-align: middle; margin-right: 6px; }
+.spinner-inline { display: inline-block; width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid rgba(28,25,21,.2); border-top-color: var(--ink); animation: spin .7s linear infinite; vertical-align: middle; margin-right: 6px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .logout-btn { font-size: 11px; color: var(--muted); background: none; border: none; cursor: pointer; font-family: var(--sans); padding: 0; transition: color .15s; }
@@ -83,6 +107,8 @@ body { font-family: var(--sans); background: var(--cream); color: var(--ink); fo
 </style>
 </head>
 <body>
+
+<div class="toast" id="toast"></div>
 
 <!-- LOGIN -->
 <div class="login-wrap" id="loginWrap">
@@ -101,28 +127,46 @@ body { font-family: var(--sans); background: var(--cream); color: var(--ink); fo
 <!-- APP -->
 <div class="app" id="app">
   <div class="header">
-    <div class="header-eyebrow" style="display:flex;align-items:center;justify-content:space-between;">
-      <span>The Content Edit</span>
-      <button class="logout-btn" onclick="logout()">Cerrar sesión</button>
+    <div class="header-left">
+      <div class="header-eyebrow">The Content Edit</div>
+      <div class="header-title">Panel de administración</div>
     </div>
-    <div class="header-title">Panel de administración</div>
+    <button class="logout-btn" onclick="logout()">Cerrar sesión</button>
   </div>
 
-  <div class="search-bar">
-    <input type="email" class="search-input" id="emailInput" placeholder="correo@ejemplo.com" onkeydown="if(event.key==='Enter')search()"/>
-    <button class="btn-search" id="searchBtn" onclick="search()">Buscar</button>
+  <div class="tabs">
+    <button class="tab-btn active" id="tab-buscar" onclick="setTab('buscar')">Buscar usuario</button>
+    <button class="tab-btn" id="tab-todos" onclick="setTab('todos')">Todos los usuarios</button>
   </div>
 
-  <div class="result" id="result"></div>
+  <!-- TAB: BUSCAR -->
+  <div id="panel-buscar">
+    <div class="search-bar">
+      <input type="email" class="search-input" id="emailInput" placeholder="correo@ejemplo.com" onkeydown="if(event.key==='Enter')search()"/>
+      <button class="btn-search" id="searchBtn" onclick="search()">Buscar</button>
+    </div>
+    <div class="result" id="result"></div>
+  </div>
+
+  <!-- TAB: TODOS -->
+  <div id="panel-todos" style="display:none;">
+    <div id="users-list"></div>
+  </div>
 </div>
 
 <script>
 const ADMIN_KEY = 'tce_admin_session';
 
+function showToast(msg, duration = 2000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('visible');
+  setTimeout(() => t.classList.remove('visible'), duration);
+}
+
 function login() {
   const pwd = document.getElementById('passwordInput').value;
   const err = document.getElementById('loginError');
-  
   fetch(`/api/admin?password=${encodeURIComponent(pwd)}`)
     .then(r => r.json())
     .then(data => {
@@ -131,9 +175,7 @@ function login() {
         document.getElementById('loginWrap').style.display = 'none';
         document.getElementById('app').classList.add('visible');
         err.style.display = 'none';
-      } else {
-        err.style.display = 'block';
-      }
+      } else { err.style.display = 'block'; }
     })
     .catch(() => { err.style.display = 'block'; });
 }
@@ -143,9 +185,7 @@ function logout() {
   location.reload();
 }
 
-function getPassword() {
-  return sessionStorage.getItem(ADMIN_KEY);
-}
+function getPassword() { return sessionStorage.getItem(ADMIN_KEY); }
 
 function copyText(text, btn) {
   navigator.clipboard.writeText(text).then(() => {
@@ -155,93 +195,75 @@ function copyText(text, btn) {
   });
 }
 
+function setTab(tab) {
+  document.getElementById('panel-buscar').style.display = tab === 'buscar' ? 'block' : 'none';
+  document.getElementById('panel-todos').style.display = tab === 'todos' ? 'block' : 'none';
+  document.getElementById('tab-buscar').className = 'tab-btn' + (tab === 'buscar' ? ' active' : '');
+  document.getElementById('tab-todos').className = 'tab-btn' + (tab === 'todos' ? ' active' : '');
+  if (tab === 'todos') loadAllUsers();
+}
+
+async function loadAllUsers() {
+  const list = document.getElementById('users-list');
+  list.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:8px 0;"><span class="spinner-inline"></span>Cargando…</div>';
+  try {
+    const r = await fetch(`/api/admin?list=true&password=${encodeURIComponent(getPassword())}`);
+    const data = await r.json();
+    if (!data.ok) { list.innerHTML = `<div class="error-card">${data.error}</div>`; return; }
+    const users = data.users;
+    const proCount = users.filter(u => u.plan === 'pro').length;
+    const freeCount = users.filter(u => u.plan === 'free').length;
+    list.innerHTML = `
+      <div class="users-count">${users.length} usuarios · <span style="color:var(--accent);">${proCount} Pro</span> · ${freeCount} Free</div>
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Plan</th>
+            <th>Widgets</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${users.map(u => `
+            <tr onclick="searchFromList('${u.email}')">
+              <td>${u.email}</td>
+              <td><span class="plan-badge ${u.plan}">${u.plan.toUpperCase()}</span></td>
+              <td>${u.widgetCount}</td>
+              <td style="color:var(--muted);">${u.createdAt ? new Date(u.createdAt).toLocaleDateString('es-MX', {day:'numeric',month:'short',year:'numeric'}) : '—'}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  } catch(e) {
+    list.innerHTML = `<div class="error-card">Error al cargar usuarios.</div>`;
+  }
+}
+
+function searchFromList(email) {
+  setTab('buscar');
+  document.getElementById('emailInput').value = email;
+  search();
+}
+
 async function search() {
   const email = document.getElementById('emailInput').value.trim();
   if (!email) return;
-
   const btn = document.getElementById('searchBtn');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner-inline"></span>Buscando';
-
   const result = document.getElementById('result');
   result.classList.remove('visible');
-
   try {
     const r = await fetch(`/api/admin?email=${encodeURIComponent(email)}&password=${encodeURIComponent(getPassword())}`);
     const data = await r.json();
-
     if (!data.ok) {
       result.innerHTML = `<div class="error-card">${data.error || 'Usuario no encontrado.'}</div>`;
       result.classList.add('visible');
       return;
     }
-
-    const u = data.user;
-    const setupUrl = `${location.origin}/setup.html?token=${u.setupToken}`;
-    const planBadge = u.plan === 'pro' 
-      ? '<span class="plan-badge pro">Pro</span>' 
-      : '<span class="plan-badge free">Free</span>';
-
-    const widgetsHTML = u.widgets && u.widgets.length > 0
-      ? `<div class="widgets-title">Widgets (${u.widgets.length})</div>` +
-        u.widgets.map(w => `
-          <div class="widget-item">
-            <div class="widget-name">${w.name}</div>
-            <div class="widget-row">
-              <div style="flex:1;min-width:0;">
-                <div class="info-label">Embed URL</div>
-                <div class="info-value">${w.embedUrl}</div>
-              </div>
-              <button class="btn-copy" onclick="copyText('${w.embedUrl}', this)">Copiar</button>
-            </div>
-            ${w.notionDbId ? `
-            <div class="widget-row" style="margin-top:6px;">
-              <div style="flex:1;min-width:0;">
-                <div class="info-label">Notion DB ID</div>
-                <div class="info-value">${w.notionDbId}</div>
-              </div>
-            </div>` : ''}
-          </div>
-        `).join('')
-      : '<div style="padding:14px 20px;font-size:13px;color:var(--muted);border-top:0.5px solid var(--border);">Sin widgets todavía.</div>';
-
-    result.innerHTML = `
-      <div class="result-card">
-        <div class="result-header">
-          <div class="result-email">${u.email}</div>
-          ${planBadge}
-        </div>
-        <div class="info-row">
-          <div style="flex:1;min-width:0;">
-            <div class="info-label">License Key</div>
-            <div class="info-value">${u.licenseKey || '—'}</div>
-          </div>
-          ${u.licenseKey ? `<button class="btn-copy" onclick="copyText('${u.licenseKey}', this)">Copiar</button>` : ''}
-        </div>
-        <div class="info-row">
-          <div style="flex:1;min-width:0;">
-            <div class="info-label">Setup Link</div>
-            <div class="info-value">${setupUrl}</div>
-          </div>
-          <button class="btn-copy" onclick="copyText('${setupUrl}', this)">Copiar</button>
-        </div>
-        <div class="info-row">
-          <div style="flex:1;min-width:0;">
-            <div class="info-label">Creado</div>
-            <div class="info-value normal">${u.createdAt ? new Date(u.createdAt).toLocaleDateString('es-MX', { day:'numeric', month:'long', year:'numeric' }) : '—'}</div>
-          </div>
-        </div>
-        <div class="info-row">
-          <div style="flex:1;min-width:0;">
-            <div class="info-label">Activado</div>
-            <div class="info-value normal">${u.activated ? 'Sí' : 'No'}</div>
-          </div>
-        </div>
-        ${widgetsHTML}
-      </div>
-    `;
-    result.classList.add('visible');
-
+    renderUser(data.user);
   } catch(e) {
     result.innerHTML = `<div class="error-card">Error al buscar. Intenta de nuevo.</div>`;
     result.classList.add('visible');
@@ -251,7 +273,134 @@ async function search() {
   }
 }
 
-// Check session on load
+function renderUser(u) {
+  const result = document.getElementById('result');
+  const setupUrl = `${location.origin}/setup.html?token=${u.setupToken}`;
+  const planBadge = u.plan === 'pro'
+    ? '<span class="plan-badge pro">Pro</span>'
+    : '<span class="plan-badge free">Free</span>';
+
+  const widgetsHTML = u.widgets && u.widgets.length > 0
+    ? `<div class="widgets-title">Widgets (${u.widgets.length})</div>` +
+      u.widgets.map(w => `
+        <div class="widget-item">
+          <div class="widget-name">${w.name}</div>
+          <div class="widget-row">
+            <div style="flex:1;min-width:0;">
+              <div class="info-label">Embed URL</div>
+              <div class="info-value">${w.embedUrl}</div>
+            </div>
+            <button class="btn-copy" onclick="copyText('${w.embedUrl}', this)">Copiar</button>
+          </div>
+          ${w.notionDbId ? `
+          <div class="widget-row" style="margin-top:6px;">
+            <div style="flex:1;min-width:0;">
+              <div class="info-label">Notion DB ID</div>
+              <div class="info-value">${w.notionDbId}</div>
+            </div>
+          </div>` : ''}
+        </div>
+      `).join('')
+    : '<div style="padding:14px 20px;font-size:13px;color:var(--muted);border-top:0.5px solid var(--border);">Sin widgets todavía.</div>';
+
+  const otherPlan = u.plan === 'pro' ? 'free' : 'pro';
+  const otherPlanLabel = u.plan === 'pro' ? 'Bajar a Free' : 'Subir a Pro';
+
+  result.innerHTML = `
+    <div class="result-card">
+      <div class="result-header">
+        <div class="result-email">${u.email}</div>
+        <div class="result-header-right">
+          ${planBadge}
+        </div>
+      </div>
+      <div class="info-row">
+        <div style="flex:1;min-width:0;">
+          <div class="info-label">License Key</div>
+          <div class="info-value">${u.licenseKey || '—'}</div>
+        </div>
+        ${u.licenseKey ? `<button class="btn-copy" onclick="copyText('${u.licenseKey}', this)">Copiar</button>` : ''}
+      </div>
+      <div class="info-row">
+        <div style="flex:1;min-width:0;">
+          <div class="info-label">Setup Link</div>
+          <div class="info-value">${setupUrl}</div>
+        </div>
+        <button class="btn-copy" onclick="copyText('${setupUrl}', this)">Copiar</button>
+      </div>
+      <div class="info-row">
+        <div style="flex:1;min-width:0;">
+          <div class="info-label">Creado</div>
+          <div class="info-value normal">${u.createdAt ? new Date(u.createdAt).toLocaleDateString('es-MX', {day:'numeric',month:'long',year:'numeric'}) : '—'}</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div style="flex:1;min-width:0;">
+          <div class="info-label">Activado</div>
+          <div class="info-value normal">${u.activated ? 'Sí' : 'No'}</div>
+        </div>
+      </div>
+      ${widgetsHTML}
+      <div class="action-row">
+        <button class="btn-action btn-action-${otherPlan}" id="btn-plan-${u.email.replace('@','_').replace('.','_')}" onclick="changePlan('${u.email}', '${otherPlan}', this)">${otherPlanLabel}</button>
+        <button class="btn-action" id="btn-email-${u.email.replace('@','_').replace('.','_')}" onclick="resendEmail('${u.email}', this)">Reenviar link de setup</button>
+      </div>
+    </div>
+  `;
+  result.classList.add('visible');
+}
+
+async function changePlan(email, plan, btn) {
+  if (!confirm(`¿Cambiar el plan de ${email} a ${plan.toUpperCase()}?`)) return;
+  btn.classList.add('loading');
+  btn.textContent = 'Cambiando…';
+  try {
+    const r = await fetch('/api/admin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: getPassword(), action: 'change_plan', email, plan }),
+    });
+    const data = await r.json();
+    if (data.ok) {
+      showToast(`Plan cambiado a ${plan.toUpperCase()} ✓`);
+      search(); // recargar
+    } else {
+      showToast('Error al cambiar plan');
+      btn.classList.remove('loading');
+      btn.textContent = plan === 'pro' ? 'Subir a Pro' : 'Bajar a Free';
+    }
+  } catch(e) {
+    showToast('Error al cambiar plan');
+    btn.classList.remove('loading');
+  }
+}
+
+async function resendEmail(email, btn) {
+  btn.classList.add('loading');
+  btn.textContent = 'Enviando…';
+  try {
+    const r = await fetch('/api/admin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: getPassword(), action: 'resend_email', email }),
+    });
+    const data = await r.json();
+    if (data.ok) {
+      btn.classList.remove('loading');
+      btn.classList.add('success');
+      btn.textContent = 'Email enviado ✓';
+      showToast('Email enviado ✓');
+    } else {
+      showToast('Error al enviar email');
+      btn.classList.remove('loading');
+      btn.textContent = 'Reenviar link de setup';
+    }
+  } catch(e) {
+    showToast('Error al enviar email');
+    btn.classList.remove('loading');
+  }
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   const saved = sessionStorage.getItem(ADMIN_KEY);
   if (saved) {
