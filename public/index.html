@@ -76,8 +76,6 @@ section + section { border-top: 0.5px solid var(--border); }
 .step-num { width: 28px; height: 28px; border-radius: 50%; border: 0.5px solid var(--border-strong); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 400; color: var(--muted); flex-shrink: 0; margin-top: 2px; }
 .step-title { font-weight: 500; font-size: 14px; margin-bottom: 3px; }
 .step-desc { font-size: 13px; color: var(--muted); line-height: 1.55; font-weight: 300; }
-
-/* ─── PLANS ─────────────────────────────────────────── */
 .plans { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 2rem; }
 .plan { background: var(--cream); border: 0.5px solid var(--border-strong); border-radius: var(--radius); padding: 1.5rem; }
 .plan.featured { border: 1.5px solid var(--accent); background: var(--accent); color: var(--cream); }
@@ -104,38 +102,10 @@ section + section { border-top: 0.5px solid var(--border); }
 .plan-btn.light:hover { background: rgba(28,25,21,.05); }
 .plan-btn.dark { background: var(--cream); color: var(--ink); border: none; }
 .plan-btn.dark:hover { opacity: .85; }
-
-/* ─── TOOLTIPS TCE ──────────────────────────────────── */
 .has-tip { cursor: default; }
-.has-tip .tip-text {
-  display: none;
-  position: absolute;
-  left: 20px;
-  bottom: calc(100% + 6px);
-  background: #F9F6F1;
-  color: #1C1915;
-  border: 0.5px solid rgba(28,25,21,0.14);
-  border-radius: 8px;
-  padding: 8px 11px;
-  font-size: 11px;
-  line-height: 1.55;
-  font-weight: 300;
-  width: 210px;
-  box-shadow: 0 6px 20px rgba(28,25,21,0.1);
-  z-index: 20;
-  pointer-events: none;
-  font-family: 'Inter', system-ui, sans-serif;
-  letter-spacing: 0;
-}
-.plan.featured .has-tip .tip-text {
-  background: #2C1F1C;
-  color: rgba(249,246,241,0.88);
-  border-color: rgba(249,246,241,0.12);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-}
+.has-tip .tip-text { display: none; position: absolute; left: 20px; bottom: calc(100% + 6px); background: #F9F6F1; color: #1C1915; border: 0.5px solid rgba(28,25,21,0.14); border-radius: 8px; padding: 8px 11px; font-size: 11px; line-height: 1.55; font-weight: 300; width: 210px; box-shadow: 0 6px 20px rgba(28,25,21,0.1); z-index: 20; pointer-events: none; font-family: 'Inter', system-ui, sans-serif; letter-spacing: 0; }
+.plan.featured .has-tip .tip-text { background: #2C1F1C; color: rgba(249,246,241,0.88); border-color: rgba(249,246,241,0.12); box-shadow: 0 6px 20px rgba(0,0,0,0.25); }
 .has-tip:hover .tip-text { display: block; }
-
-/* ─── FAQ ───────────────────────────────────────────── */
 .faq-list { margin-top: 2rem; }
 .faq-item { border-bottom: 0.5px solid var(--border); cursor: pointer; }
 .faq-q { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.1rem 0; font-size: 14px; font-weight: 400; color: var(--ink); }
@@ -322,14 +292,12 @@ footer { background: var(--ink); padding: 2rem 1.5rem; display: flex; justify-co
   </div>
 </section>
 
-<!-- PRICING con tooltips -->
 <section id="pricing">
   <div class="container fade-in">
     <span class="label">Precio</span>
     <h2 style="font-family:var(--serif);font-size:clamp(24px,4vw,32px);line-height:1.2;font-weight:400;">Un solo pago. <em style="font-style:italic;color:var(--accent)">Tuyo para siempre.</em></h2>
     <p style="font-size:14px;color:var(--muted);margin-top:.5rem;font-weight:300;">Sin suscripciones, sin renovaciones. Paga una vez y úsalo cuanto quieras.</p>
     <div class="plans">
-      <!-- FREE -->
       <div class="plan">
         <div class="plan-name">Gratis</div>
         <div class="plan-desc">Empieza gratis, actualiza cuando quieras</div>
@@ -347,7 +315,6 @@ footer { background: var(--ink); padding: 2rem 1.5rem; display: flex; justify-co
         </ul>
         <button class="plan-btn light" onclick="window.location.href='https://thecontentedit.lemonsqueezy.com/checkout/buy/dfb73a7c-a196-4ff5-8944-edfe23f673a3?logo=0&discount=0'">Empezar gratis</button>
       </div>
-      <!-- PRO -->
       <div class="plan featured">
         <div class="plan-tag">Recomendado</div>
         <div class="plan-name">Pro</div>
@@ -384,9 +351,9 @@ footer { background: var(--ink); padding: 2rem 1.5rem; display: flex; justify-co
 <footer>
   <a href="#" class="footer-logo">The Content Edit</a>
   <div class="footer-links">
-    <a href="#">Instagram</a>
-    <a href="#">TikTok</a>
-    <a href="#">Contacto</a>
+    <a href="https://www.instagram.com/thecontentedit_____" target="_blank">Instagram</a>
+    <a href="https://www.tiktok.com/@thecontentedit___" target="_blank">TikTok</a>
+    <a href="mailto:hola@thecontentedit.digital">Contacto</a>
     <a href="/privacidad">Política de privacidad</a>
   </div>
   <p class="footer-copy">© 2026 The Content Edit. Todos los derechos reservados.</p>
