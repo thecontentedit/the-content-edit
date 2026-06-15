@@ -313,21 +313,18 @@ const icons = {
   canva: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M12 8v8"/></svg>`,
 };
 
-const PILAR_PALETTE = ['#C0392B','#1A5276','#1E8449','#D35400','#7D3C98','#117A65','#B7950B','#2E4057'];
+const PILAR_PALETTE = ['#C0392B','#1A5276','#1E8449','#D35400','#7D3C98','#117A65','#B7950B','#2E4057','#CB4335','#2E86C1','#239B56','#D68910'];
 const pilarColorMap = {};
-let pilarColorIndex = 0;
 function getPilarColor(pilar) {
   if (!pilar) return 'rgba(100,100,100,0.65)';
   if (!pilarColorMap[pilar]) {
-    pilarColorMap[pilar] = PILAR_PALETTE[pilarColorIndex % PILAR_PALETTE.length];
-    pilarColorIndex++;
+    let hash = 0;
+    for (let i = 0; i < pilar.length; i++) { hash = pilar.charCodeAt(i) + ((hash << 5) - hash); }
+    pilarColorMap[pilar] = PILAR_PALETTE[Math.abs(hash) % PILAR_PALETTE.length];
   }
   return pilarColorMap[pilar];
 }
-function resetPilarColors() {
-  Object.keys(pilarColorMap).forEach(k => delete pilarColorMap[k]);
-  pilarColorIndex = 0;
-}
+function resetPilarColors() { Object.keys(pilarColorMap).forEach(k => delete pilarColorMap[k]); }
 
 async function loadWidget() {
   if (planModeActive) { if (!confirm('¿Descartar cambios del Plan Grid y recargar?')) return; exitPlanMode(false); }
