@@ -315,14 +315,14 @@ const icons = {
 
 const PILAR_PALETTE = ['#C0392B','#E67E22','#D4AC0D','#7D6608','#1E8449','#0E6655','#117A9E','#1A5276','#6C3483','#B7367A','#4A7C00','#784212'];
 const pilarColorMap = {};
+function buildPilarColorMap(posts) {
+  Object.keys(pilarColorMap).forEach(k => delete pilarColorMap[k]);
+  const pilares = [...new Set(posts.map(p => p.pilar).filter(Boolean))].sort();
+  pilares.forEach((pilar, i) => { pilarColorMap[pilar] = PILAR_PALETTE[i % PILAR_PALETTE.length]; });
+}
 function getPilarColor(pilar) {
   if (!pilar) return 'rgba(100,100,100,0.65)';
-  if (!pilarColorMap[pilar]) {
-    let hash = 0;
-    for (let i = 0; i < pilar.length; i++) { hash = pilar.charCodeAt(i) + ((hash << 5) - hash); }
-    pilarColorMap[pilar] = PILAR_PALETTE[Math.abs(hash) % PILAR_PALETTE.length];
-  }
-  return pilarColorMap[pilar];
+  return pilarColorMap[pilar] || 'rgba(100,100,100,0.65)';
 }
 function resetPilarColors() { Object.keys(pilarColorMap).forEach(k => delete pilarColorMap[k]); }
 
@@ -406,7 +406,7 @@ function renderGrid(posts, plan) {
   const total = Math.max(filtered.length, currentTab === 'reels' ? 0 : 9);
   const slots = Array.from({ length: total }, (_, i) => filtered[i] || null);
   if (slots.length === 0 && currentTab === 'reels') { grid.innerHTML = '<div style="padding:2rem;text-align:center;font-size:13px;color:#7A7570;grid-column:1/-1;">No hay reels todavía</div>'; return; }
-  if (settings.showContentMap) { const pilaresUnicos = [...new Set(filtered.map(p => p.pilar).filter(Boolean))]; pilaresUnicos.forEach(p => getPilarColor(p)); }
+  buildPilarColorMap(filtered);
   slots.forEach((post, i) => {
     if (!post) { const empty = document.createElement('div'); empty.className = 'empty-cell'; empty.innerHTML = '<span>+ nuevo</span>'; grid.appendChild(empty); return; }
     const cell = document.createElement('div'); cell.className = 'cell'; cell.dataset.index = i; cell.dataset.pageId = post.pageId;
