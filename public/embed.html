@@ -317,7 +317,7 @@ const PILAR_PALETTE = ['#C0392B','#1E8449','#6C3483','#E67E22','#1A5276','#B7367
 const pilarColorMap = {};
 function buildPilarColorMap(posts) {
   Object.keys(pilarColorMap).forEach(k => delete pilarColorMap[k]);
-  const pilares = [...new Set(posts.map(p => p.pilar).filter(Boolean))].sort();
+  const pilares = [...new Set(posts.map(p => p.pilar).filter(Boolean))].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
   pilares.forEach((pilar, i) => { pilarColorMap[pilar] = PILAR_PALETTE[i % PILAR_PALETTE.length]; });
 }
 function getPilarColor(pilar) {
